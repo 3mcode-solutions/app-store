@@ -1,0 +1,392 @@
+.products-section {
+  padding: 60px 0;
+}
+
+.products-filters {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.search-box {
+  position: relative;
+}
+
+.search-box i {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+}
+
+.search-box input {
+  padding-right: 40px;
+}
+
+.form-select {
+  padding: 0.6rem 2.25rem 0.6rem 0.75rem;
+  font-size: 0.95rem;
+  border-color: #dee2e6;
+  color: var(--heading-color);
+}
+
+.form-select:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 0.2rem rgba(65, 84, 241, 0.25);
+}
+
+.product-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  height: 100%;
+  overflow: hidden;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+.product-img {
+  position: relative;
+  padding-top: 75%;
+  overflow: hidden;
+}
+
+.product-img img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.discount-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--accent-color);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.product-content {
+  padding: 20px;
+}
+
+.product-content h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: var(--heading-color);
+}
+
+.description {
+  color: #6c757d;
+  font-size: 14px;
+  margin-bottom: 15px;
+  height: 40px;
+  overflow: hidden;
+}
+
+.price-rating {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.price {
+  font-weight: bold;
+}
+
+.original-price {
+  color: #6c757d;
+  text-decoration: line-through;
+  margin-left: 8px;
+  font-size: 14px;
+}
+
+.final-price {
+  color: var(--accent-color);
+  font-size: 18px;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  color: #ffc107;
+}
+
+.rating i {
+  margin-left: 5px;
+}
+
+.product-actions {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+}
+
+.product-actions .btn {
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.product-actions .btn i {
+  font-size: 18px;
+}
+
+.product-actions .btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn-outline-danger:hover {
+  color: #fff;
+}
+
+.list-card .product-actions {
+  max-width: 400px;
+}
+
+.no-products {
+  text-align: center;
+  padding: 60px 0;
+}
+
+.no-products i {
+  font-size: 64px;
+  color: #6c757d;
+  margin-bottom: 20px;
+}
+
+.no-products h3 {
+  color: var(--heading-color);
+  margin-bottom: 10px;
+}
+
+.no-products p {
+  color: #6c757d;
+  margin-bottom: 20px;
+}
+
+.additional-filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-top: 1px solid #eee;
+  margin-top: 15px;
+}
+
+.filter-checks {
+  display: flex;
+  gap: 20px;
+}
+
+.view-options {
+  display: flex;
+  gap: 10px;
+}
+
+.view-options .btn {
+  padding: 6px 12px;
+}
+
+.view-options .btn i {
+  font-size: 18px;
+}
+
+.price-range-inputs {
+  display: flex;
+  gap: 10px;
+}
+
+.price-range-inputs input {
+  width: 50%;
+}
+
+.form-label {
+  color: var(--heading-color);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+/* قسم المقارنة */
+.compare-section {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+}
+
+.compare-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.compare-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--heading-color);
+}
+
+.compare-products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.compare-item {
+  position: relative;
+  padding: 15px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.compare-item img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.compare-item h4 {
+  font-size: 14px;
+  margin: 10px 0;
+  color: var(--heading-color);
+}
+
+.compare-item .price {
+  color: var(--accent-color);
+  font-weight: bold;
+}
+
+.remove-compare {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: none;
+  border: none;
+  color: #dc3545;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.compare-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border: 2px dashed #dee2e6;
+  border-radius: 8px;
+  color: #6c757d;
+}
+
+.compare-placeholder i {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+/* العرض القائمي */
+.list-view {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.list-item {
+  width: 100%;
+}
+
+.list-card {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 20px;
+}
+
+.list-card .product-img {
+  padding-top: 100%;
+}
+
+.list-card .product-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.list-card .description {
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.list-card .price-rating {
+  margin-top: auto;
+  margin-bottom: 15px;
+}
+
+@media (max-width: 768px) {
+  .products-filters .row > div {
+    margin-bottom: 10px;
+  }
+
+  .products-filters .row > div:last-child {
+    margin-bottom: 0;
+  }
+
+  .list-card {
+    grid-template-columns: 1fr;
+  }
+
+  .list-card .product-img {
+    padding-top: 60%;
+  }
+
+  .additional-filters {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .filter-checks {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .compare-products {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+
+  .price-range-inputs {
+    flex-direction: column;
+  }
+
+  .price-range-inputs input {
+    width: 100%;
+  }
+
+  .product-actions {
+    grid-template-columns: 1fr auto auto;
+  }
+
+  .product-actions .btn {
+    padding: 6px 10px;
+  }
+
+  .product-actions .btn i {
+    font-size: 16px;
+  }
+}

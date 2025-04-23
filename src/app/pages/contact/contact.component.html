@@ -1,0 +1,137 @@
+<section id="contact" class="contact">
+  <div class="container" data-aos="fade-up">
+    <header class="section-header">
+      <h2>Contact</h2>
+      <p>Contact Us</p>
+    </header>
+
+    <div class="row gy-4">
+      <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+        <div class="row gy-4">
+          <div class="col-md-6">
+            <div class="info-box">
+              <i class="bi bi-geo-alt"></i>
+              <h3>العنوان</h3>
+              <p>A108 Adam Street,<br>New York, NY 535022</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="info-box">
+              <i class="bi bi-telephone"></i>
+              <h3>اتصل بنا</h3>
+              <p>+1 5589 55488 55<br>+1 6678 254445 41</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="info-box">
+              <i class="bi bi-envelope"></i>
+              <h3>البريد الإلكتروني</h3>
+              <p>info&#64;example.com<br>contact&#64;example.com</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="info-box">
+              <i class="bi bi-clock"></i>
+              <h3>ساعات العمل</h3>
+              <p>الاثنين - الجمعة<br>9:00 صباحاً - 05:00 مساءً</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+        <form class="contact-form" (ngSubmit)="onSubmit()" #contactForm="ngForm">
+          <div class="row gy-4">
+            <div class="col-md-6">
+              <div class="form-group">
+                <input
+                  type="text"
+                  name="name"
+                  [(ngModel)]="formData.name"
+                  class="form-control"
+                  placeholder="الاسم"
+                  required
+                  #name="ngModel"
+                  [class.is-invalid]="name.invalid && name.touched">
+                <div class="invalid-feedback" *ngIf="name.invalid && name.touched">
+                  الرجاء إدخال الاسم
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <input
+                  type="email"
+                  class="form-control"
+                  name="email"
+                  [(ngModel)]="formData.email"
+                  placeholder="البريد الإلكتروني"
+                  required
+                  email
+                  #email="ngModel"
+                  [class.is-invalid]="email.invalid && email.touched">
+                <div class="invalid-feedback" *ngIf="email.invalid && email.touched">
+                  الرجاء إدخال بريد إلكتروني صحيح
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="form-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="subject"
+                  [(ngModel)]="formData.subject"
+                  placeholder="الموضوع"
+                  required
+                  #subject="ngModel"
+                  [class.is-invalid]="subject.invalid && subject.touched">
+                <div class="invalid-feedback" *ngIf="subject.invalid && subject.touched">
+                  الرجاء إدخال الموضوع
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="form-group">
+                <textarea
+                  class="form-control"
+                  name="message"
+                  [(ngModel)]="formData.message"
+                  rows="6"
+                  placeholder="الرسالة"
+                  required
+                  #message="ngModel"
+                  [class.is-invalid]="message.invalid && message.touched"></textarea>
+                <div class="invalid-feedback" *ngIf="message.invalid && message.touched">
+                  الرجاء إدخال رسالتك
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-12 text-center">
+              <div class="status-messages">
+                <div class="loading" *ngIf="isLoading">
+                  <i class="bi bi-hourglass-split"></i> جاري الإرسال...
+                </div>
+                <div class="error-message" *ngIf="isError">
+                  <i class="bi bi-exclamation-circle"></i> {{ errorMessage }}
+                </div>
+                <div class="sent-message" *ngIf="isSuccess">
+                  <i class="bi bi-check-circle"></i> تم إرسال رسالتك بنجاح!
+                </div>
+              </div>
+
+              <button type="submit" [disabled]="!contactForm.form.valid || isLoading">
+                <i class="bi" [class.bi-send]="!isLoading" [class.bi-hourglass-split]="isLoading"></i>
+                إرسال الرسالة
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

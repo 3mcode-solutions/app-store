@@ -1,0 +1,219 @@
+<section class="products-section">
+  <div class="container">
+    <header class="section-header">
+      <h2>منتجاتنا</h2>
+      <p>تسوق أحدث المنتجات بأفضل الأسعار</p>
+    </header>
+
+    <!-- فلتر وترتيب المنتجات -->
+    <div class="products-filters mb-4">
+      <div class="row g-3">
+        <!-- صف البحث والتصنيف والترتيب -->
+        <div class="col-md-5">
+          <div class="search-box">
+            <i class="bi bi-search"></i>
+            <input type="text" class="form-control"
+                   [(ngModel)]="searchQuery"
+                   (ngModelChange)="onSearchChange()"
+                   placeholder="ابحث عن منتج...">
+          </div>
+        </div>
+        <div class="col-md-4">
+          <select class="form-select"
+                  [(ngModel)]="selectedCategory"
+                  (ngModelChange)="onCategoryChange($event)">
+            <option value="">جميع الفئات</option>
+            <option value="1">إلكترونيات</option>
+            <option value="2">ملابس</option>
+            <option value="3">أثاث منزلي</option>
+            <option value="4">مستلزمات رياضية</option>
+            <option value="5">كتب</option>
+            <option value="6">مستلزمات منزلية</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <select class="form-select"
+                  [(ngModel)]="sortBy"
+                  (ngModelChange)="onSortChange()">
+            @for (option of sortOptions; track option.value) {
+              <option [value]="option.value">{{option.label}}</option>
+            }
+          </select>
+        </div>
+
+        <!-- صف نطاق السعر والتقييم -->
+        <div class="col-md-6">
+          <label class="form-label">نطاق السعر</label>
+          <div class="price-range-inputs d-flex gap-2">
+            <input type="number" class="form-control"
+                   [(ngModel)]="priceRange.min"
+                   (ngModelChange)="filterProducts()"
+                   placeholder="السعر الأدنى">
+            <input type="number" class="form-control"
+                   [(ngModel)]="priceRange.max"
+                   (ngModelChange)="filterProducts()"
+                   placeholder="السعر الأعلى">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">التقييم الأدنى</label>
+          <select class="form-select"
+                  [(ngModel)]="ratingFilter"
+                  (ngModelChange)="filterProducts()">
+            <option [value]="0">الكل</option>
+            <option [value]="4.5">4.5 وأعلى</option>
+            <option [value]="4">4 وأعلى</option>
+            <option [value]="3.5">3.5 وأعلى</option>
+            <option [value]="3">3 وأعلى</option>
+          </select>
+        </div>
+
+        <!-- صف الفلاتر الإضافية وأزرار العرض -->
+        <div class="col-12">
+          <div class="additional-filters">
+            <div class="filter-checks">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox"
+                       [(ngModel)]="showOnlyInStock"
+                       (ngModelChange)="filterProducts()"
+                       id="inStockFilter">
+                <label class="form-check-label" for="inStockFilter">
+                  المتوفر فقط
+                </label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox"
+                       [(ngModel)]="showOnlyDiscounted"
+                       (ngModelChange)="filterProducts()"
+                       id="discountFilter">
+                <label class="form-check-label" for="discountFilter">
+                  العروض فقط
+                </label>
+              </div>
+            </div>
+            <div class="view-options">
+              <button class="btn btn-outline-primary"
+                      [class.active]="viewMode === 'grid'"
+                      (click)="toggleViewMode()">
+                <i class="bi bi-grid"></i>
+              </button>
+              <button class="btn btn-outline-primary"
+                      [class.active]="viewMode === 'list'"
+                      (click)="toggleViewMode()">
+                <i class="bi bi-list-ul"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- قسم المقارنة -->
+    @if (compareProducts.length > 0) {
+      <div class="compare-section mb-4">
+        <div class="compare-header">
+          <h3>مقارنة المنتجات</h3>
+          <button class="btn btn-outline-danger btn-sm" (click)="clearCompare()">
+            <i class="bi bi-x-lg"></i>
+            مسح المقارنة
+          </button>
+        </div>
+        <div class="compare-products">
+          @for (product of compareProducts; track product.id) {
+            <div class="compare-item">
+              <button class="remove-compare" (click)="removeFromCompare(product.id)">
+                <i class="bi bi-x"></i>
+              </button>
+              <img [src]="product.imageUrl" [alt]="product.name">
+              <h4>{{product.name}}</h4>
+              <div class="price">{{getFinalPrice(product)}} ريال</div>
+            </div>
+          }
+          @if (compareProducts.length < maxCompareItems) {
+            <div class="compare-placeholder">
+              <i class="bi bi-plus-lg"></i>
+              <p>أضف منتج للمقارنة</p>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- قائمة المنتجات -->
+    <div [class]="viewMode === 'grid' ? 'row gy-4' : 'list-view'">
+      @if (products.length > 0) {
+        @for (product of products; track product.id) {
+          <div [class]="viewMode === 'grid' ? 'col-lg-4 col-md-6' : 'list-item'">
+            <div class="product-card" [class.list-card]="viewMode === 'list'">
+              <div class="product-img">
+                <img [src]="product.imageUrl" [alt]="product.name" class="img-fluid">
+                @if (product.discount) {
+                  <div class="discount-badge">
+                    خصم {{product.discount}}%
+                  </div>
+                }
+              </div>
+              <div class="product-content">
+                <h3>{{product.name}}</h3>
+                <div class="description">{{product.description}}</div>
+                <div class="price-rating">
+                  <div class="price">
+                    @if (product.discount) {
+                      <span class="original-price">{{product.price}} ريال</span>
+                      <span class="final-price">{{getFinalPrice(product)}} ريال</span>
+                    } @else {
+                      <span class="final-price">{{product.price}} ريال</span>
+                    }
+                  </div>
+                  @if (product.rating) {
+                    <div class="rating">
+                      <i class="bi bi-star-fill"></i>
+                      <span>{{product.rating}}</span>
+                    </div>
+                  }
+                </div>
+                <div class="product-actions">
+                  <button class="btn btn-primary"
+                          (click)="addToCart(product)"
+                          [disabled]="!product.inStock">
+                    <i class="bi bi-cart-plus"></i>
+                    @if (product.inStock) {
+                      أضف للسلة
+                    } @else {
+                      نفذت الكمية
+                    }
+                  </button>
+                  <button class="btn"
+                          [class.btn-outline-primary]="!isInCompare(product.id)"
+                          [class.btn-primary]="isInCompare(product.id)"
+                          (click)="toggleCompare(product)"
+                          [disabled]="!canAddToCompare() && !isInCompare(product.id)"
+                          title="إضافة للمقارنة">
+                    <i class="bi" [class.bi-arrows-angle-expand]="!isInCompare(product.id)"
+                               [class.bi-check2]="isInCompare(product.id)"></i>
+                  </button>
+                  <button class="btn"
+                          [class.btn-outline-danger]="!isInWishlist(product.id)"
+                          [class.btn-danger]="isInWishlist(product.id)"
+                          (click)="toggleWishlist(product)"
+                          title="إضافة للمفضلة">
+                    <i class="bi" [class.bi-heart]="!isInWishlist(product.id)"
+                               [class.bi-heart-fill]="isInWishlist(product.id)"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      } @else {
+        <div class="col-12">
+          <div class="no-products">
+            <i class="bi bi-search"></i>
+            <h3>لا توجد منتجات</h3>
+            <p>لم يتم العثور على منتجات تطابق معايير البحث</p>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>

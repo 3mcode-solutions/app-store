@@ -1,0 +1,31 @@
+<header id="header" class="header d-flex align-items-center sticky-top">
+  <div class="container-fluid container-xl position-relative d-flex align-items-center">
+    <a routerLink="/" class="logo d-flex align-items-center me-auto">
+      <img src="assets/img/logo.png" alt="متجرنا">
+      <h1 class="sitename">متجرنا</h1>
+    </a>
+
+    <nav id="navmenu" class="navmenu" [class.mobile-nav-active]="isMenuOpen">
+      <ul>
+        <li><a routerLink="/home" routerLinkActive="active">الرئيسية</a></li>
+        <li><a routerLink="/products" routerLinkActive="active">المنتجات</a></li>
+        <li><a routerLink="/categories" routerLinkActive="active">التصنيفات</a></li>
+        <li><a routerLink="/offers" routerLinkActive="active">العروض</a></li>
+        <li><a routerLink="/about" routerLinkActive="active">من نحن</a></li>
+        <li><a routerLink="/contact" routerLinkActive="active">اتصل بنا</a></li>
+      </ul>
+      <i class="mobile-nav-toggle d-xl-none bi"
+         [class.bi-list]="!isMenuOpen"
+         [class.bi-x]="isMenuOpen"
+         (click)="toggleMenu()"></i>
+    </nav>
+
+    <div class="header-actions d-flex align-items-center">
+      <a class="cart-link me-3" routerLink="/cart">
+        <i class="bi bi-cart3"></i>
+        <span class="cart-count" *ngIf="(cartItemsCount$ | async) as count">{{count}}</span>
+      </a>
+      <a class="btn-getstarted" routerLink="/auth/login">تسجيل الدخول</a>
+    </div>
+  </div>
+</header>

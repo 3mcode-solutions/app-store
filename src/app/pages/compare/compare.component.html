@@ -1,0 +1,73 @@
+<section class="compare-section">
+  <div class="container">
+    <header class="section-header">
+      <h2>مقارنة المنتجات</h2>
+      <p>قارن بين المنتجات لاختيار الأفضل</p>
+    </header>
+
+    @if (compareProducts.length > 0) {
+      <div class="compare-table-wrapper">
+        <div class="compare-actions">
+          <button class="btn btn-outline-danger" (click)="clearCompare()">
+            <i class="bi bi-trash"></i>
+            مسح المقارنة
+          </button>
+        </div>
+
+        <div class="compare-table">
+          <!-- صور المنتجات والأزرار -->
+          <div class="compare-row product-header">
+            <div class="feature-name">المنتج</div>
+            @for (product of compareProducts; track product.id) {
+              <div class="product-cell">
+                <button class="remove-product" (click)="removeProduct(product.id)">
+                  <i class="bi bi-x"></i>
+                </button>
+                <img [src]="product.imageUrl" [alt]="product.name">
+                <h3>{{product.name}}</h3>
+                <div class="product-actions">
+                  <button class="btn btn-primary btn-sm"
+                          (click)="addToCart(product)"
+                          [disabled]="!product.inStock">
+                    <i class="bi bi-cart-plus"></i>
+                    أضف للسلة
+                  </button>
+                  <button class="btn btn-outline-danger btn-sm"
+                          (click)="addToWishlist(product)">
+                    <i class="bi bi-heart"></i>
+                  </button>
+                  <button class="btn btn-outline-secondary btn-sm"
+                          (click)="shareProduct(product)">
+                    <i class="bi bi-share"></i>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- خصائص المقارنة -->
+          @for (feature of features; track feature) {
+            <div class="compare-row">
+              <div class="feature-name">{{feature}}</div>
+              @for (product of compareProducts; track product.id) {
+                <div class="feature-value" [class.highlight]="isHighlightedFeature(feature)">
+                  {{getFeatureValue(product, feature)}}
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    } @else {
+      <div class="empty-compare">
+        <i class="bi bi-arrows-angle-expand"></i>
+        <h3>لا توجد منتجات للمقارنة</h3>
+        <p>قم بإضافة منتجات للمقارنة من صفحة المنتجات</p>
+        <a routerLink="/products" class="btn btn-primary">
+          <i class="bi bi-shop me-2"></i>
+          تصفح المنتجات
+        </a>
+      </div>
+    }
+  </div>
+</section>

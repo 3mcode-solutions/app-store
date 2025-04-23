@@ -1,0 +1,60 @@
+.auth-section {
+  padding: 80px 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: #f6f9fe;
+
+  .card {
+    border: none;
+    box-shadow: 0 0 30px rgba(1, 41, 112, 0.1);
+    border-radius: 10px;
+  }
+
+  .form-label {
+    font-weight: 500;
+    color: #012970;
+  }
+
+  .form-control {
+    padding: 12px;
+    border-radius: 4px;
+    box-shadow: none;
+    font-size: 14px;
+
+    &:focus {
+      border-color: #4154f1;
+      box-shadow: 0 0 5px rgba(65, 84, 241, 0.2);
+    }
+  }
+
+  .btn-primary {
+    background: #4154f1;
+    border: none;
+    padding: 12px;
+    font-weight: 500;
+
+    &:hover {
+      background: #5969f3;
+    }
+
+    &:disabled {
+      background: #96a1f3;
+    }
+  }
+
+  .text-danger {
+    font-size: 12px;
+    margin-top: 5px;
+  }
+
+  a {
+    color: #4154f1;
+    text-decoration: none;
+
+    &:hover {
+      color: #5969f3;
+      text-decoration: underline;
+    }
+  }
+}

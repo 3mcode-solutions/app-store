@@ -1,0 +1,23 @@
+/* هذا ملف مؤقت سيتم استبداله بأنماط NiceAdmin */
+.admin-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+}
+
+.admin-sidebar {
+  width: 250px;
+  background-color: #343a40;
+  color: white;
+}
+
+.admin-content {
+  flex: 1;
+  padding: 20px;
+  background-color: #f8f9fa;
+}

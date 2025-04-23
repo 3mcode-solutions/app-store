@@ -1,0 +1,134 @@
+/* About Section Styles */
+.about {
+  padding: 80px 0;
+}
+
+.about .content {
+  background: #f6f9ff;
+  padding: 40px;
+}
+
+.about h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #4154f1;
+  text-transform: uppercase;
+}
+
+.about h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #012970;
+}
+
+.about p {
+  margin: 15px 0 30px 0;
+  line-height: 24px;
+}
+
+.about ul {
+  list-style: none;
+  padding: 0;
+}
+
+.about ul li {
+  padding: 10px 0 0 28px;
+  position: relative;
+}
+
+.about ul i {
+  position: absolute;
+  left: 0;
+  top: 7px;
+  font-size: 20px;
+  color: #4154f1;
+}
+
+.about .btn-read-more {
+  line-height: 0;
+  padding: 15px 40px;
+  border-radius: 4px;
+  transition: 0.5s;
+  color: #fff;
+  background: #4154f1;
+  box-shadow: 0px 5px 25px rgba(65, 84, 241, 0.3);
+}
+
+.about .btn-read-more span {
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+
+.about .btn-read-more i {
+  margin-left: 5px;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.about .btn-read-more:hover i {
+  transform: translateX(5px);
+}
+
+/* Features Section Styles */
+.features {
+  padding: 60px 0;
+  background: #f6f9ff;
+}
+
+.features .box {
+  padding: 30px;
+  box-shadow: 0px 0 5px rgba(1, 41, 112, 0.08);
+  text-align: center;
+  transition: 0.3s;
+  height: 100%;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.features .box i {
+  line-height: 1;
+  color: #4154f1;
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.features .box h3 {
+  font-size: 18px;
+  color: #012970;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.features .box p {
+  font-size: 15px;
+  color: #444444;
+}
+
+.features .box:hover {
+  transform: scale(1.02);
+}
+
+/* Section Header Styles */
+.section-header {
+  text-align: center;
+  padding-bottom: 40px;
+}
+
+.section-header h2 {
+  font-size: 13px;
+  letter-spacing: 1px;
+  font-weight: 700;
+  margin: 0;
+  color: #4154f1;
+  text-transform: uppercase;
+}
+
+.section-header p {
+  margin: 10px 0 0 0;
+  padding: 0;
+  font-size: 38px;
+  line-height: 42px;
+  font-weight: 700;
+  color: #012970;
+}

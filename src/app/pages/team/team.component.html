@@ -1,0 +1,89 @@
+<main class="main">
+  <!-- Page Title -->
+  <div class="page-title">
+    <div class="heading">
+      <div class="container">
+        <div class="row d-flex justify-content-center text-center">
+          <div class="col-lg-8">
+            <h1>{{pageTitle.title}}</h1>
+            <p class="mb-0">{{pageTitle.description}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <nav class="breadcrumbs">
+      <div class="container">
+        <ol>
+          <li><a routerLink="/">Home</a></li>
+          <li class="current">Team</li>
+        </ol>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Team Section -->
+  <section class="team section">
+    <div class="container">
+      <div class="row gy-4">
+        <div class="col-lg-3 col-md-6" *ngFor="let member of teamMembers"
+             [attr.data-aos]="'fade-up'"
+             [attr.data-aos-delay]="member.delay">
+          <div class="team-member">
+            <div class="member-img">
+              <img [src]="member.image" class="img-fluid" [alt]="member.name">
+              <div class="social">
+                <a [href]="member.social.twitter"><i class="bi bi-twitter"></i></a>
+                <a [href]="member.social.facebook"><i class="bi bi-facebook"></i></a>
+                <a [href]="member.social.instagram"><i class="bi bi-instagram"></i></a>
+                <a [href]="member.social.linkedin"><i class="bi bi-linkedin"></i></a>
+              </div>
+            </div>
+            <div class="member-info">
+              <h4>{{member.name}}</h4>
+              <span>{{member.position}}</span>
+              <p>{{member.bio}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats section-bg">
+    <div class="container">
+      <div class="row gy-4">
+        <div class="col-lg-3 col-md-6" *ngFor="let stat of stats">
+          <div class="stats-box">
+            <i [class]="stat.icon"></i>
+            <div>
+              <span class="purecounter"
+                    [attr.data-purecounter-start]="0"
+                    [attr.data-purecounter-end]="stat.count"
+                    [attr.data-purecounter-duration]="1">
+                {{stat.count}}
+              </span>
+              <p>{{stat.title}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call To Action -->
+  <section class="cta">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 text-center">
+          <h3>Interested in Joining Our Team?</h3>
+          <p>We're always looking for talented individuals to join our growing team.</p>
+          <a href="#" class="cta-btn">
+            Join Our Team
+            <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

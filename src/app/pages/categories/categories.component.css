@@ -1,0 +1,130 @@
+.categories-section {
+  padding: 60px 0;
+  background-color: var(--background-color);
+}
+
+.category-card {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  height: 100%;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+}
+
+.category-img {
+  position: relative;
+  padding-top: 60%;
+  overflow: hidden;
+}
+
+.category-img img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.category-card:hover .category-img img {
+  transform: scale(1.1);
+}
+
+.category-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.category-card:hover .category-overlay {
+  opacity: 1;
+}
+
+.category-overlay i {
+  font-size: 48px;
+  color: white;
+}
+
+.category-content {
+  padding: 20px;
+}
+
+.category-content h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--heading-color);
+}
+
+.category-content p {
+  color: #6c757d;
+  font-size: 14px;
+  margin-bottom: 15px;
+  height: 40px;
+  overflow: hidden;
+}
+
+.product-count {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent-color);
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.product-count i {
+  font-size: 16px;
+}
+
+.browse-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--accent-color);
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.category-card:hover .browse-link {
+  color: var(--heading-color);
+}
+
+.browse-link i {
+  transition: transform 0.3s ease;
+}
+
+.category-card:hover .browse-link i {
+  transform: translateX(-5px);
+}
+
+@media (max-width: 768px) {
+  .category-card {
+    margin-bottom: 20px;
+  }
+
+  .category-img {
+    padding-top: 50%;
+  }
+
+  .category-content h3 {
+    font-size: 18px;
+  }
+}

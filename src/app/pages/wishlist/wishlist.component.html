@@ -1,0 +1,88 @@
+<section class="wishlist-section">
+  <div class="container">
+    <header class="section-header">
+      <h2>المفضلة</h2>
+      <p>المنتجات المحفوظة في قائمتك المفضلة</p>
+    </header>
+
+    <ng-container *ngIf="wishlistItems$ | async as wishlistItems">
+      @if (wishlistItems.length > 0) {
+        <div class="wishlist-actions mb-4">
+          <button class="btn btn-outline-danger" (click)="clearWishlist()">
+            <i class="bi bi-trash"></i>
+            مسح القائمة
+          </button>
+        </div>
+
+        <div class="row g-4">
+          @for (product of wishlistItems; track product.id) {
+            <div class="col-lg-4 col-md-6">
+              <div class="product-card">
+                <div class="product-img">
+                  <img [src]="product.imageUrl" [alt]="product.name" class="img-fluid">
+                  @if (product.discount) {
+                    <div class="discount-badge">
+                      خصم {{product.discount}}%
+                    </div>
+                  }
+                </div>
+                <div class="product-content">
+                  <h3>{{product.name}}</h3>
+                  <div class="description">{{product.description}}</div>
+                  <div class="price-rating">
+                    <div class="price">
+                      @if (product.discount) {
+                        <span class="original-price">{{product.price}} ريال</span>
+                        <span class="final-price">
+                          {{product.price * (1 - product.discount/100)}} ريال
+                        </span>
+                      } @else {
+                        <span class="final-price">{{product.price}} ريال</span>
+                      }
+                    </div>
+                    @if (product.rating) {
+                      <div class="rating">
+                        <i class="bi bi-star-fill"></i>
+                        <span>{{product.rating}}</span>
+                      </div>
+                    }
+                  </div>
+                  <div class="product-actions">
+                    <button class="btn btn-primary"
+                            (click)="addToCart(product)"
+                            [disabled]="!product.inStock">
+                      <i class="bi bi-cart-plus"></i>
+                      @if (product.inStock) {
+                        أضف للسلة
+                      } @else {
+                        نفذت الكمية
+                      }
+                    </button>
+                    <button class="btn btn-outline-danger"
+                            (click)="removeFromWishlist(product.id)">
+                      <i class="bi bi-heart-fill"></i>
+                    </button>
+                    <button class="btn btn-outline-secondary"
+                            (click)="shareProduct(product)">
+                      <i class="bi bi-share"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="empty-wishlist">
+          <i class="bi bi-heart"></i>
+          <h3>قائمة المفضلة فارغة</h3>
+          <p>لم تقم بإضافة أي منتجات إلى قائمة المفضلة بعد</p>
+          <a routerLink="/products" class="btn btn-primary">
+            <i class="bi bi-shop me-2"></i>
+            تصفح المنتجات
+          </a>
+        </div>
+      }
+    </ng-container>
+  </div>
+</section>

@@ -1,0 +1,36 @@
+/* هذا ملف مؤقت سيتم استبداله بأنماط NiceAdmin */
+.sidebar {
+  height: 100%;
+  width: 100%;
+  background-color: #343a40;
+  color: white;
+}
+
+.sidebar-header {
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-menu li {
+  padding: 0;
+}
+
+.sidebar-menu a {
+  display: block;
+  padding: 15px 20px;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.sidebar-menu a:hover, .sidebar-menu a.active {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}

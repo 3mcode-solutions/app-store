@@ -1,0 +1,46 @@
+<div class="login-container">
+  <form (ngSubmit)="onSubmit()" #formRef="ngForm" class="login-form">
+    <div class="form-group">
+      <label for="email">البريد الإلكتروني</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        [(ngModel)]="loginForm.email"
+        required
+        email
+        #email="ngModel"
+        [class.is-invalid]="email.invalid && email.touched"
+        class="form-control">
+      <div class="invalid-feedback" *ngIf="email.invalid && email.touched">
+        يرجى إدخال بريد إلكتروني صحيح
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">كلمة المرور</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        [(ngModel)]="loginForm.password"
+        required
+        #password="ngModel"
+        [class.is-invalid]="password.invalid && password.touched"
+        class="form-control">
+      <div class="invalid-feedback" *ngIf="password.invalid && password.touched">
+        يرجى إدخال كلمة المرور
+      </div>
+    </div>
+
+    <div class="form-feedback">
+      <div class="loading" *ngIf="isLoading">جاري تسجيل الدخول...</div>
+      <div class="error-message" *ngIf="isError">{{ errorMessage }}</div>
+    </div>
+
+    <button type="submit" [disabled]="!formRef.form.valid || isLoading" class="btn btn-primary">
+      <i class="bi" [class.bi-box-arrow-in-right]="!isLoading" [class.bi-hourglass-split]="isLoading"></i>
+      تسجيل الدخول
+    </button>
+  </form>
+</div>

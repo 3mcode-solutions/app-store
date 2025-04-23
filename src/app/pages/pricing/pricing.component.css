@@ -1,0 +1,206 @@
+.pricing {
+  padding: 80px 0;
+}
+
+.section-bg {
+  background-color: #f6f9ff;
+}
+
+.pricing-box {
+  padding: 40px 20px;
+  background: #fff;
+  text-align: center;
+  box-shadow: 0px 0 30px rgba(1, 41, 112, 0.08);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  transition: 0.3s;
+}
+
+.pricing-box h3 {
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #012970;
+}
+
+.pricing-box .price {
+  font-size: 36px;
+  color: #444444;
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
+}
+
+.pricing-box .price sup {
+  font-size: 20px;
+  top: -15px;
+  left: -3px;
+}
+
+.pricing-box .price span {
+  color: #bababa;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.pricing-box ul {
+  padding: 20px 0;
+  list-style: none;
+  color: #444444;
+  text-align: left;
+  line-height: 20px;
+}
+
+.pricing-box ul li {
+  padding: 10px 0 10px 25px;
+  position: relative;
+}
+
+.pricing-box ul i {
+  color: #4154f1;
+  font-size: 18px;
+  position: absolute;
+  left: 0;
+}
+
+.pricing-box ul .na {
+  color: #ccc;
+}
+
+.pricing-box ul .na i {
+  color: #ccc;
+}
+
+.pricing-box .btn-buy {
+  display: inline-block;
+  padding: 10px 40px;
+  border-radius: 4px;
+  color: #4154f1;
+  border: 1px solid #4154f1;
+  transition: none;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
+  transition: 0.3s;
+  text-decoration: none;
+}
+
+.pricing-box .btn-buy:hover {
+  background: #4154f1;
+  color: #fff;
+}
+
+.pricing-box.featured {
+  transform: scale(1.1);
+  box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+  z-index: 1;
+}
+
+.pricing-box.featured .btn-buy {
+  background: #4154f1;
+  color: #fff;
+}
+
+.pricing-box.featured .btn-buy:hover {
+  background: #2839c4;
+}
+
+/* FAQ Section */
+.pricing-faq {
+  padding: 60px 0;
+}
+
+.faq-list {
+  padding: 0;
+}
+
+.faq-item {
+  margin-bottom: 30px;
+  background: #fff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0px 0 30px rgba(1, 41, 112, 0.08);
+}
+
+.faq-item h4 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #012970;
+  margin-bottom: 15px;
+}
+
+.faq-item p {
+  color: #444444;
+  margin: 0;
+  font-size: 15px;
+}
+
+/* Call to Action */
+.pricing-cta {
+  padding: 60px 0;
+  background: linear-gradient(rgba(1, 41, 112, 0.9), rgba(1, 41, 112, 0.9)), url("../../../assets/img/hero-bg.png") fixed center center;
+  background-size: cover;
+  color: #fff;
+}
+
+.pricing-cta h3 {
+  color: #fff;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.pricing-cta p {
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 25px;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 30px;
+  border-radius: 4px;
+  color: #4154f1;
+  background: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.cta-btn i {
+  font-size: 16px;
+  margin-left: 5px;
+  transition: 0.3s;
+}
+
+.cta-btn:hover {
+  background: #e6e9ff;
+}
+
+.cta-btn:hover i {
+  transform: translateX(5px);
+}
+
+/* Section Header */
+.section-header {
+  text-align: center;
+  padding-bottom: 40px;
+}
+
+.section-header h2 {
+  font-size: 13px;
+  letter-spacing: 1px;
+  font-weight: 700;
+  margin: 0;
+  color: #4154f1;
+  text-transform: uppercase;
+}
+
+.section-header p {
+  margin: 10px 0 0 0;
+  padding: 0;
+  font-size: 38px;
+  line-height: 42px;
+  font-weight: 700;
+  color: #012970;
+}

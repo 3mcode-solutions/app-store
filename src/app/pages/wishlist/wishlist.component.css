@@ -1,0 +1,102 @@
+.wishlist-section {
+  padding: 60px 0;
+}
+
+.wishlist-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.empty-wishlist {
+  text-align: center;
+  padding: 60px 0;
+}
+
+.empty-wishlist i {
+  font-size: 64px;
+  color: #dc3545;
+  margin-bottom: 20px;
+}
+
+.empty-wishlist h3 {
+  color: var(--heading-color);
+  margin-bottom: 10px;
+}
+
+.empty-wishlist p {
+  color: #6c757d;
+  margin-bottom: 20px;
+}
+
+/* تصميم بطاقات المنتجات */
+.product-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  height: 100%;
+  overflow: hidden;
+}
+
+.product-img {
+  position: relative;
+  padding-top: 75%;
+  overflow: hidden;
+}
+
+.product-img img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-content {
+  padding: 20px;
+}
+
+.discount-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--accent-color);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.product-actions {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.product-actions .btn {
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.product-actions .btn i {
+  font-size: 18px;
+}
+
+@media (max-width: 768px) {
+  .product-actions {
+    grid-template-columns: 1fr auto auto;
+  }
+
+  .product-actions .btn {
+    padding: 6px 10px;
+  }
+
+  .product-actions .btn i {
+    font-size: 16px;
+  }
+}
