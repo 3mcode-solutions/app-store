@@ -1,0 +1,112 @@
+<div class="pagetitle">
+  <h1>الرسائل</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/admin">الرئيسية</a></li>
+      <li class="breadcrumb-item active">الرسائل</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">جميع الرسائل</h5>
+
+          <!-- أزرار الفلترة -->
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="btn-group" role="group" aria-label="فلترة الرسائل">
+              <button type="button" class="btn" [class.btn-primary]="activeFilter === 'all'" [class.btn-outline-primary]="activeFilter !== 'all'" (click)="applyFilter('all')">الكل</button>
+              <button type="button" class="btn" [class.btn-primary]="activeFilter === 'unread'" [class.btn-outline-primary]="activeFilter !== 'unread'" (click)="applyFilter('unread')">غير مقروءة</button>
+              <button type="button" class="btn" [class.btn-primary]="activeFilter === 'read'" [class.btn-outline-primary]="activeFilter !== 'read'" (click)="applyFilter('read')">مقروءة</button>
+            </div>
+
+            <div>
+              <button type="button" class="btn btn-outline-primary me-2" (click)="markAllAsRead()" *ngIf="hasUnreadMessages">تعيين الكل كمقروء</button>
+              <button type="button" class="btn btn-outline-danger" (click)="clearAllMessages()" *ngIf="messages.length > 0">حذف الكل</button>
+            </div>
+          </div>
+
+          <!-- قائمة الرسائل -->
+          <div class="messages-list">
+            <div *ngIf="filteredMessages.length === 0" class="text-center p-4">
+              <i class="bi bi-chat-left-text fs-1 text-muted"></i>
+              <p class="mt-2">لا توجد رسائل</p>
+            </div>
+
+            <div *ngFor="let message of filteredMessages" class="message-item" [class.unread]="!message.isRead">
+              <div class="message-avatar">
+                <img [src]="message.sender.avatar" alt="Avatar" class="rounded-circle">
+              </div>
+              <div class="message-content">
+                <div class="message-header">
+                  <h6>{{ message.sender.name }}</h6>
+                  <span class="message-time">{{ getTimeAgo(message.time) }}</span>
+                </div>
+                <p>{{ message.content }}</p>
+              </div>
+              <div class="message-actions">
+                <button type="button" class="btn btn-sm btn-outline-primary" (click)="markAsRead(message.id)" *ngIf="!message.isRead">
+                  <i class="bi bi-check-circle"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeMessage(message.id)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">إرسال رسالة جديدة</h5>
+
+          <form>
+            <div class="mb-3">
+              <label for="recipient" class="form-label">المستلم</label>
+              <select class="form-select" id="recipient" [(ngModel)]="newMessage.recipient" name="recipient">
+                <option value="">اختر المستلم</option>
+                <option *ngFor="let recipient of recipients" [value]="recipient.id">{{ recipient.name }}</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="messageContent" class="form-label">محتوى الرسالة</label>
+              <textarea class="form-control" id="messageContent" rows="5" [(ngModel)]="newMessage.content" name="content"></textarea>
+            </div>
+
+            <div class="text-center">
+              <button type="button" class="btn btn-primary" (click)="sendMessage()">إرسال</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">إحصائيات الرسائل</h5>
+
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span>إجمالي الرسائل:</span>
+            <span class="badge bg-primary">{{ messages.length }}</span>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span>الرسائل غير المقروءة:</span>
+            <span class="badge bg-danger">{{ unreadMessagesCount }}</span>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center">
+            <span>الرسائل المقروءة:</span>
+            <span class="badge bg-success">{{ readMessagesCount }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

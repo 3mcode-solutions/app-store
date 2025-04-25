@@ -1,0 +1,64 @@
+<div class="pagetitle">
+  <h1>الإشعارات</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/admin">الرئيسية</a></li>
+      <li class="breadcrumb-item active">الإشعارات</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">جميع الإشعارات</h5>
+
+          <!-- أزرار الفلترة -->
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="btn-group" role="group" aria-label="فلترة الإشعارات">
+              <button type="button" class="btn" [class.btn-primary]="activeFilter === 'all'" [class.btn-outline-primary]="activeFilter !== 'all'" (click)="applyFilter('all')">الكل</button>
+              <button type="button" class="btn" [class.btn-primary]="activeFilter === 'unread'" [class.btn-outline-primary]="activeFilter !== 'unread'" (click)="applyFilter('unread')">غير مقروءة</button>
+              <button type="button" class="btn" [class.btn-primary]="activeFilter === 'read'" [class.btn-outline-primary]="activeFilter !== 'read'" (click)="applyFilter('read')">مقروءة</button>
+            </div>
+
+            <div>
+              <button type="button" class="btn btn-outline-primary me-2" (click)="markAllAsRead()" *ngIf="hasUnreadNotifications">تعيين الكل كمقروء</button>
+              <button type="button" class="btn btn-outline-danger" (click)="clearAllNotifications()" *ngIf="notifications.length > 0">حذف الكل</button>
+            </div>
+          </div>
+
+          <!-- قائمة الإشعارات -->
+          <div class="notifications-list">
+            <div *ngIf="filteredNotifications.length === 0" class="text-center p-4">
+              <i class="bi bi-bell-slash fs-1 text-muted"></i>
+              <p class="mt-2">لا توجد إشعارات</p>
+            </div>
+
+            <div *ngFor="let notification of filteredNotifications" class="notification-item" [class.unread]="!notification.isRead">
+              <div class="notification-icon">
+                <i class="bi" [ngClass]="'bi-' + notification.icon + ' text-' + getNotificationColor(notification.type)"></i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-header">
+                  <h6>{{ notification.title }}</h6>
+                  <span class="notification-time">{{ getTimeAgo(notification.time) }}</span>
+                </div>
+                <p>{{ notification.message }}</p>
+              </div>
+              <div class="notification-actions">
+                <button type="button" class="btn btn-sm btn-outline-primary" (click)="markAsRead(notification.id)" *ngIf="!notification.isRead">
+                  <i class="bi bi-check-circle"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeNotification(notification.id)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

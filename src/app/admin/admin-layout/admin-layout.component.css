@@ -54,6 +54,7 @@ body.admin-panel.toggle-sidebar .main {
 html[dir="rtl"] body.admin-panel .sidebar {
   right: 0 !important;
   left: auto !important;
+  transition: all 0.3s !important;
 }
 
 html[dir="rtl"] body.admin-panel.toggle-sidebar .sidebar {
@@ -64,15 +65,388 @@ html[dir="rtl"] body.admin-panel.toggle-sidebar .sidebar {
 html[dir="rtl"] body.admin-panel .main {
   margin-right: 300px !important;
   margin-left: 0 !important;
+  transition: all 0.3s !important;
 }
 
 html[dir="rtl"] body.admin-panel.toggle-sidebar .main {
   margin-right: 0 !important;
 }
 
+/* Fix for sidebar toggle button */
+.toggle-sidebar-btn {
+  cursor: pointer !important;
+  font-size: 32px !important;
+  color: #012970 !important;
+  transition: all 0.3s !important;
+}
+
+.toggle-sidebar-btn:hover {
+  color: #4154f1 !important;
+}
+
 /* Ensure proper z-index for dropdowns */
 body.admin-panel .dropdown-menu {
   z-index: 1000 !important;
+}
+
+/* تنسيق شريط البحث */
+.search-bar {
+  position: fixed !important;
+  top: 60px !important;
+  left: 0 !important;
+  right: 0 !important;
+  padding: 20px !important;
+  box-shadow: 0px 0px 15px 0px rgba(1, 41, 112, 0.1) !important;
+  background: white !important;
+  z-index: 9999 !important;
+  transition: 0.3s !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  transform: translateY(-20px) !important;
+}
+
+@media (min-width: 1200px) {
+  .search-bar {
+    position: absolute !important;
+    top: 60px !important;
+    left: 20% !important;
+    right: 20% !important;
+    width: 60% !important;
+    margin: 0 auto !important;
+    border-radius: 8px !important;
+  }
+}
+
+.search-bar.search-bar-show {
+  visibility: visible !important;
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+.search-form {
+  position: relative !important;
+  width: 100% !important;
+}
+
+.search-form input {
+  border: 0 !important;
+  font-size: 14px !important;
+  color: #012970 !important;
+  border: 1px solid rgba(1, 41, 112, 0.2) !important;
+  padding: 10px 38px 10px 15px !important;
+  border-radius: 4px !important;
+  transition: 0.3s !important;
+  width: 100% !important;
+}
+
+.search-form input:focus {
+  outline: none !important;
+  box-shadow: 0 0 10px 0 rgba(1, 41, 112, 0.15) !important;
+  border: 1px solid rgba(1, 41, 112, 0.3) !important;
+}
+
+.search-form button[type="submit"] {
+  position: absolute !important;
+  right: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  border: 0 !important;
+  background: none !important;
+  font-size: 16px !important;
+  padding: 0 15px !important;
+  margin-right: 5px !important;
+  color: #012970 !important;
+  transition: 0.3s !important;
+}
+
+.search-form button[type="submit"]:hover {
+  color: #4154f1 !important;
+}
+
+.search-close {
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  border: 0 !important;
+  background: none !important;
+  font-size: 16px !important;
+  padding: 0 15px !important;
+  margin-left: 5px !important;
+  color: #012970 !important;
+  transition: 0.3s !important;
+  display: none !important;
+}
+
+.search-bar-show .search-close {
+  display: block !important;
+}
+
+.search-close:hover {
+  color: #f44336 !important;
+}
+
+/* تنسيق نتائج البحث */
+.search-results {
+  margin-top: 20px !important;
+  background: white !important;
+  border-radius: 4px !important;
+  box-shadow: 0 0 10px rgba(1, 41, 112, 0.1) !important;
+  max-height: 400px !important;
+  overflow-y: auto !important;
+}
+
+.search-results-container {
+  padding: 15px !important;
+}
+
+.search-results-title {
+  color: #012970 !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  margin-bottom: 15px !important;
+}
+
+.search-results-list {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.search-results-list li {
+  display: flex !important;
+  align-items: center !important;
+  padding: 10px !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  transition: 0.3s !important;
+}
+
+.search-results-list li:hover {
+  background: #f6f9ff !important;
+}
+
+.search-result-icon {
+  width: 40px !important;
+  height: 40px !important;
+  background: #f6f9ff !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-left: 15px !important;
+  color: #4154f1 !important;
+  font-size: 18px !important;
+}
+
+.search-result-content h6 {
+  color: #012970 !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  margin: 0 !important;
+}
+
+.search-result-content p {
+  color: #899bbd !important;
+  font-size: 12px !important;
+  margin: 5px 0 0 0 !important;
+}
+
+/* تنسيق رسالة عدم وجود نتائج */
+.no-results {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 20px !important;
+  text-align: center !important;
+}
+
+.no-results i {
+  font-size: 40px !important;
+  color: #899bbd !important;
+  margin-bottom: 10px !important;
+}
+
+.no-results p {
+  color: #012970 !important;
+  font-size: 14px !important;
+  margin: 0 !important;
+}
+
+/* تنسيق القوائم المنسدلة */
+.dropdown-menu {
+  border: 0 !important;
+  box-shadow: 0 5px 30px 0 rgba(82, 63, 105, 0.2) !important;
+  border-radius: 4px !important;
+  padding: 0 !important;
+  animation: dropdown-animate 0.2s !important;
+  margin: 0 !important;
+  z-index: 9999 !important;
+}
+
+.dropdown-menu.show {
+  display: block !important;
+}
+
+@keyframes dropdown-animate {
+  0% {
+    opacity: 0 !important;
+    transform: translateY(15px) !important;
+  }
+  100% {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+}
+
+.dropdown-menu .dropdown-header,
+.dropdown-menu .dropdown-footer {
+  text-align: center !important;
+  font-size: 15px !important;
+  padding: 10px 25px !important;
+}
+
+.dropdown-menu .dropdown-footer a {
+  color: #444444 !important;
+  text-decoration: underline !important;
+}
+
+.dropdown-menu .dropdown-footer a:hover {
+  text-decoration: none !important;
+}
+
+.dropdown-menu .dropdown-divider {
+  color: #a5c5fe !important;
+  margin: 0 !important;
+}
+
+.dropdown-menu .dropdown-item {
+  font-size: 14px !important;
+  padding: 10px 15px !important;
+  transition: 0.3s !important;
+}
+
+.dropdown-menu .dropdown-item i {
+  margin-left: 10px !important;
+  font-size: 18px !important;
+  line-height: 0 !important;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background-color: #f6f9ff !important;
+}
+
+/* تنسيق قائمة الإشعارات */
+.notifications {
+  min-width: 280px !important;
+}
+
+.notifications a {
+  text-decoration: none !important;
+}
+
+.notifications .notification-item {
+  display: flex !important;
+  align-items: center !important;
+  padding: 15px 10px !important;
+  transition: 0.3s !important;
+}
+
+.notifications .notification-item i {
+  margin: 0 15px 0 10px !important;
+  font-size: 24px !important;
+}
+
+.notifications .notification-item h4 {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  margin-bottom: 5px !important;
+}
+
+.notifications .notification-item p {
+  font-size: 13px !important;
+  margin-bottom: 3px !important;
+  color: #919191 !important;
+}
+
+.notifications .notification-item:hover {
+  background-color: #f6f9ff !important;
+}
+
+.notifications .notification-item.unread {
+  background-color: #f0f7ff !important;
+  border-right: 3px solid #4154f1 !important;
+}
+
+.notifications .notification-item.unread:hover {
+  background-color: #e6f0ff !important;
+}
+
+/* تنسيق قائمة الرسائل */
+.messages {
+  min-width: 280px !important;
+}
+
+.messages .message-item {
+  padding: 15px 10px !important;
+  transition: 0.3s !important;
+}
+
+.messages .message-item a {
+  display: flex !important;
+  text-decoration: none !important;
+}
+
+.messages .message-item img {
+  margin: 0 10px 0 0 !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+}
+
+.messages .message-item h4 {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  margin-bottom: 5px !important;
+  color: #444444 !important;
+}
+
+.messages .message-item p {
+  font-size: 13px !important;
+  margin-bottom: 3px !important;
+  color: #919191 !important;
+}
+
+.messages .message-item:hover {
+  background-color: #f6f9ff !important;
+}
+
+.messages .message-item.unread {
+  background-color: #f0f7ff !important;
+  border-right: 3px solid #4154f1 !important;
+}
+
+.messages .message-item.unread:hover {
+  background-color: #e6f0ff !important;
+}
+
+/* تنسيق قائمة الملف الشخصي */
+.profile {
+  min-width: 240px !important;
+  padding-bottom: 0 !important;
+  top: 8px !important;
+}
+
+.profile .dropdown-header h6 {
+  font-size: 18px !important;
+  margin-bottom: 0 !important;
+  font-weight: 600 !important;
+  color: #444444 !important;
+}
+
+.profile .dropdown-header span {
+  font-size: 14px !important;
 }
 
 /* Fix for mobile view */

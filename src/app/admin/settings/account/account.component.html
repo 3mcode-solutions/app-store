@@ -1,0 +1,120 @@
+<div class="pagetitle">
+  <h1>إعدادات الحساب</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/admin">الرئيسية</a></li>
+      <li class="breadcrumb-item">الإعدادات</li>
+      <li class="breadcrumb-item active">إعدادات الحساب</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">إعدادات الإشعارات</h5>
+
+          <form>
+            <h6>إعدادات البريد الإلكتروني</h6>
+            <div class="form-check form-switch mb-3">
+              <input class="form-check-input" type="checkbox" id="emailNotifications" [(ngModel)]="accountSettings.emailNotifications" name="emailNotifications">
+              <label class="form-check-label" for="emailNotifications">تفعيل إشعارات البريد الإلكتروني</label>
+            </div>
+
+            <h6>إعدادات الرسائل النصية</h6>
+            <div class="form-check form-switch mb-3">
+              <input class="form-check-input" type="checkbox" id="smsNotifications" [(ngModel)]="accountSettings.smsNotifications" name="smsNotifications">
+              <label class="form-check-label" for="smsNotifications">تفعيل إشعارات الرسائل النصية</label>
+            </div>
+
+            <h6>أنواع الإشعارات</h6>
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input" type="checkbox" id="orderNotifications" [(ngModel)]="accountSettings.orderNotifications" name="orderNotifications">
+              <label class="form-check-label" for="orderNotifications">إشعارات الطلبات</label>
+            </div>
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input" type="checkbox" id="productNotifications" [(ngModel)]="accountSettings.productNotifications" name="productNotifications">
+              <label class="form-check-label" for="productNotifications">إشعارات المنتجات</label>
+            </div>
+            <div class="form-check form-switch mb-3">
+              <input class="form-check-input" type="checkbox" id="marketingNotifications" [(ngModel)]="accountSettings.marketingNotifications" name="marketingNotifications">
+              <label class="form-check-label" for="marketingNotifications">إشعارات التسويق</label>
+            </div>
+
+            <div class="text-center">
+              <button type="button" class="btn btn-primary" (click)="saveAccountSettings()">حفظ الإعدادات</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">إعدادات الأمان</h5>
+
+          <form>
+            <h6>المصادقة الثنائية</h6>
+            <div class="form-check form-switch mb-3">
+              <input class="form-check-input" type="checkbox" id="twoFactorAuth" [(ngModel)]="accountSettings.twoFactorAuth" name="twoFactorAuth">
+              <label class="form-check-label" for="twoFactorAuth">تفعيل المصادقة الثنائية</label>
+            </div>
+
+            <div class="mb-3" *ngIf="!accountSettings.twoFactorAuth">
+              <p>المصادقة الثنائية تضيف طبقة إضافية من الأمان لحسابك. عند تفعيلها، ستحتاج إلى إدخال رمز تحقق من تطبيق المصادقة بالإضافة إلى كلمة المرور عند تسجيل الدخول.</p>
+              <button type="button" class="btn btn-primary" (click)="enableTwoFactorAuth()">تفعيل المصادقة الثنائية</button>
+            </div>
+
+            <div class="mb-3" *ngIf="accountSettings.twoFactorAuth">
+              <p>المصادقة الثنائية مفعلة حاليًا. يمكنك تعطيلها في أي وقت، لكن هذا سيقلل من مستوى أمان حسابك.</p>
+              <button type="button" class="btn btn-danger" (click)="disableTwoFactorAuth()">تعطيل المصادقة الثنائية</button>
+            </div>
+
+            <h6>تفضيلات العرض</h6>
+            <div class="mb-3">
+              <label for="language" class="form-label">اللغة</label>
+              <select class="form-select" id="language" [(ngModel)]="accountSettings.language" name="language">
+                <option value="ar">العربية</option>
+                <option value="en">الإنجليزية</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="timezone" class="form-label">المنطقة الزمنية</label>
+              <select class="form-select" id="timezone" [(ngModel)]="accountSettings.timezone" name="timezone">
+                <option value="Asia/Riyadh">الرياض (GMT+3)</option>
+                <option value="Asia/Dubai">دبي (GMT+4)</option>
+                <option value="Asia/Cairo">القاهرة (GMT+2)</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="dateFormat" class="form-label">تنسيق التاريخ</label>
+              <select class="form-select" id="dateFormat" [(ngModel)]="accountSettings.dateFormat" name="dateFormat">
+                <option value="dd/MM/yyyy">يوم/شهر/سنة (31/12/2023)</option>
+                <option value="MM/dd/yyyy">شهر/يوم/سنة (12/31/2023)</option>
+                <option value="yyyy-MM-dd">سنة-شهر-يوم (2023-12-31)</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="theme" class="form-label">السمة</label>
+              <select class="form-select" id="theme" [(ngModel)]="accountSettings.theme" name="theme">
+                <option value="light">فاتح</option>
+                <option value="dark">داكن</option>
+                <option value="system">حسب النظام</option>
+              </select>
+            </div>
+
+            <div class="text-center">
+              <button type="button" class="btn btn-primary" (click)="saveAccountSettings()">حفظ الإعدادات</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

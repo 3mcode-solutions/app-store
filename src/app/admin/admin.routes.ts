@@ -121,6 +121,39 @@ export const ADMIN_ROUTES: Routes = [
         path: 'settings/payment',
         loadComponent: () => import('./settings/payment/payment.component')
           .then(m => m.PaymentComponent)
+      },
+      {
+        path: 'settings/account',
+        loadComponent: () => import('./settings/account/account.component')
+          .then(m => m.AccountSettingsComponent)
+      },
+
+      // الملف الشخصي
+      {
+        path: 'profile',
+        loadComponent: () => import('./profile/profile.component')
+          .then(m => m.ProfileComponent)
+      },
+
+      // المساعدة
+      {
+        path: 'help',
+        loadComponent: () => import('./help/help.component')
+          .then(m => m.HelpComponent)
+      },
+
+      // الإشعارات
+      {
+        path: 'notifications',
+        loadComponent: () => import('./notifications/notifications.component')
+          .then(m => m.NotificationsComponent)
+      },
+
+      // الرسائل
+      {
+        path: 'messages',
+        loadComponent: () => import('./messages/messages.component')
+          .then(m => m.MessagesComponent)
       }
     ]
   }
