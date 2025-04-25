@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   loginForm = {
@@ -15,6 +16,9 @@ export class LoginComponent {
     password: ''
   };
 
+  // إضافة المتغيرات الجديدة
+  showPassword = false;
+  rememberMe = false;
   isLoading = false;
   isError = false;
   errorMessage = '';
@@ -53,6 +57,16 @@ export class LoginComponent {
     return emailRegex.test(email);
   }
 
+  /**
+   * إظهار/إخفاء كلمة المرور
+   */
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  /**
+   * عرض رسالة خطأ
+   */
   private showError(message: string) {
     this.isError = true;
     this.errorMessage = message;

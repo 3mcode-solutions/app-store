@@ -20,11 +20,13 @@ export class CategoriesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.categories = this.categoryService.getCategories();
+    this.categoryService.getCategories().subscribe(categories => {
+      this.categories = categories;
+    });
   }
 
   navigateToProducts(categoryId: number): void {
-    this.categoryService.setSelectedCategory(categoryId);
+    this.categoryService.setSelectedCategory(categoryId.toString());
     this.router.navigate(['/products'], {
       queryParams: { category: categoryId }
     });

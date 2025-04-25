@@ -201,15 +201,50 @@ export class ProductsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      const categoryId = params['category'];
-      if (categoryId) {
-        this.selectedCategory = categoryId;
-        this.filterProducts();
+    // استمع للتغييرات في المسار
+    this.route.data.subscribe(data => {
+      if (data['category']) {
+        // إذا كان هناك فئة محددة في بيانات المسار
+        this.filterByCategory(data['category']);
       } else {
-        this.products = [...this.allProducts];
+        // استمع لمعلمات الاستعلام (للتوافق مع الكود القديم)
+        this.route.queryParams.subscribe(params => {
+          const categoryId = params['category'];
+          if (categoryId) {
+            this.selectedCategory = categoryId;
+            this.filterProducts();
+          } else {
+            this.products = [...this.allProducts];
+          }
+        });
       }
     });
+  }
+
+  /**
+   * تصفية المنتجات حسب الفئة
+   */
+  filterByCategory(categoryName: string): void {
+    // تعيين الفئة المحددة بناءً على اسم الفئة
+    switch (categoryName) {
+      case 'electronics':
+        this.selectedCategory = '1';
+        break;
+      case 'clothing':
+        this.selectedCategory = '2';
+        break;
+      case 'furniture':
+        this.selectedCategory = '3';
+        break;
+      case 'sports':
+        this.selectedCategory = '4';
+        break;
+      default:
+        this.selectedCategory = '';
+    }
+
+    // تطبيق التصفية
+    this.filterProducts();
   }
 
   filterProducts(): void {

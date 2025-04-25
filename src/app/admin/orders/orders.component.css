@@ -1,4 +1,248 @@
-/* هذا ملف مؤقت سيتم استبداله بأنماط NiceAdmin */
-.orders-container {
-  padding: 20px;
+/* أنماط عامة */
+.card {
+  margin-bottom: 30px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0 30px rgba(1, 41, 112, 0.1);
+}
+
+.card-title {
+  padding: 20px 0 15px 0;
+  font-size: 18px;
+  font-weight: 500;
+  color: #012970;
+  font-family: "Poppins", sans-serif;
+}
+
+.card-title span {
+  color: #899bbd;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+/* أنماط بطاقات الإحصائيات */
+.info-card {
+  padding-bottom: 10px;
+}
+
+.info-card h6 {
+  font-size: 28px;
+  color: #012970;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+}
+
+.card-icon {
+  font-size: 32px;
+  line-height: 0;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+
+.sales-card .card-icon {
+  color: #4154f1;
+  background: #f6f6fe;
+}
+
+.revenue-card .card-icon {
+  color: #2eca6a;
+  background: #e0f8e9;
+}
+
+.customers-card .card-icon {
+  color: #ff771d;
+  background: #ffecdf;
+}
+
+/* أنماط جدول الطلبات */
+.table-responsive {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: #212529;
+  vertical-align: middle;
+  border-color: #ebeef4;
+}
+
+.table th {
+  font-weight: 600;
+  color: #012970;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* أنماط صورة المنتج المصغرة */
+.product-thumbnail {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+/* أنماط أزرار الإجراءات */
+.btn-group .btn {
+  margin-right: 5px;
+}
+
+.btn-group .btn:last-child {
+  margin-right: 0;
+}
+
+.btn-primary {
+  background-color: #4154f1;
+  border-color: #4154f1;
+}
+
+.btn-primary:hover {
+  background-color: #3a4bd8;
+  border-color: #3a4bd8;
+}
+
+.btn-success {
+  background-color: #2eca6a;
+  border-color: #2eca6a;
+}
+
+.btn-success:hover {
+  background-color: #28b35d;
+  border-color: #28b35d;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+/* أنماط ترقيم الصفحات */
+.pagination {
+  margin-bottom: 0;
+}
+
+.page-item.active .page-link {
+  background-color: #4154f1;
+  border-color: #4154f1;
+}
+
+.page-link {
+  color: #4154f1;
+}
+
+.page-link:hover {
+  color: #3a4bd8;
+}
+
+/* أنماط النوافذ المنبثقة */
+.modal-header {
+  border-bottom: 1px solid #dee2e6;
+  background-color: #f8f9fa;
+}
+
+.modal-title {
+  color: #012970;
+  font-weight: 600;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+}
+
+/* أنماط تفاصيل الطلب */
+.order-details h6.fw-bold {
+  color: #012970;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ebeef4;
+  padding-bottom: 5px;
+}
+
+.order-details p {
+  margin-bottom: 8px;
+}
+
+.order-details strong {
+  font-weight: 600;
+  color: #012970;
+}
+
+/* أنماط أدوات البحث والتصفية */
+.input-group {
+  margin-bottom: 0;
+}
+
+.form-select, .form-control {
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-select:focus, .form-control:focus {
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* أنماط القائمة المنسدلة */
+.filter .icon {
+  font-size: 20px;
+  color: #012970;
+}
+
+.dropdown-menu {
+  border: 0;
+  padding: 10px 0;
+  box-shadow: 0 5px 30px 0 rgba(82, 63, 105, 0.2);
+}
+
+.dropdown-menu .dropdown-header {
+  color: #6c757d;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 25px;
+}
+
+.dropdown-menu .dropdown-item {
+  padding: 8px 25px;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background-color: #f6f9ff;
+  color: #4154f1;
+}
+
+.dropdown-menu .dropdown-item i {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+/* أنماط الشارات */
+.badge {
+  font-weight: 600;
+  padding: 5px 8px;
+  text-transform: uppercase;
+  font-size: 11px;
+  border-radius: 3px;
 }

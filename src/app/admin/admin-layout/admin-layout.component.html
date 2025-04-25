@@ -1,0 +1,388 @@
+<!-- ======= Header ======= -->
+<header id="header" class="header fixed-top d-flex align-items-center">
+
+  <div class="d-flex align-items-center justify-content-between">
+    <a href="/admin" class="logo d-flex align-items-center">
+      <img src="assets/admin/img/logo.png" alt="">
+      <span class="d-none d-lg-block">لوحة التحكم</span>
+    </a>
+    <i class="bi bi-list toggle-sidebar-btn" (click)="toggleSidebar()"></i>
+  </div><!-- End Logo -->
+
+  <div class="search-bar">
+    <form class="search-form d-flex align-items-center" method="POST" action="#">
+      <input type="text" name="query" placeholder="بحث" title="أدخل كلمة البحث">
+      <button type="submit" title="بحث"><i class="bi bi-search"></i></button>
+    </form>
+  </div><!-- End Search Bar -->
+
+  <nav class="header-nav ms-auto">
+    <ul class="d-flex align-items-center">
+
+      <li class="nav-item d-block d-lg-none">
+        <a class="nav-link nav-icon search-bar-toggle " href="#">
+          <i class="bi bi-search"></i>
+        </a>
+      </li><!-- End Search Icon-->
+
+      <li class="nav-item dropdown">
+        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+          <i class="bi bi-bell"></i>
+          <span class="badge bg-primary badge-number">4</span>
+        </a><!-- End Notification Icon -->
+
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+          <li class="dropdown-header">
+            لديك 4 إشعارات جديدة
+            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">عرض الكل</span></a>
+          </li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          <li class="notification-item">
+            <i class="bi bi-exclamation-circle text-warning"></i>
+            <div>
+              <h4>طلب جديد</h4>
+              <p>تم استلام طلب جديد بقيمة 1200 ريال</p>
+              <p>منذ 30 دقيقة</p>
+            </div>
+          </li>
+
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          <li class="notification-item">
+            <i class="bi bi-x-circle text-danger"></i>
+            <div>
+              <h4>طلب ملغي</h4>
+              <p>تم إلغاء الطلب رقم #2457</p>
+              <p>منذ ساعتين</p>
+            </div>
+          </li>
+
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          <li class="notification-item">
+            <i class="bi bi-check-circle text-success"></i>
+            <div>
+              <h4>طلب مكتمل</h4>
+              <p>تم تسليم الطلب رقم #2391</p>
+              <p>منذ 3 ساعات</p>
+            </div>
+          </li>
+
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          <li class="notification-item">
+            <i class="bi bi-info-circle text-primary"></i>
+            <div>
+              <h4>تحديث النظام</h4>
+              <p>تم تحديث النظام إلى الإصدار الجديد</p>
+              <p>منذ 4 ساعات</p>
+            </div>
+          </li>
+
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+          <li class="dropdown-footer">
+            <a href="#">عرض جميع الإشعارات</a>
+          </li>
+
+        </ul><!-- End Notification Dropdown Items -->
+
+      </li><!-- End Notification Nav -->
+
+      <li class="nav-item dropdown">
+        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+          <i class="bi bi-chat-left-text"></i>
+          <span class="badge bg-success badge-number">3</span>
+        </a><!-- End Messages Icon -->
+
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
+          <li class="dropdown-header">
+            لديك 3 رسائل جديدة
+            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">عرض الكل</span></a>
+          </li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          <li class="message-item">
+            <a href="#">
+              <img src="assets/admin/img/messages-1.jpg" alt="" class="rounded-circle">
+              <div>
+                <h4>أحمد محمد</h4>
+                <p>هل يمكنني الحصول على معلومات حول المنتج؟</p>
+                <p>منذ 4 ساعات</p>
+              </div>
+            </a>
+          </li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          <li class="message-item">
+            <a href="#">
+              <img src="assets/admin/img/messages-2.jpg" alt="" class="rounded-circle">
+              <div>
+                <h4>سارة أحمد</h4>
+                <p>متى سيتم شحن طلبي؟</p>
+                <p>منذ 6 ساعات</p>
+              </div>
+            </a>
+          </li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          <li class="message-item">
+            <a href="#">
+              <img src="assets/admin/img/messages-3.jpg" alt="" class="rounded-circle">
+              <div>
+                <h4>محمد علي</h4>
+                <p>أريد إلغاء طلبي، كيف يمكنني ذلك؟</p>
+                <p>منذ 8 ساعات</p>
+              </div>
+            </a>
+          </li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          <li class="dropdown-footer">
+            <a href="#">عرض جميع الرسائل</a>
+          </li>
+
+        </ul><!-- End Messages Dropdown Items -->
+
+      </li><!-- End Messages Nav -->
+
+      <li class="nav-item dropdown pe-3">
+
+        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+          <img src="assets/admin/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+          <span class="d-none d-md-block dropdown-toggle ps-2">المدير</span>
+        </a><!-- End Profile Iamge Icon -->
+
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+          <li class="dropdown-header">
+            <h6>المدير</h6>
+            <span>مدير الموقع</span>
+          </li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+              <i class="bi bi-person"></i>
+              <span>الملف الشخصي</span>
+            </a>
+          </li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+              <i class="bi bi-gear"></i>
+              <span>إعدادات الحساب</span>
+            </a>
+          </li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
+              <i class="bi bi-question-circle"></i>
+              <span>تحتاج مساعدة؟</span>
+            </a>
+          </li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="#">
+              <i class="bi bi-box-arrow-right"></i>
+              <span>تسجيل الخروج</span>
+            </a>
+          </li>
+
+        </ul><!-- End Profile Dropdown Items -->
+      </li><!-- End Profile Nav -->
+
+    </ul>
+  </nav><!-- End Icons Navigation -->
+
+</header><!-- End Header -->
+
+<!-- ======= Sidebar ======= -->
+<aside id="sidebar" class="sidebar">
+
+  <ul class="sidebar-nav" id="sidebar-nav">
+
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/admin/dashboard" routerLinkActive="active">
+        <i class="bi bi-grid"></i>
+        <span>لوحة التحكم</span>
+      </a>
+    </li><!-- End Dashboard Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#products-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-box"></i><span>المنتجات</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="products-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+          <a routerLink="/admin/products" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>قائمة المنتجات</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/categories" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>التصنيفات</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Products Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#orders-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-cart"></i><span>الطلبات</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="orders-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+          <a routerLink="/admin/orders/pending" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>الطلبات الجديدة</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/orders/shipping" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>طلبات قيد الشحن</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/orders/all" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>جميع الطلبات</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Orders Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#customers-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-people"></i><span>العملاء</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="customers-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+          <a routerLink="/admin/customers" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>قائمة العملاء</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/customers/groups" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>مجموعات العملاء</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Customers Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#marketing-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-megaphone"></i><span>التسويق</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="marketing-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+          <a routerLink="/admin/marketing/coupons" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>كوبونات الخصم</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/marketing/promotions" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>العروض الترويجية</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/marketing/newsletter" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>النشرة البريدية</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Marketing Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#reports-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-bar-chart"></i><span>التقارير</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="reports-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+          <a routerLink="/admin/reports/sales" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>تقارير المبيعات</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/reports/products" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>تقارير المنتجات</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/reports/customers" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>تقارير العملاء</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Reports Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#settings-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-gear"></i><span>الإعدادات</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="settings-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+          <a routerLink="/admin/settings/general" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>الإعدادات العامة</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/settings/shipping" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>إعدادات الشحن</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/settings/payment" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>إعدادات الدفع</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/settings/users" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>المستخدمين والصلاحيات</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Settings Nav -->
+
+  </ul>
+
+</aside><!-- End Sidebar-->
+
+<main id="main" class="main">
+  <router-outlet></router-outlet>
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<footer id="footer" class="footer">
+  <div class="copyright">
+    &copy; حقوق النشر <strong><span>متجر الإلكترونيات</span></strong>. جميع الحقوق محفوظة
+  </div>
+</footer><!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

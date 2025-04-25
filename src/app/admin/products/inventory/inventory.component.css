@@ -1,0 +1,126 @@
+/* أنماط عامة */
+.card {
+  margin-bottom: 30px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0 30px rgba(1, 41, 112, 0.1);
+}
+
+.card-title {
+  padding: 20px 0 15px 0;
+  font-size: 18px;
+  font-weight: 500;
+  color: #012970;
+  font-family: "Poppins", sans-serif;
+}
+
+/* أنماط بطاقات الإحصائيات */
+.info-card {
+  padding-bottom: 10px;
+}
+
+.info-card h6 {
+  font-size: 28px;
+  color: #012970;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+}
+
+.card-icon {
+  font-size: 32px;
+  line-height: 0;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sales-card .card-icon {
+  color: #4154f1;
+  background: #f6f6fe;
+}
+
+.revenue-card .card-icon {
+  color: #2eca6a;
+  background: #e0f8e9;
+}
+
+.customers-card .card-icon {
+  color: #ff771d;
+  background: #ffecdf;
+}
+
+/* أنماط الجدول */
+.table-responsive {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: #212529;
+  vertical-align: middle;
+  border-color: #ebeef4;
+}
+
+.table th {
+  font-weight: 600;
+  color: #012970;
+}
+
+.product-thumbnail {
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+/* أنماط الأزرار */
+.btn-primary {
+  background-color: #4154f1;
+  border-color: #4154f1;
+}
+
+.btn-primary:hover {
+  background-color: #3a4bd8;
+  border-color: #3a4bd8;
+}
+
+.btn-success {
+  background-color: #2eca6a;
+  border-color: #2eca6a;
+}
+
+.btn-success:hover {
+  background-color: #28b35d;
+  border-color: #28b35d;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+  border-color: #c82333;
+}
+
+/* أنماط ترقيم الصفحات */
+.pagination {
+  margin-bottom: 0;
+}
+
+.page-link {
+  color: #4154f1;
+}
+
+.page-item.active .page-link {
+  background-color: #4154f1;
+  border-color: #4154f1;
+}

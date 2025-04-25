@@ -1,0 +1,207 @@
+<div class="pagetitle">
+  <h1>تقرير المبيعات</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/admin">الرئيسية</a></li>
+      <li class="breadcrumb-item">التقارير</li>
+      <li class="breadcrumb-item active">تقرير المبيعات</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-12">
+
+      <!-- أدوات التقرير -->
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">إعدادات التقرير</h5>
+          
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label for="dateRange" class="form-label">نطاق التاريخ</label>
+              <select class="form-select" id="dateRange" [(ngModel)]="dateRange" (change)="onDateRangeChange()">
+                <option value="day">اليوم</option>
+                <option value="week">الأسبوع الحالي</option>
+                <option value="month">الشهر الحالي</option>
+                <option value="year">السنة الحالية</option>
+                <option value="custom">مخصص</option>
+              </select>
+            </div>
+            
+            <div class="col-md-3 mb-3" *ngIf="dateRange === 'custom'">
+              <label for="startDate" class="form-label">تاريخ البداية</label>
+              <input type="date" class="form-control" id="startDate" [(ngModel)]="startDate">
+            </div>
+            
+            <div class="col-md-3 mb-3" *ngIf="dateRange === 'custom'">
+              <label for="endDate" class="form-label">تاريخ النهاية</label>
+              <input type="date" class="form-control" id="endDate" [(ngModel)]="endDate">
+            </div>
+            
+            <div class="col-md-2 mb-3" [ngClass]="{'offset-md-5': dateRange !== 'custom', 'offset-md-0': dateRange === 'custom'}">
+              <label class="form-label d-block">&nbsp;</label>
+              <button class="btn btn-primary w-100" (click)="loadSalesData()" [disabled]="isLoading">
+                <i class="bi bi-search me-1"></i> عرض التقرير
+              </button>
+            </div>
+          </div>
+          
+          <div class="row mt-2">
+            <div class="col-md-12 text-end">
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-primary" (click)="exportCSV()">
+                  <i class="bi bi-file-earmark-excel me-1"></i> تصدير CSV
+                </button>
+                <button type="button" class="btn btn-outline-primary" (click)="exportPDF()">
+                  <i class="bi bi-file-earmark-pdf me-1"></i> تصدير PDF
+                </button>
+                <button type="button" class="btn btn-outline-primary" (click)="printReport()">
+                  <i class="bi bi-printer me-1"></i> طباعة
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ملخص المبيعات -->
+      <div class="row" *ngIf="salesData">
+        <!-- إجمالي المبيعات -->
+        <div class="col-xxl-4 col-md-4">
+          <div class="card info-card sales-card">
+            <div class="card-body">
+              <h5 class="card-title">إجمالي المبيعات</h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-currency-dollar"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{ salesData.totalSales | currency:'SAR':'symbol':'1.0-0' }}</h6>
+                  <span [ngClass]="salesData.salesGrowth >= 0 ? 'text-success' : 'text-danger'">
+                    <i [ngClass]="salesData.salesGrowth >= 0 ? 'bi bi-arrow-up' : 'bi bi-arrow-down'"></i>
+                    {{ salesData.salesGrowth | number:'1.0-0' }}%
+                  </span>
+                  <span class="text-muted small pt-2 ps-1">مقارنة بالفترة السابقة</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- إجمالي الطلبات -->
+        <div class="col-xxl-4 col-md-4">
+          <div class="card info-card revenue-card">
+            <div class="card-body">
+              <h5 class="card-title">إجمالي الطلبات</h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-cart"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{ salesData.totalOrders }}</h6>
+                  <span [ngClass]="salesData.ordersGrowth >= 0 ? 'text-success' : 'text-danger'">
+                    <i [ngClass]="salesData.ordersGrowth >= 0 ? 'bi bi-arrow-up' : 'bi bi-arrow-down'"></i>
+                    {{ salesData.ordersGrowth | number:'1.0-0' }}%
+                  </span>
+                  <span class="text-muted small pt-2 ps-1">مقارنة بالفترة السابقة</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- متوسط قيمة الطلب -->
+        <div class="col-xxl-4 col-md-4">
+          <div class="card info-card customers-card">
+            <div class="card-body">
+              <h5 class="card-title">متوسط قيمة الطلب</h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-receipt"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{ salesData.averageOrderValue | currency:'SAR':'symbol':'1.0-0' }}</h6>
+                  <span [ngClass]="salesData.aovGrowth >= 0 ? 'text-success' : 'text-danger'">
+                    <i [ngClass]="salesData.aovGrowth >= 0 ? 'bi bi-arrow-up' : 'bi bi-arrow-down'"></i>
+                    {{ salesData.aovGrowth | number:'1.0-0' }}%
+                  </span>
+                  <span class="text-muted small pt-2 ps-1">مقارنة بالفترة السابقة</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- رسم بياني المبيعات -->
+      <div class="card" *ngIf="salesData">
+        <div class="card-body">
+          <h5 class="card-title">تحليل المبيعات</h5>
+          
+          <div class="chart-container">
+            <canvas #salesChart></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- المنتجات الأكثر مبيعاً -->
+      <div class="row" *ngIf="salesData">
+        <div class="col-lg-8">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">المنتجات الأكثر مبيعاً</h5>
+              
+              <div class="chart-container">
+                <canvas #productChart></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">تفاصيل المنتجات الأكثر مبيعاً</h5>
+              
+              <div class="activity">
+                <div class="activity-item d-flex" *ngFor="let product of salesData.topProducts; let i = index">
+                  <div class="activity-label">{{ i + 1 }}</div>
+                  <i class="bi bi-circle-fill activity-badge" [ngClass]="'text-' + getProductColor(i)"></i>
+                  <div class="activity-content">
+                    <strong>{{ product.name }}</strong>
+                    <div class="text-muted small">
+                      المبيعات: {{ product.sales | currency:'SAR':'symbol':'1.0-0' }} | 
+                      الكمية: {{ product.quantity }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- رسالة التحميل -->
+      <div class="card" *ngIf="isLoading">
+        <div class="card-body text-center p-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">جاري التحميل...</span>
+          </div>
+          <p class="mt-3">جاري تحميل بيانات التقرير...</p>
+        </div>
+      </div>
+
+      <!-- رسالة عدم وجود بيانات -->
+      <div class="card" *ngIf="!isLoading && !salesData">
+        <div class="card-body text-center p-5">
+          <i class="bi bi-exclamation-circle text-warning" style="font-size: 3rem;"></i>
+          <h5 class="mt-3">لا توجد بيانات متاحة</h5>
+          <p>يرجى تحديد نطاق تاريخ آخر أو التأكد من وجود مبيعات في النطاق المحدد.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

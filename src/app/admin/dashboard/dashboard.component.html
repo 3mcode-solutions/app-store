@@ -1,5 +1,361 @@
-<!-- هذا ملف مؤقت سيتم استبداله بمحتوى NiceAdmin -->
-<div class="dashboard-container">
-  <h1>لوحة التحكم</h1>
-  <p>سيتم إضافة محتوى لوحة التحكم هنا</p>
-</div>
+<div class="pagetitle">
+  <h1>لوحة القيادة</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/admin">الرئيسية</a></li>
+      <li class="breadcrumb-item active">لوحة القيادة</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<section class="section dashboard">
+  <div class="row">
+
+    <!-- Left side columns -->
+    <div class="col-lg-8">
+      <div class="row">
+
+        <!-- المبيعات -->
+        <div class="col-xxl-4 col-md-6">
+          <div class="card info-card sales-card">
+
+            <div class="filter">
+              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                  <h6>تصفية</h6>
+                </li>
+
+                <li><a class="dropdown-item" href="#">اليوم</a></li>
+                <li><a class="dropdown-item" href="#">هذا الشهر</a></li>
+                <li><a class="dropdown-item" href="#">هذا العام</a></li>
+              </ul>
+            </div>
+
+            <div class="card-body">
+              <h5 class="card-title">المبيعات <span>| اليوم</span></h5>
+
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-cart"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{ salesStats.today }}</h6>
+                  <span [class]="'text-' + (salesStats.isPositive ? 'success' : 'danger') + ' small pt-1 fw-bold'">{{ salesStats.growth }}%</span>
+                  <span class="text-muted small pt-2 ps-1">{{ salesStats.isPositive ? 'زيادة' : 'انخفاض' }}</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div><!-- End Sales Card -->
+
+        <!-- الإيرادات -->
+        <div class="col-xxl-4 col-md-6">
+          <div class="card info-card revenue-card">
+
+            <div class="filter">
+              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                  <h6>تصفية</h6>
+                </li>
+
+                <li><a class="dropdown-item" href="#">اليوم</a></li>
+                <li><a class="dropdown-item" href="#">هذا الشهر</a></li>
+                <li><a class="dropdown-item" href="#">هذا العام</a></li>
+              </ul>
+            </div>
+
+            <div class="card-body">
+              <h5 class="card-title">الإيرادات <span>| هذا الشهر</span></h5>
+
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-currency-dollar"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{ revenueStats.amount | number }} ريال</h6>
+                  <span [class]="'text-' + (revenueStats.isPositive ? 'success' : 'danger') + ' small pt-1 fw-bold'">{{ revenueStats.growth }}%</span>
+                  <span class="text-muted small pt-2 ps-1">{{ revenueStats.isPositive ? 'زيادة' : 'انخفاض' }}</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div><!-- End Revenue Card -->
+
+        <!-- العملاء -->
+        <div class="col-xxl-4 col-xl-12">
+
+          <div class="card info-card customers-card">
+
+            <div class="filter">
+              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                  <h6>تصفية</h6>
+                </li>
+
+                <li><a class="dropdown-item" href="#">اليوم</a></li>
+                <li><a class="dropdown-item" href="#">هذا الشهر</a></li>
+                <li><a class="dropdown-item" href="#">هذا العام</a></li>
+              </ul>
+            </div>
+
+            <div class="card-body">
+              <h5 class="card-title">العملاء <span>| هذا العام</span></h5>
+
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-people"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{ customersStats.count | number }}</h6>
+                  <span [class]="'text-' + (customersStats.isPositive ? 'success' : 'danger') + ' small pt-1 fw-bold'">{{ Math.abs(customersStats.growth) }}%</span>
+                  <span class="text-muted small pt-2 ps-1">{{ customersStats.isPositive ? 'زيادة' : 'انخفاض' }}</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div><!-- End Customers Card -->
+
+        <!-- رسم بياني للمبيعات -->
+        <div class="col-12">
+          <div class="card">
+            <div class="filter">
+              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                  <h6>تصفية</h6>
+                </li>
+                <li><a class="dropdown-item" href="#">اليوم</a></li>
+                <li><a class="dropdown-item" href="#">هذا الشهر</a></li>
+                <li><a class="dropdown-item" href="#">هذا العام</a></li>
+              </ul>
+            </div>
+
+            <div class="card-body">
+              <h5 class="card-title">تقرير المبيعات <span>| 2023</span></h5>
+
+              <!-- رسم بياني للمبيعات -->
+              <div id="salesChart" style="min-height: 400px;"></div>
+            </div>
+          </div>
+        </div><!-- End Sales Chart -->
+
+        <!-- رسم بياني للإيرادات -->
+        <div class="col-12">
+          <div class="card">
+            <div class="filter">
+              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                  <h6>تصفية</h6>
+                </li>
+                <li><a class="dropdown-item" href="#">اليوم</a></li>
+                <li><a class="dropdown-item" href="#">هذا الشهر</a></li>
+                <li><a class="dropdown-item" href="#">هذا العام</a></li>
+              </ul>
+            </div>
+
+            <div class="card-body">
+              <h5 class="card-title">تقرير الإيرادات <span>| 2023</span></h5>
+
+              <!-- رسم بياني للإيرادات -->
+              <div id="revenueChart" style="min-height: 400px;"></div>
+            </div>
+          </div>
+        </div><!-- End Revenue Chart -->
+
+        <!-- المبيعات الأخيرة -->
+        <div class="col-12">
+          <div class="card recent-sales overflow-auto">
+
+            <div class="filter">
+              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                  <h6>تصفية</h6>
+                </li>
+
+                <li><a class="dropdown-item" href="#">اليوم</a></li>
+                <li><a class="dropdown-item" href="#">هذا الشهر</a></li>
+                <li><a class="dropdown-item" href="#">هذا العام</a></li>
+              </ul>
+            </div>
+
+            <div class="card-body">
+              <h5 class="card-title">المبيعات الأخيرة <span>| اليوم</span></h5>
+
+              <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">العميل</th>
+                    <th scope="col">المنتج</th>
+                    <th scope="col">السعر</th>
+                    <th scope="col">الحالة</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let sale of recentSales">
+                    <th scope="row"><a href="#">#{{ sale.id }}</a></th>
+                    <td>{{ sale.customer }}</td>
+                    <td><a href="#" class="text-primary">{{ sale.product }}</a></td>
+                    <td>{{ sale.price | number }} ريال</td>
+                    <td><span class="badge bg-{{ sale.statusClass }}">{{ sale.status }}</span></td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+
+          </div>
+        </div><!-- End Recent Sales -->
+
+        <!-- المنتجات الأكثر مبيعاً -->
+        <div class="col-12">
+          <div class="card top-selling overflow-auto">
+
+            <div class="filter">
+              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                  <h6>تصفية</h6>
+                </li>
+
+                <li><a class="dropdown-item" href="#">اليوم</a></li>
+                <li><a class="dropdown-item" href="#">هذا الشهر</a></li>
+                <li><a class="dropdown-item" href="#">هذا العام</a></li>
+              </ul>
+            </div>
+
+            <div class="card-body pb-0">
+              <h5 class="card-title">المنتجات الأكثر مبيعاً <span>| اليوم</span></h5>
+
+              <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th scope="col">صورة</th>
+                    <th scope="col">المنتج</th>
+                    <th scope="col">السعر</th>
+                    <th scope="col">المبيعات</th>
+                    <th scope="col">الإيرادات</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let product of topSellingProducts">
+                    <th scope="row"><a href="#"><img [src]="product.image" alt=""></a></th>
+                    <td><a href="#" class="text-primary fw-bold">{{ product.name }}</a></td>
+                    <td>{{ product.price | number }} ريال</td>
+                    <td class="fw-bold">{{ product.sales }}</td>
+                    <td>{{ product.revenue | number }} ريال</td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+
+          </div>
+        </div><!-- End Top Selling -->
+
+      </div>
+    </div><!-- End Left side columns -->
+
+    <!-- Right side columns -->
+    <div class="col-lg-4">
+
+      <!-- رسم بياني للعملاء -->
+      <div class="card">
+        <div class="filter">
+          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+            <li class="dropdown-header text-start">
+              <h6>تصفية</h6>
+            </li>
+            <li><a class="dropdown-item" href="#">اليوم</a></li>
+            <li><a class="dropdown-item" href="#">هذا الشهر</a></li>
+            <li><a class="dropdown-item" href="#">هذا العام</a></li>
+          </ul>
+        </div>
+
+        <div class="card-body pb-0">
+          <h5 class="card-title">توزيع العملاء <span>| هذا العام</span></h5>
+
+          <canvas id="customersChart" style="height: 400px; margin: 15px auto; padding: 10px;"></canvas>
+
+          <div class="text-center mt-4">
+            <span class="d-inline-block me-3"><i class="bi bi-circle-fill text-primary me-1"></i> عملاء جدد ({{ 300 | number }})</span>
+            <span class="d-inline-block me-3"><i class="bi bi-circle-fill text-success me-1"></i> عملاء حاليين ({{ 850 | number }})</span>
+            <span class="d-inline-block"><i class="bi bi-circle-fill text-warning me-1"></i> عملاء غير نشطين ({{ 94 | number }})</span>
+          </div>
+        </div>
+      </div><!-- End Customers Chart -->
+
+      <!-- النشاط الأخير -->
+      <div class="card">
+        <div class="filter">
+          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+            <li class="dropdown-header text-start">
+              <h6>تصفية</h6>
+            </li>
+
+            <li><a class="dropdown-item" href="#">اليوم</a></li>
+            <li><a class="dropdown-item" href="#">هذا الشهر</a></li>
+            <li><a class="dropdown-item" href="#">هذا العام</a></li>
+          </ul>
+        </div>
+
+        <div class="card-body">
+          <h5 class="card-title">النشاط الأخير <span>| اليوم</span></h5>
+
+          <div class="activity">
+
+            <div class="activity-item d-flex" *ngFor="let activity of recentActivities">
+              <div class="activite-label">{{ activity.time }}</div>
+              <i class="bi bi-circle-fill activity-badge text-{{ activity.type }} align-self-start"></i>
+              <div class="activity-content" [innerHTML]="activity.content"></div>
+            </div><!-- End activity item-->
+
+          </div>
+
+        </div>
+      </div><!-- End Recent Activity -->
+
+      <!-- الأخبار والتحديثات -->
+      <div class="card">
+        <div class="filter">
+          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+            <li class="dropdown-header text-start">
+              <h6>تصفية</h6>
+            </li>
+
+            <li><a class="dropdown-item" href="#">اليوم</a></li>
+            <li><a class="dropdown-item" href="#">هذا الشهر</a></li>
+            <li><a class="dropdown-item" href="#">هذا العام</a></li>
+          </ul>
+        </div>
+
+        <div class="card-body pb-0">
+          <h5 class="card-title">الأخبار والتحديثات <span>| اليوم</span></h5>
+
+          <div class="news">
+            <div class="post-item clearfix" *ngFor="let news of newsUpdates">
+              <img [src]="news.image" alt="">
+              <h4><a href="#">{{ news.title }}</a></h4>
+              <p>{{ news.content }}</p>
+            </div>
+          </div><!-- End sidebar recent posts-->
+
+        </div>
+      </div><!-- End News & Updates -->
+
+    </div><!-- End Right side columns -->
+
+  </div>
+</section>

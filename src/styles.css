@@ -1,1 +1,57 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Global styles for both store and admin */
+body {
+  font-family: "Open Sans", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Admin panel specific styles */
+body.admin-panel {
+  background-color: #f6f9ff;
+  overflow-x: hidden;
+}
+
+/* Fix for conflicts between store and admin styles */
+body.admin-panel .header,
+body.admin-panel .sidebar,
+body.admin-panel .main,
+body.admin-panel .footer {
+  font-family: "Open Sans", sans-serif !important;
+}
+
+/* Ensure proper layout for admin panel */
+body.admin-panel .main {
+  margin-top: 60px;
+  padding: 20px 30px;
+  transition: all 0.3s;
+}
+
+/* Fix for RTL layout in admin panel */
+html[dir="rtl"] body.admin-panel .sidebar {
+  right: 0;
+  left: auto;
+}
+
+html[dir="rtl"] body.admin-panel .main {
+  margin-right: 300px;
+  margin-left: 0;
+}
+
+/* Fix for mobile view in admin panel */
+@media (max-width: 1199px) {
+  html[dir="rtl"] body.admin-panel .sidebar {
+    right: -300px;
+    left: auto;
+  }
+
+  html[dir="rtl"] body.admin-panel .main {
+    margin-right: 0;
+  }
+
+  html[dir="rtl"] body.admin-panel.toggle-sidebar .sidebar {
+    right: 0;
+    left: auto;
+  }
+}

@@ -1,16 +1,185 @@
-<!-- هذا ملف مؤقت سيتم استبداله بمحتوى NiceAdmin -->
-<div class="sidebar">
-  <div class="sidebar-header">
-    <h3>لوحة التحكم</h3>
-  </div>
-  
-  <ul class="sidebar-menu">
-    <li><a routerLink="/admin/dashboard" routerLinkActive="active">الرئيسية</a></li>
-    <li><a routerLink="/admin/products" routerLinkActive="active">المنتجات</a></li>
-    <li><a routerLink="/admin/categories" routerLinkActive="active">التصنيفات</a></li>
-    <li><a routerLink="/admin/orders" routerLinkActive="active">الطلبات</a></li>
-    <li><a routerLink="/admin/users" routerLinkActive="active">المستخدمين</a></li>
-    <li><a routerLink="/admin/settings" routerLinkActive="active">الإعدادات</a></li>
-    <li><a routerLink="/">العودة للمتجر</a></li>
+<aside id="sidebar" class="sidebar">
+
+  <ul class="sidebar-nav" id="sidebar-nav">
+
+    <!-- لوحة القيادة -->
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/admin/dashboard" routerLinkActive="active">
+        <i class="bi bi-grid"></i>
+        <span>لوحة القيادة</span>
+      </a>
+    </li><!-- End Dashboard Nav -->
+
+    <!-- إدارة المنتجات -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#products-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-cart"></i><span>المنتجات</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="products-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+          <a routerLink="/admin/products" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>قائمة المنتجات</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/products/add" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>إضافة منتج</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/products/inventory" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>إدارة المخزون</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Products Nav -->
+
+    <!-- إدارة التصنيفات -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#categories-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-tag"></i><span>التصنيفات</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="categories-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+          <a routerLink="/admin/categories" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>قائمة التصنيفات</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/categories/add" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>إضافة تصنيف</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Categories Nav -->
+
+    <!-- إدارة الطلبات -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#orders-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-receipt"></i><span>الطلبات</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="orders-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+          <a routerLink="/admin/orders" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>قائمة الطلبات</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/orders/pending" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>طلبات قيد المعالجة</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/orders/shipping" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>طلبات قيد الشحن</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Orders Nav -->
+
+    <!-- إدارة المستخدمين -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#users-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-people"></i><span>المستخدمين</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="users-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+          <a routerLink="/admin/users" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>قائمة المستخدمين</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/users/add" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>إضافة مستخدم</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Users Nav -->
+
+    <!-- التسويق -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#marketing-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-megaphone"></i><span>التسويق</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="marketing-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+          <a routerLink="/admin/marketing/coupons" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>كوبونات الخصم</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/marketing/promotions" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>العروض الترويجية</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Marketing Nav -->
+
+    <!-- التقارير -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#reports-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-bar-chart"></i><span>التقارير</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="reports-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+          <a routerLink="/admin/reports/sales" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>تقارير المبيعات</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/reports/customers" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>تقارير العملاء</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/reports/inventory" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>تقارير المخزون</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Reports Nav -->
+
+    <li class="nav-heading">الإعدادات</li>
+
+    <!-- إعدادات المتجر -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#settings-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-gear"></i><span>الإعدادات</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="settings-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+          <a routerLink="/admin/settings/general" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>إعدادات عامة</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/settings/shipping" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>إعدادات الشحن</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/settings/payment" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>إعدادات الدفع</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Settings Nav -->
+
+    <!-- روابط سريعة -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" routerLink="/" target="_blank">
+        <i class="bi bi-shop"></i>
+        <span>زيارة المتجر</span>
+      </a>
+    </li><!-- End Visit Store Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" routerLink="/auth/login">
+        <i class="bi bi-box-arrow-right"></i>
+        <span>تسجيل الخروج</span>
+      </a>
+    </li><!-- End Logout Nav -->
+
   </ul>
-</div>
+
+</aside><!-- End Sidebar-->

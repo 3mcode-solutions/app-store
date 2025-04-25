@@ -1,0 +1,174 @@
+<div class="pagetitle">
+  <h1>إضافة فئة جديدة</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/admin">الرئيسية</a></li>
+      <li class="breadcrumb-item"><a routerLink="/admin/categories">الفئات</a></li>
+      <li class="breadcrumb-item active">إضافة فئة</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-12">
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">معلومات الفئة</h5>
+
+          <!-- نموذج إضافة فئة -->
+          <form [formGroup]="categoryForm" (ngSubmit)="saveCategory()">
+            <div class="row mb-3">
+              <label for="name" class="col-sm-2 col-form-label">اسم الفئة</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="name" formControlName="name" placeholder="أدخل اسم الفئة">
+                <div *ngIf="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched" class="text-danger">
+                  <small *ngIf="categoryForm.get('name')?.errors?.['required']">اسم الفئة مطلوب</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="description" class="col-sm-2 col-form-label">وصف الفئة</label>
+              <div class="col-sm-10">
+                <textarea class="form-control" id="description" formControlName="description" rows="3" placeholder="أدخل وصف الفئة"></textarea>
+                <div *ngIf="categoryForm.get('description')?.invalid && categoryForm.get('description')?.touched" class="text-danger">
+                  <small *ngIf="categoryForm.get('description')?.errors?.['required']">وصف الفئة مطلوب</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="imageUrl" class="col-sm-2 col-form-label">رابط الصورة</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="imageUrl" formControlName="imageUrl" placeholder="أدخل رابط صورة الفئة">
+                <div *ngIf="categoryForm.get('imageUrl')?.invalid && categoryForm.get('imageUrl')?.touched" class="text-danger">
+                  <small *ngIf="categoryForm.get('imageUrl')?.errors?.['required']">رابط الصورة مطلوب</small>
+                </div>
+                <small class="text-muted">يفضل أن تكون الصورة بأبعاد 800×600 بكسل</small>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="icon" class="col-sm-2 col-form-label">الأيقونة</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="icon" formControlName="icon" placeholder="أدخل اسم الأيقونة (مثال: bi-cart)">
+                <div *ngIf="categoryForm.get('icon')?.invalid && categoryForm.get('icon')?.touched" class="text-danger">
+                  <small *ngIf="categoryForm.get('icon')?.errors?.['required']">الأيقونة مطلوبة</small>
+                </div>
+                <small class="text-muted">يمكنك استخدام أيقونات Bootstrap Icons (bi-*) أو Boxicons (bx-*)</small>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label">فئة مميزة</label>
+              <div class="col-sm-10">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="featured" formControlName="featured">
+                  <label class="form-check-label" for="featured">عرض في القسم المميز</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label">الحالة</label>
+              <div class="col-sm-10">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="active" formControlName="active">
+                  <label class="form-check-label" for="active">فعالة</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-sm-10 offset-sm-2">
+                <button type="submit" class="btn btn-primary" [disabled]="categoryForm.invalid || isLoading">
+                  <i class="bi bi-check-circle me-1"></i>
+                  <span *ngIf="!isLoading">حفظ الفئة</span>
+                  <span *ngIf="isLoading">جاري الحفظ...</span>
+                </button>
+                <button type="button" class="btn btn-secondary ms-2" (click)="resetForm()">
+                  <i class="bi bi-x-circle me-1"></i>
+                  إعادة تعيين
+                </button>
+              </div>
+            </div>
+          </form><!-- End Form -->
+
+        </div>
+      </div>
+
+      <!-- معاينة الأيقونات -->
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">معاينة الأيقونات الشائعة</h5>
+          
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <p>يمكنك استخدام أي من الأيقونات التالية في حقل الأيقونة:</p>
+            </div>
+          </div>
+          
+          <div class="row text-center">
+            <div class="col-md-2 col-sm-3 col-4 mb-3">
+              <i class="bi bi-cart fs-1"></i>
+              <p class="small">bi-cart</p>
+            </div>
+            <div class="col-md-2 col-sm-3 col-4 mb-3">
+              <i class="bi bi-laptop fs-1"></i>
+              <p class="small">bi-laptop</p>
+            </div>
+            <div class="col-md-2 col-sm-3 col-4 mb-3">
+              <i class="bi bi-phone fs-1"></i>
+              <p class="small">bi-phone</p>
+            </div>
+            <div class="col-md-2 col-sm-3 col-4 mb-3">
+              <i class="bi bi-tv fs-1"></i>
+              <p class="small">bi-tv</p>
+            </div>
+            <div class="col-md-2 col-sm-3 col-4 mb-3">
+              <i class="bi bi-headset fs-1"></i>
+              <p class="small">bi-headset</p>
+            </div>
+            <div class="col-md-2 col-sm-3 col-4 mb-3">
+              <i class="bi bi-camera fs-1"></i>
+              <p class="small">bi-camera</p>
+            </div>
+            <div class="col-md-2 col-sm-3 col-4 mb-3">
+              <i class="bi bi-watch fs-1"></i>
+              <p class="small">bi-watch</p>
+            </div>
+            <div class="col-md-2 col-sm-3 col-4 mb-3">
+              <i class="bi bi-controller fs-1"></i>
+              <p class="small">bi-controller</p>
+            </div>
+            <div class="col-md-2 col-sm-3 col-4 mb-3">
+              <i class="bi bi-printer fs-1"></i>
+              <p class="small">bi-printer</p>
+            </div>
+            <div class="col-md-2 col-sm-3 col-4 mb-3">
+              <i class="bi bi-speaker fs-1"></i>
+              <p class="small">bi-speaker</p>
+            </div>
+            <div class="col-md-2 col-sm-3 col-4 mb-3">
+              <i class="bi bi-mouse fs-1"></i>
+              <p class="small">bi-mouse</p>
+            </div>
+            <div class="col-md-2 col-sm-3 col-4 mb-3">
+              <i class="bi bi-keyboard fs-1"></i>
+              <p class="small">bi-keyboard</p>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-12">
+              <p class="text-muted">للمزيد من الأيقونات، يمكنك زيارة <a href="https://icons.getbootstrap.com/" target="_blank">Bootstrap Icons</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

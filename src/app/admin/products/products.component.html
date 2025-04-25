@@ -1,5 +1,422 @@
-<!-- هذا ملف مؤقت سيتم استبداله بمحتوى NiceAdmin -->
-<div class="products-container">
+<div class="pagetitle">
   <h1>إدارة المنتجات</h1>
-  <p>سيتم إضافة محتوى إدارة المنتجات هنا</p>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/admin">الرئيسية</a></li>
+      <li class="breadcrumb-item active">المنتجات</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<!-- إحصائيات المنتجات -->
+<section class="section dashboard">
+  <div class="row">
+    <!-- إجمالي المنتجات -->
+    <div class="col-xxl-3 col-md-6">
+      <div class="card info-card sales-card">
+        <div class="card-body">
+          <h5 class="card-title">إجمالي المنتجات</h5>
+          <div class="d-flex align-items-center">
+            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+              <i class="bi bi-cart"></i>
+            </div>
+            <div class="ps-3">
+              <h6>{{ totalProductsCount }}</h6>
+              <span class="text-muted small pt-2">منتج</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- المنتجات المتوفرة -->
+    <div class="col-xxl-3 col-md-6">
+      <div class="card info-card revenue-card">
+        <div class="card-body">
+          <h5 class="card-title">المنتجات المتوفرة</h5>
+          <div class="d-flex align-items-center">
+            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+              <i class="bi bi-check-circle"></i>
+            </div>
+            <div class="ps-3">
+              <h6>{{ inStockCount }}</h6>
+              <span class="text-success small pt-1 fw-bold">{{ inStockPercentage }}%</span>
+              <span class="text-muted small pt-2 ps-1">من المنتجات</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- المنتجات غير المتوفرة -->
+    <div class="col-xxl-3 col-md-6">
+      <div class="card info-card customers-card">
+        <div class="card-body">
+          <h5 class="card-title">المنتجات غير المتوفرة</h5>
+          <div class="d-flex align-items-center">
+            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+              <i class="bi bi-x-circle"></i>
+            </div>
+            <div class="ps-3">
+              <h6>{{ outOfStockCount }}</h6>
+              <span class="text-danger small pt-1 fw-bold">{{ outOfStockPercentage }}%</span>
+              <span class="text-muted small pt-2 ps-1">من المنتجات</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- متوسط التقييم -->
+    <div class="col-xxl-3 col-md-6">
+      <div class="card info-card sales-card">
+        <div class="card-body">
+          <h5 class="card-title">متوسط التقييم</h5>
+          <div class="d-flex align-items-center">
+            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+              <i class="bi bi-star"></i>
+            </div>
+            <div class="ps-3">
+              <h6>{{ averageRating | number:'1.1-1' }}</h6>
+              <div class="rating small">
+                <i *ngFor="let star of [1,2,3,4,5]"
+                   class="bi"
+                   [class.bi-star-fill]="star <= averageRating"
+                   [class.bi-star-half]="star - 0.5 <= averageRating && star > averageRating"
+                   [class.bi-star]="star - 0.5 > averageRating"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-12">
+
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title">قائمة المنتجات</h5>
+            <button class="btn btn-primary" (click)="openAddProductModal()">
+              <i class="bi bi-plus-circle me-1"></i> إضافة منتج جديد
+            </button>
+          </div>
+
+          <!-- أدوات البحث والتصفية -->
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="ابحث عن منتج..." [(ngModel)]="searchTerm" (keyup)="applyFilter()">
+                <button class="btn btn-outline-secondary" type="button">
+                  <i class="bi bi-search"></i>
+                </button>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <select class="form-select" [(ngModel)]="selectedCategory" (change)="applyFilter()">
+                <option value="">جميع الفئات</option>
+                <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <select class="form-select" [(ngModel)]="sortBy" (change)="applyFilter()">
+                <option value="id">الترتيب الافتراضي</option>
+                <option value="name">الاسم (أ-ي)</option>
+                <option value="priceAsc">السعر (الأقل أولاً)</option>
+                <option value="priceDesc">السعر (الأعلى أولاً)</option>
+                <option value="stock">المخزون</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- جدول المنتجات -->
+          <div class="table-responsive">
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">صورة</th>
+                  <th scope="col">اسم المنتج</th>
+                  <th scope="col">الفئة</th>
+                  <th scope="col">السعر</th>
+                  <th scope="col">الخصم</th>
+                  <th scope="col">المخزون</th>
+                  <th scope="col">التقييم</th>
+                  <th scope="col">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let product of filteredProducts; let i = index">
+                  <th scope="row">{{ i + 1 }}</th>
+                  <td>
+                    <img [src]="product.imageUrl" alt="{{ product.name }}" class="product-thumbnail">
+                  </td>
+                  <td>{{ product.name }}</td>
+                  <td>{{ getCategoryName(product.category) }}</td>
+                  <td>{{ product.price | currency:'SAR':'symbol':'1.2-2' }}</td>
+                  <td>
+                    <span *ngIf="product.discount" class="badge bg-success">{{ product.discount }}%</span>
+                    <span *ngIf="!product.discount">-</span>
+                  </td>
+                  <td>
+                    <span [class]="product.inStock ? 'badge bg-success' : 'badge bg-danger'">
+                      {{ product.inStock ? 'متوفر' : 'غير متوفر' }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="rating">
+                      <i *ngFor="let star of [1,2,3,4,5]"
+                         class="bi"
+                         [class.bi-star-fill]="star <= (product.rating || 0)"
+                         [class.bi-star]="star > (product.rating || 0)"></i>
+                      <span class="ms-1">{{ product.rating || 0 }}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-sm btn-primary" (click)="editProduct(product)">
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                      <button type="button" class="btn btn-sm btn-danger" (click)="deleteProduct(product)">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                      <button type="button" class="btn btn-sm btn-info" (click)="viewProductDetails(product)">
+                        <i class="bi bi-eye"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- ترقيم الصفحات -->
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <div>
+              <span>عرض {{ filteredProducts.length }} من {{ products.length }} منتج</span>
+            </div>
+            <nav aria-label="Page navigation">
+              <ul class="pagination">
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                  <a class="page-link" href="#" (click)="$event.preventDefault(); changePage(currentPage - 1)">السابق</a>
+                </li>
+                <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="page === currentPage">
+                  <a class="page-link" href="#" (click)="$event.preventDefault(); changePage(page)">{{ page }}</a>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                  <a class="page-link" href="#" (click)="$event.preventDefault(); changePage(currentPage + 1)">التالي</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- نافذة إضافة/تعديل منتج -->
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="productModalLabel">{{ productModalTitle }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="productForm" (ngSubmit)="saveProduct()">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="name" class="form-label">اسم المنتج</label>
+              <input type="text" class="form-control" id="name" formControlName="name" placeholder="أدخل اسم المنتج">
+              <div *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched" class="text-danger">
+                اسم المنتج مطلوب
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label for="category" class="form-label">الفئة</label>
+              <select class="form-select" id="category" formControlName="category">
+                <option value="">اختر الفئة</option>
+                <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+              </select>
+              <div *ngIf="productForm.get('category')?.invalid && productForm.get('category')?.touched" class="text-danger">
+                الفئة مطلوبة
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="price" class="form-label">السعر</label>
+              <input type="number" class="form-control" id="price" formControlName="price" placeholder="أدخل سعر المنتج">
+              <div *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched" class="text-danger">
+                السعر مطلوب ويجب أن يكون أكبر من صفر
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label for="discount" class="form-label">الخصم (%)</label>
+              <input type="number" class="form-control" id="discount" formControlName="discount" placeholder="أدخل نسبة الخصم">
+              <div *ngIf="productForm.get('discount')?.invalid && productForm.get('discount')?.touched" class="text-danger">
+                الخصم يجب أن يكون بين 0 و 100
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-12">
+              <label for="description" class="form-label">وصف المنتج</label>
+              <textarea class="form-control" id="description" formControlName="description" rows="3" placeholder="أدخل وصف المنتج"></textarea>
+              <div *ngIf="productForm.get('description')?.invalid && productForm.get('description')?.touched" class="text-danger">
+                وصف المنتج مطلوب
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="imageUrl" class="form-label">صورة المنتج</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="imageUrl" formControlName="imageUrl" placeholder="أدخل رابط صورة المنتج">
+                <button class="btn btn-outline-secondary" type="button" (click)="openImageUploader()">
+                  <i class="bi bi-upload"></i> تحميل
+                </button>
+              </div>
+              <div *ngIf="productForm.get('imageUrl')?.invalid && productForm.get('imageUrl')?.touched" class="text-danger">
+                رابط الصورة مطلوب
+              </div>
+              <div *ngIf="productForm.get('imageUrl')?.valid" class="mt-2">
+                <img [src]="productForm.get('imageUrl')?.value" alt="معاينة الصورة" class="img-thumbnail" style="max-height: 100px;">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label for="inStock" class="form-label">تفاصيل المخزون</label>
+              <div class="form-check form-switch mb-2">
+                <input class="form-check-input" type="checkbox" id="inStock" formControlName="inStock">
+                <label class="form-check-label" for="inStock">متوفر في المخزون</label>
+              </div>
+              <div class="mb-3">
+                <label for="stockQuantity" class="form-label">الكمية المتوفرة</label>
+                <input type="number" class="form-control" id="stockQuantity" formControlName="stockQuantity" placeholder="أدخل الكمية المتوفرة" min="0">
+              </div>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="featured" formControlName="featured">
+                <label class="form-check-label" for="featured">منتج مميز</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="rating" class="form-label">التقييم</label>
+              <input type="number" class="form-control" id="rating" formControlName="rating" placeholder="أدخل تقييم المنتج" step="0.1" min="0" max="5">
+              <div *ngIf="productForm.get('rating')?.invalid && productForm.get('rating')?.touched" class="text-danger">
+                التقييم يجب أن يكون بين 0 و 5
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+            <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid">
+              {{ isEditMode ? 'حفظ التغييرات' : 'إضافة المنتج' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة تأكيد الحذف -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">تأكيد الحذف</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        هل أنت متأكد من رغبتك في حذف المنتج "{{ selectedProduct?.name }}"؟
+        <div class="alert alert-warning mt-3">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          هذا الإجراء لا يمكن التراجع عنه.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+        <button type="button" class="btn btn-danger" (click)="confirmDelete()">تأكيد الحذف</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة عرض تفاصيل المنتج -->
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detailsModalLabel">تفاصيل المنتج</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" *ngIf="selectedProduct">
+        <div class="row">
+          <div class="col-md-5">
+            <img [src]="selectedProduct.imageUrl" alt="{{ selectedProduct.name }}" class="img-fluid rounded">
+          </div>
+          <div class="col-md-7">
+            <h4>{{ selectedProduct.name }}</h4>
+            <p class="text-muted">{{ getCategoryName(selectedProduct.category) }}</p>
+
+            <div class="mb-3">
+              <div class="rating">
+                <i *ngFor="let star of [1,2,3,4,5]"
+                   class="bi"
+                   [class.bi-star-fill]="star <= (selectedProduct?.rating || 0)"
+                   [class.bi-star]="star > (selectedProduct?.rating || 0)"></i>
+                <span class="ms-1">{{ selectedProduct?.rating || 0 }}</span>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <h5>السعر:</h5>
+              <div *ngIf="selectedProduct.discount">
+                <span class="text-decoration-line-through text-muted">{{ selectedProduct.price | currency:'SAR':'symbol':'1.2-2' }}</span>
+                <span class="ms-2 fs-4 fw-bold text-danger">
+                  {{ (selectedProduct.price * (1 - selectedProduct.discount / 100)) | currency:'SAR':'symbol':'1.2-2' }}
+                </span>
+                <span class="badge bg-success ms-2">خصم {{ selectedProduct.discount }}%</span>
+              </div>
+              <div *ngIf="!selectedProduct.discount">
+                <span class="fs-4 fw-bold">{{ selectedProduct.price | currency:'SAR':'symbol':'1.2-2' }}</span>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <h5>الحالة:</h5>
+              <span [class]="selectedProduct.inStock ? 'badge bg-success' : 'badge bg-danger'">
+                {{ selectedProduct.inStock ? 'متوفر في المخزون' : 'غير متوفر' }}
+              </span>
+            </div>
+
+            <div class="mb-3">
+              <h5>الوصف:</h5>
+              <p>{{ selectedProduct.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+        <button type="button" class="btn btn-primary" (click)="selectedProduct && editProduct(selectedProduct)" data-bs-dismiss="modal">
+          <i class="bi bi-pencil me-1"></i> تعديل
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

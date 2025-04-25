@@ -1,0 +1,239 @@
+<div class="pagetitle">
+  <h1>إدارة المخزون</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/admin">الرئيسية</a></li>
+      <li class="breadcrumb-item"><a routerLink="/admin/products">المنتجات</a></li>
+      <li class="breadcrumb-item active">إدارة المخزون</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<section class="section dashboard">
+  <div class="row">
+    <!-- إحصائيات المخزون -->
+    <div class="col-12">
+      <div class="row">
+        <!-- إجمالي المنتجات -->
+        <div class="col-xxl-3 col-md-6">
+          <div class="card info-card sales-card">
+            <div class="card-body">
+              <h5 class="card-title">إجمالي المنتجات</h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-cart"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{ totalProducts }}</h6>
+                  <span class="text-muted small pt-1">منتج</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- المنتجات المتوفرة -->
+        <div class="col-xxl-3 col-md-6">
+          <div class="card info-card revenue-card">
+            <div class="card-body">
+              <h5 class="card-title">المنتجات المتوفرة</h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-check-circle"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{ inStockProducts }}</h6>
+                  <span class="text-success small pt-1">{{ (inStockProducts / totalProducts * 100) | number:'1.0-0' }}%</span>
+                  <span class="text-muted small pt-2 ps-1">من إجمالي المنتجات</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- المنتجات غير المتوفرة -->
+        <div class="col-xxl-3 col-md-6">
+          <div class="card info-card customers-card">
+            <div class="card-body">
+              <h5 class="card-title">المنتجات غير المتوفرة</h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-x-circle"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{ outOfStockProducts }}</h6>
+                  <span class="text-danger small pt-1">{{ (outOfStockProducts / totalProducts * 100) | number:'1.0-0' }}%</span>
+                  <span class="text-muted small pt-2 ps-1">من إجمالي المنتجات</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- المنتجات منخفضة المخزون -->
+        <div class="col-xxl-3 col-md-6">
+          <div class="card info-card customers-card">
+            <div class="card-body">
+              <h5 class="card-title">منخفضة المخزون</h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-exclamation-triangle"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{ lowStockProducts }}</h6>
+                  <span class="text-warning small pt-1">{{ (lowStockProducts / totalProducts * 100) | number:'1.0-0' }}%</span>
+                  <span class="text-muted small pt-2 ps-1">من إجمالي المنتجات</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- قائمة المنتجات -->
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">إدارة مخزون المنتجات</h5>
+
+          <!-- أدوات البحث والفلترة -->
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" class="form-control" placeholder="بحث عن منتج..." [(ngModel)]="searchTerm" (keyup)="applyFilter()">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <select class="form-select" [(ngModel)]="selectedCategory" (change)="applyFilter()">
+                <option value="">جميع الفئات</option>
+                <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <select class="form-select" [(ngModel)]="stockFilter" (change)="applyFilter()">
+                <option value="all">جميع المنتجات</option>
+                <option value="inStock">متوفرة في المخزون</option>
+                <option value="outOfStock">غير متوفرة</option>
+                <option value="lowStock">منخفضة المخزون</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <button class="btn btn-primary w-100" (click)="loadProducts()">
+                <i class="bi bi-arrow-clockwise me-1"></i> تحديث
+              </button>
+            </div>
+          </div>
+
+          <!-- جدول المنتجات -->
+          <div class="table-responsive">
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">المنتج</th>
+                  <th scope="col">الفئة</th>
+                  <th scope="col">السعر</th>
+                  <th scope="col">الحالة</th>
+                  <th scope="col">الكمية</th>
+                  <th scope="col">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let product of filteredProducts; let i = index">
+                  <th scope="row">{{ (currentPage - 1) * pageSize + i + 1 }}</th>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <img [src]="product.imageUrl" alt="{{ product.name }}" class="product-thumbnail me-2">
+                      <span>{{ product.name }}</span>
+                    </div>
+                  </td>
+                  <td>{{ getCategoryName(product.category) }}</td>
+                  <td>{{ product.price | currency:'SAR':'symbol':'1.0-0' }}</td>
+                  <td>
+                    <span class="badge" [ngClass]="product.inStock ? 'bg-success' : 'bg-danger'">
+                      {{ product.inStock ? 'متوفر' : 'غير متوفر' }}
+                    </span>
+                  </td>
+                  <td>
+                    <span [ngClass]="{'text-warning': product.stockQuantity !== undefined && product.stockQuantity < 5 && product.inStock}">
+                      {{ product.stockQuantity || 0 }}
+                    </span>
+                  </td>
+                  <td>
+                    <button class="btn btn-sm btn-primary me-1" (click)="openUpdateModal(product)" title="تحديث المخزون">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm" [ngClass]="product.inStock ? 'btn-danger' : 'btn-success'" (click)="toggleStockStatus(product)" title="{{ product.inStock ? 'تعطيل المنتج' : 'تفعيل المنتج' }}">
+                      <i class="bi" [ngClass]="product.inStock ? 'bi-x-circle' : 'bi-check-circle'"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- ترقيم الصفحات -->
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <div>
+              <span class="text-muted">عرض {{ filteredProducts.length }} من {{ totalProducts }} منتج</span>
+            </div>
+            <nav aria-label="Page navigation">
+              <ul class="pagination">
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                  <a class="page-link" href="javascript:void(0)" (click)="changePage(currentPage - 1)">السابق</a>
+                </li>
+                <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index" [class.active]="currentPage === i + 1">
+                  <a class="page-link" href="javascript:void(0)" (click)="changePage(i + 1)">{{ i + 1 }}</a>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                  <a class="page-link" href="javascript:void(0)" (click)="changePage(currentPage + 1)">التالي</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- نافذة تحديث المخزون -->
+<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateModalLabel">تحديث المخزون</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" *ngIf="selectedProduct">
+        <form [formGroup]="inventoryForm">
+          <div class="mb-3">
+            <label class="form-label">المنتج</label>
+            <input type="text" class="form-control" [value]="selectedProduct.name" readonly>
+          </div>
+          <div class="mb-3">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="updateInStock" formControlName="inStock">
+              <label class="form-check-label" for="updateInStock">متوفر في المخزون</label>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="updateStockQuantity" class="form-label">الكمية المتوفرة</label>
+            <input type="number" class="form-control" id="updateStockQuantity" formControlName="stockQuantity" min="0">
+            <div *ngIf="inventoryForm.get('stockQuantity')?.invalid && inventoryForm.get('stockQuantity')?.touched" class="text-danger">
+              <small *ngIf="inventoryForm.get('stockQuantity')?.errors?.['required']">الكمية مطلوبة</small>
+              <small *ngIf="inventoryForm.get('stockQuantity')?.errors?.['min']">يجب أن تكون الكمية أكبر من أو تساوي 0</small>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+        <button type="button" class="btn btn-primary" (click)="updateInventory()" [disabled]="inventoryForm.invalid">حفظ التغييرات</button>
+      </div>
+    </div>
+  </div>
+</div>

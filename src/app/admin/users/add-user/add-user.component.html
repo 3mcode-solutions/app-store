@@ -1,0 +1,137 @@
+<div class="pagetitle">
+  <h1>إضافة مستخدم جديد</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/admin">الرئيسية</a></li>
+      <li class="breadcrumb-item"><a routerLink="/admin/users">المستخدمين</a></li>
+      <li class="breadcrumb-item active">إضافة مستخدم</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-12">
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">معلومات المستخدم</h5>
+
+          <!-- نموذج إضافة مستخدم -->
+          <form [formGroup]="userForm" (ngSubmit)="saveUser()">
+            <div class="row mb-3">
+              <label for="name" class="col-sm-2 col-form-label">الاسم الكامل</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="name" formControlName="name" placeholder="أدخل الاسم الكامل">
+                <div *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.touched" class="text-danger">
+                  <small *ngIf="userForm.get('name')?.errors?.['required']">الاسم الكامل مطلوب</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="email" class="col-sm-2 col-form-label">البريد الإلكتروني</label>
+              <div class="col-sm-10">
+                <input type="email" class="form-control" id="email" formControlName="email" placeholder="أدخل البريد الإلكتروني">
+                <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched" class="text-danger">
+                  <small *ngIf="userForm.get('email')?.errors?.['required']">البريد الإلكتروني مطلوب</small>
+                  <small *ngIf="userForm.get('email')?.errors?.['email']">يرجى إدخال بريد إلكتروني صحيح</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="phone" class="col-sm-2 col-form-label">رقم الهاتف</label>
+              <div class="col-sm-10">
+                <input type="tel" class="form-control" id="phone" formControlName="phone" placeholder="أدخل رقم الهاتف">
+                <div *ngIf="userForm.get('phone')?.invalid && userForm.get('phone')?.touched" class="text-danger">
+                  <small *ngIf="userForm.get('phone')?.errors?.['required']">رقم الهاتف مطلوب</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="password" class="col-sm-2 col-form-label">كلمة المرور</label>
+              <div class="col-sm-10">
+                <input type="password" class="form-control" id="password" formControlName="password" placeholder="أدخل كلمة المرور">
+                <div *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched" class="text-danger">
+                  <small *ngIf="userForm.get('password')?.errors?.['required']">كلمة المرور مطلوبة</small>
+                  <small *ngIf="userForm.get('password')?.errors?.['minlength']">يجب أن تتكون كلمة المرور من 8 أحرف على الأقل</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="confirmPassword" class="col-sm-2 col-form-label">تأكيد كلمة المرور</label>
+              <div class="col-sm-10">
+                <input type="password" class="form-control" id="confirmPassword" formControlName="confirmPassword" placeholder="أعد إدخال كلمة المرور">
+                <div *ngIf="userForm.get('confirmPassword')?.invalid && userForm.get('confirmPassword')?.touched" class="text-danger">
+                  <small *ngIf="userForm.get('confirmPassword')?.errors?.['required']">تأكيد كلمة المرور مطلوب</small>
+                  <small *ngIf="userForm.get('confirmPassword')?.errors?.['passwordMismatch']">كلمة المرور غير متطابقة</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="role" class="col-sm-2 col-form-label">الدور</label>
+              <div class="col-sm-10">
+                <select class="form-select" id="role" formControlName="role">
+                  <option *ngFor="let role of roles" [value]="role.id">{{ role.name }}</option>
+                </select>
+                <div *ngIf="userForm.get('role')?.invalid && userForm.get('role')?.touched" class="text-danger">
+                  <small *ngIf="userForm.get('role')?.errors?.['required']">الدور مطلوب</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label">الحالة</label>
+              <div class="col-sm-10">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="active" formControlName="active">
+                  <label class="form-check-label" for="active">مفعل</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-sm-10 offset-sm-2">
+                <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid || isLoading">
+                  <i class="bi bi-check-circle me-1"></i>
+                  <span *ngIf="!isLoading">حفظ المستخدم</span>
+                  <span *ngIf="isLoading">جاري الحفظ...</span>
+                </button>
+                <button type="button" class="btn btn-secondary ms-2" (click)="resetForm()">
+                  <i class="bi bi-x-circle me-1"></i>
+                  إعادة تعيين
+                </button>
+              </div>
+            </div>
+          </form><!-- End Form -->
+
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">ملاحظات هامة</h5>
+          
+          <div class="alert alert-info">
+            <h6><i class="bi bi-info-circle me-1"></i> معلومات حول الأدوار</h6>
+            <ul>
+              <li><strong>مدير:</strong> يمتلك صلاحيات كاملة للوصول إلى جميع أقسام لوحة الإدارة وإدارة المستخدمين والإعدادات.</li>
+              <li><strong>محرر:</strong> يمكنه إدارة المنتجات والفئات والطلبات، ولكن لا يمكنه الوصول إلى إعدادات النظام أو إدارة المستخدمين.</li>
+              <li><strong>عميل:</strong> يمكنه تسجيل الدخول إلى المتجر وإجراء عمليات الشراء وإدارة حسابه الشخصي فقط.</li>
+            </ul>
+          </div>
+          
+          <div class="alert alert-warning">
+            <h6><i class="bi bi-exclamation-triangle me-1"></i> تنبيه</h6>
+            <p>يرجى التأكد من إعطاء الصلاحيات المناسبة للمستخدمين حسب احتياجاتهم. منح صلاحيات زائدة قد يشكل خطراً على أمان النظام.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

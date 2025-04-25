@@ -1,5 +1,381 @@
-<!-- هذا ملف مؤقت سيتم استبداله بمحتوى NiceAdmin -->
-<div class="orders-container">
+<div class="pagetitle">
   <h1>إدارة الطلبات</h1>
-  <p>سيتم إضافة محتوى إدارة الطلبات هنا</p>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/admin">الرئيسية</a></li>
+      <li class="breadcrumb-item active">الطلبات</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<section class="section dashboard">
+  <div class="row">
+    <!-- إحصائيات الطلبات -->
+    <div class="col-12">
+      <div class="row">
+        <!-- إجمالي الطلبات -->
+        <div class="col-xxl-3 col-md-6">
+          <div class="card info-card sales-card">
+            <div class="card-body">
+              <h5 class="card-title">إجمالي الطلبات</h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-cart"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{ orderStats.totalOrders }}</h6>
+                  <span class="text-muted small pt-1">طلب</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- الطلبات قيد المعالجة -->
+        <div class="col-xxl-3 col-md-6">
+          <div class="card info-card customers-card">
+            <div class="card-body">
+              <h5 class="card-title">قيد المعالجة</h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-hourglass-split"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{ orderStats.processingOrders }}</h6>
+                  <span class="text-muted small pt-1">طلب</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- الطلبات المكتملة -->
+        <div class="col-xxl-3 col-md-6">
+          <div class="card info-card revenue-card">
+            <div class="card-body">
+              <h5 class="card-title">الطلبات المكتملة</h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-check-circle"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{ orderStats.deliveredOrders }}</h6>
+                  <span class="text-muted small pt-1">طلب</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- إجمالي الإيرادات -->
+        <div class="col-xxl-3 col-md-6">
+          <div class="card info-card revenue-card">
+            <div class="card-body">
+              <h5 class="card-title">إجمالي الإيرادات</h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-currency-dollar"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{ orderStats.totalRevenue | currency:'SAR':'symbol':'1.0-0' }}</h6>
+                  <span class="text-success small pt-1 fw-bold">ريال سعودي</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- قائمة الطلبات -->
+    <div class="col-12">
+      <div class="card recent-sales overflow-auto">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title">قائمة الطلبات</h5>
+            <div class="filter">
+              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                  <h6>تصفية</h6>
+                </li>
+                <li><a class="dropdown-item" href="#" (click)="$event.preventDefault(); filterOrders('all')">جميع الطلبات</a></li>
+                <li><a class="dropdown-item" href="#" (click)="$event.preventDefault(); filterOrders('pending')">قيد الانتظار</a></li>
+                <li><a class="dropdown-item" href="#" (click)="$event.preventDefault(); filterOrders('processing')">قيد المعالجة</a></li>
+                <li><a class="dropdown-item" href="#" (click)="$event.preventDefault(); filterOrders('shipped')">تم الشحن</a></li>
+                <li><a class="dropdown-item" href="#" (click)="$event.preventDefault(); filterOrders('delivered')">تم التسليم</a></li>
+                <li><a class="dropdown-item" href="#" (click)="$event.preventDefault(); filterOrders('cancelled')">ملغية</a></li>
+                <li><a class="dropdown-item" href="#" (click)="$event.preventDefault(); filterOrders('returned')">مرتجعة</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- أدوات البحث -->
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="ابحث عن طلب..." [(ngModel)]="searchTerm" (keyup)="applyFilter()">
+                <button class="btn btn-outline-secondary" type="button">
+                  <i class="bi bi-search"></i>
+                </button>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <select class="form-select" [(ngModel)]="statusFilter" (change)="applyFilter()">
+                <option value="">جميع الحالات</option>
+                <option value="pending">قيد الانتظار</option>
+                <option value="processing">قيد المعالجة</option>
+                <option value="shipped">تم الشحن</option>
+                <option value="delivered">تم التسليم</option>
+                <option value="cancelled">ملغي</option>
+                <option value="returned">مرتجع</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <select class="form-select" [(ngModel)]="sortBy" (change)="applyFilter()">
+                <option value="date_desc">الأحدث أولاً</option>
+                <option value="date_asc">الأقدم أولاً</option>
+                <option value="amount_desc">المبلغ (الأعلى أولاً)</option>
+                <option value="amount_asc">المبلغ (الأقل أولاً)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- جدول الطلبات -->
+          <div class="table-responsive">
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">رقم الطلب</th>
+                  <th scope="col">العميل</th>
+                  <th scope="col">التاريخ</th>
+                  <th scope="col">المبلغ</th>
+                  <th scope="col">طريقة الدفع</th>
+                  <th scope="col">حالة الدفع</th>
+                  <th scope="col">حالة الطلب</th>
+                  <th scope="col">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let order of filteredOrders">
+                  <td>{{ order.orderNumber }}</td>
+                  <td>{{ order.userName }}</td>
+                  <td>{{ order.createdAt | date:'dd/MM/yyyy' }}</td>
+                  <td>{{ order.totalAmount | currency:'SAR':'symbol':'1.0-0' }}</td>
+                  <td>{{ getPaymentMethodName(order.paymentMethod) }}</td>
+                  <td>
+                    <span [class]="getPaymentStatusClass(order.paymentStatus)">
+                      {{ getPaymentStatusName(order.paymentStatus) }}
+                    </span>
+                  </td>
+                  <td>
+                    <span [class]="getOrderStatusClass(order.status)">
+                      {{ getOrderStatusName(order.status) }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-sm btn-primary" (click)="viewOrderDetails(order)">
+                        <i class="bi bi-eye"></i>
+                      </button>
+                      <button type="button" class="btn btn-sm btn-success" (click)="updateOrderStatus(order)">
+                        <i class="bi bi-arrow-clockwise"></i>
+                      </button>
+                      <button type="button" class="btn btn-sm btn-danger" (click)="deleteOrder(order)">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- ترقيم الصفحات -->
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <div>
+              <span>عرض {{ filteredOrders.length }} من {{ orders.length }} طلب</span>
+            </div>
+            <nav aria-label="Page navigation">
+              <ul class="pagination">
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                  <a class="page-link" href="#" (click)="$event.preventDefault(); changePage(currentPage - 1)">السابق</a>
+                </li>
+                <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="page === currentPage">
+                  <a class="page-link" href="#" (click)="$event.preventDefault(); changePage(page)">{{ page }}</a>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                  <a class="page-link" href="#" (click)="$event.preventDefault(); changePage(currentPage + 1)">التالي</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- نافذة تفاصيل الطلب -->
+<div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="orderDetailsModalLabel">تفاصيل الطلب</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" *ngIf="selectedOrder">
+        <div class="order-details">
+          <!-- معلومات الطلب -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <h6 class="fw-bold">معلومات الطلب</h6>
+              <p><strong>رقم الطلب:</strong> {{ selectedOrder.orderNumber }}</p>
+              <p><strong>تاريخ الطلب:</strong> {{ selectedOrder.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
+              <p><strong>حالة الطلب:</strong> <span [class]="getOrderStatusClass(selectedOrder.status)">{{ getOrderStatusName(selectedOrder.status) }}</span></p>
+              <p><strong>إجمالي المبلغ:</strong> {{ selectedOrder.totalAmount | currency:'SAR':'symbol':'1.2-2' }}</p>
+            </div>
+            <div class="col-md-6">
+              <h6 class="fw-bold">معلومات الدفع</h6>
+              <p><strong>طريقة الدفع:</strong> {{ getPaymentMethodName(selectedOrder.paymentMethod) }}</p>
+              <p><strong>حالة الدفع:</strong> <span [class]="getPaymentStatusClass(selectedOrder.paymentStatus)">{{ getPaymentStatusName(selectedOrder.paymentStatus) }}</span></p>
+              <p *ngIf="selectedOrder.notes"><strong>ملاحظات:</strong> {{ selectedOrder.notes }}</p>
+            </div>
+          </div>
+
+          <!-- معلومات العميل والشحن -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <h6 class="fw-bold">معلومات العميل</h6>
+              <p><strong>الاسم:</strong> {{ selectedOrder.userName }}</p>
+              <p><strong>البريد الإلكتروني:</strong> {{ selectedOrder.userEmail }}</p>
+              <p *ngIf="selectedOrder.userPhone"><strong>رقم الهاتف:</strong> {{ selectedOrder.userPhone }}</p>
+            </div>
+            <div class="col-md-6">
+              <h6 class="fw-bold">عنوان الشحن</h6>
+              <p><strong>الاسم:</strong> {{ selectedOrder.shippingAddress.fullName }}</p>
+              <p><strong>العنوان:</strong> {{ selectedOrder.shippingAddress.street }}, {{ selectedOrder.shippingAddress.city }}, {{ selectedOrder.shippingAddress.state }}</p>
+              <p><strong>الرمز البريدي:</strong> {{ selectedOrder.shippingAddress.postalCode }}</p>
+              <p><strong>الدولة:</strong> {{ selectedOrder.shippingAddress.country }}</p>
+              <p *ngIf="selectedOrder.shippingAddress.phone"><strong>رقم الهاتف:</strong> {{ selectedOrder.shippingAddress.phone }}</p>
+            </div>
+          </div>
+
+          <!-- منتجات الطلب -->
+          <div class="row">
+            <div class="col-12">
+              <h6 class="fw-bold">منتجات الطلب</h6>
+              <div class="table-responsive">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>المنتج</th>
+                      <th>السعر</th>
+                      <th>الكمية</th>
+                      <th>الخصم</th>
+                      <th>الإجمالي</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of selectedOrder.items">
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <img [src]="item.productImage" alt="{{ item.productName }}" class="product-thumbnail me-2">
+                          <span>{{ item.productName }}</span>
+                        </div>
+                      </td>
+                      <td>{{ item.price | currency:'SAR':'symbol':'1.2-2' }}</td>
+                      <td>{{ item.quantity }}</td>
+                      <td>{{ item.discount ? (item.discount + '%') : '-' }}</td>
+                      <td>{{ item.total | currency:'SAR':'symbol':'1.2-2' }}</td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="4" class="text-end"><strong>الإجمالي:</strong></td>
+                      <td>{{ selectedOrder.totalAmount | currency:'SAR':'symbol':'1.2-2' }}</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+        <button type="button" class="btn btn-success" (click)="selectedOrder && updateOrderStatus(selectedOrder)" data-bs-dismiss="modal">
+          <i class="bi bi-arrow-clockwise me-1"></i> تحديث الحالة
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة تحديث حالة الطلب -->
+<div class="modal fade" id="updateStatusModal" tabindex="-1" aria-labelledby="updateStatusModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateStatusModalLabel">تحديث حالة الطلب</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" *ngIf="selectedOrder">
+        <form [formGroup]="statusForm">
+          <div class="mb-3">
+            <label for="orderStatus" class="form-label">حالة الطلب</label>
+            <select class="form-select" id="orderStatus" formControlName="orderStatus">
+              <option value="pending">قيد الانتظار</option>
+              <option value="processing">قيد المعالجة</option>
+              <option value="shipped">تم الشحن</option>
+              <option value="delivered">تم التسليم</option>
+              <option value="cancelled">ملغي</option>
+              <option value="returned">مرتجع</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="paymentStatus" class="form-label">حالة الدفع</label>
+            <select class="form-select" id="paymentStatus" formControlName="paymentStatus">
+              <option value="pending">قيد الانتظار</option>
+              <option value="paid">تم الدفع</option>
+              <option value="failed">فشل الدفع</option>
+              <option value="refunded">تم الاسترجاع</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="notes" class="form-label">ملاحظات</label>
+            <textarea class="form-control" id="notes" formControlName="notes" rows="3"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+        <button type="button" class="btn btn-primary" (click)="confirmUpdateStatus()">حفظ التغييرات</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة تأكيد الحذف -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">تأكيد الحذف</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        هل أنت متأكد من رغبتك في حذف الطلب "{{ selectedOrder?.orderNumber }}"؟
+        <div class="alert alert-warning mt-3">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          هذا الإجراء لا يمكن التراجع عنه.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+        <button type="button" class="btn btn-danger" (click)="confirmDelete()">تأكيد الحذف</button>
+      </div>
+    </div>
+  </div>
 </div>

@@ -1,0 +1,131 @@
+/* أنماط عامة */
+.card {
+  margin-bottom: 30px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0 30px rgba(1, 41, 112, 0.1);
+}
+
+.card-title {
+  padding: 20px 0 15px 0;
+  font-size: 18px;
+  font-weight: 500;
+  color: #012970;
+  font-family: "Poppins", sans-serif;
+}
+
+.card-subtitle {
+  font-size: 16px;
+  font-weight: 500;
+  color: #012970;
+  margin-bottom: 15px;
+}
+
+/* أنماط النموذج */
+.form-label {
+  font-weight: 500;
+  color: #012970;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #4154f1;
+  box-shadow: 0 0 0 0.25rem rgba(65, 84, 241, 0.25);
+}
+
+.form-check-input:checked {
+  background-color: #4154f1;
+  border-color: #4154f1;
+}
+
+.btn-primary {
+  background-color: #4154f1;
+  border-color: #4154f1;
+}
+
+.btn-primary:hover {
+  background-color: #3a4bd8;
+  border-color: #3a4bd8;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #5a6268;
+}
+
+.btn-outline-danger {
+  color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #fff;
+}
+
+/* أنماط الرسائل */
+.text-danger {
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.text-muted {
+  font-size: 12px;
+}
+
+/* أنماط الشعار */
+.logo-preview {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.logo-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.logo-upload {
+  flex: 1;
+}
+
+/* أنماط وسائل التواصل الاجتماعي */
+.input-group-text {
+  background-color: #f6f9ff;
+  border-color: #ced4da;
+}
+
+.input-group-text i {
+  font-size: 1.2rem;
+}
+
+.bi-facebook {
+  color: #3b5998;
+}
+
+.bi-twitter {
+  color: #1da1f2;
+}
+
+.bi-instagram {
+  color: #e1306c;
+}
+
+.bi-linkedin {
+  color: #0077b5;
+}
+
+.bi-youtube {
+  color: #ff0000;
+}

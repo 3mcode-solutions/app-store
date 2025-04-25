@@ -1,23 +1,71 @@
-/* هذا ملف مؤقت سيتم استبداله بأنماط NiceAdmin */
-.admin-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+/* تعديلات إضافية على أنماط NiceAdmin */
+
+/* تعديل اتجاه النص للغة العربية */
+body {
+  direction: rtl;
+  text-align: right;
 }
 
-.main-content {
-  display: flex;
-  flex: 1;
+/* تعديلات على الهيدر */
+.header {
+  padding-right: 20px;
+  padding-left: 20px;
 }
 
-.admin-sidebar {
-  width: 250px;
-  background-color: #343a40;
-  color: white;
+/* تعديلات على السايدبار */
+.sidebar {
+  right: 0;
+  left: auto;
 }
 
-.admin-content {
-  flex: 1;
-  padding: 20px;
-  background-color: #f8f9fa;
+.sidebar-nav .nav-link i {
+  margin-left: 10px;
+  margin-right: 0;
+}
+
+/* تعديلات على المحتوى الرئيسي */
+.main {
+  margin-right: 300px;
+  margin-left: 0;
+}
+
+/* تعديلات عند طي السايدبار */
+body.toggle-sidebar .main {
+  margin-right: 70px;
+  margin-left: 0;
+}
+
+/* تعديلات على البطاقات */
+.card-title span {
+  padding-right: 10px;
+  padding-left: 0;
+}
+
+/* تعديلات على الجداول */
+.table {
+  text-align: right;
+}
+
+/* تعديلات على الأزرار */
+.btn i {
+  margin-left: 8px;
+  margin-right: 0;
+}
+
+/* تعديلات على القوائم المنسدلة */
+.dropdown-menu-arrow::before {
+  right: auto;
+  left: 20px;
+}
+
+/* تعديلات على الإشعارات */
+.notification-item i {
+  margin-left: 10px;
+  margin-right: 0;
+}
+
+/* تعديلات على الأنشطة */
+.activity-item i {
+  margin-left: 10px;
+  margin-right: 0;
 }

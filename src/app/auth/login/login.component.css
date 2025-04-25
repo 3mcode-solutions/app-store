@@ -1,0 +1,268 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 20px;
+  background-color: #f8f9fa;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 450px;
+  padding: 30px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(1, 41, 112, 0.1);
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.form-header h2 {
+  color: #012970;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.form-header p {
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #012970;
+}
+
+.input-group {
+  position: relative;
+}
+
+.form-control {
+  height: 48px;
+  padding: 10px 15px;
+  padding-right: 40px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  width: 100%;
+  font-size: 16px;
+  transition: all 0.3s;
+}
+
+.form-control:focus {
+  border-color: #4154f1;
+  box-shadow: 0 0 0 0.2rem rgba(65, 84, 241, 0.25);
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+}
+
+.input-icon,
+.password-toggle {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.password-toggle:hover {
+  color: #4154f1;
+}
+
+.invalid-feedback {
+  color: #dc3545;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.form-check {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.form-check-input {
+  margin-left: 10px;
+  width: 18px;
+  height: 18px;
+}
+
+.form-check-label {
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.forgot-password {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.forgot-password a {
+  color: #4154f1;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+
+.form-feedback {
+  margin-bottom: 20px;
+  min-height: 24px;
+}
+
+.loading {
+  color: #4154f1;
+  text-align: center;
+}
+
+.error-message {
+  color: #dc3545;
+  text-align: center;
+  padding: 10px;
+  background-color: rgba(220, 53, 69, 0.1);
+  border-radius: 5px;
+}
+
+.btn-primary {
+  width: 100%;
+  height: 48px;
+  background-color: #4154f1;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-primary:hover {
+  background-color: #3a4bd8;
+  transform: translateY(-2px);
+}
+
+.btn-primary:disabled {
+  background-color: #a8b3f8;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary i {
+  margin-left: 8px;
+  font-size: 18px;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.register-link a {
+  color: #4154f1;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+.social-login {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.social-login p {
+  position: relative;
+  margin-bottom: 20px;
+  color: #6c757d;
+}
+
+.social-login p::before,
+.social-login p::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 30%;
+  height: 1px;
+  background-color: #ced4da;
+}
+
+.social-login p::before {
+  right: 0;
+}
+
+.social-login p::after {
+  left: 0;
+}
+
+.social-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.social-button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 20px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.social-button.facebook {
+  background-color: #3b5998;
+}
+
+.social-button.google {
+  background-color: #db4437;
+}
+
+.social-button.twitter {
+  background-color: #1da1f2;
+}
+
+.social-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* تحسينات للشاشات الصغيرة */
+@media (max-width: 576px) {
+  .login-form {
+    padding: 20px;
+  }
+
+  .form-header h2 {
+    font-size: 24px;
+  }
+
+  .social-buttons {
+    flex-wrap: wrap;
+  }
+}

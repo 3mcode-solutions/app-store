@@ -1,0 +1,158 @@
+/* Styles to ensure admin panel looks correct */
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Override any conflicting styles from the store */
+body.admin-panel {
+  font-family: "Open Sans", sans-serif !important;
+  background-color: #f6f9ff !important;
+  color: #444444 !important;
+  overflow-x: hidden;
+}
+
+body.admin-panel .header,
+body.admin-panel .sidebar,
+body.admin-panel .main,
+body.admin-panel .footer {
+  font-family: "Open Sans", sans-serif !important;
+}
+
+/* Reset any conflicting styles */
+body.admin-panel h1,
+body.admin-panel h2,
+body.admin-panel h3,
+body.admin-panel h4,
+body.admin-panel h5,
+body.admin-panel h6,
+body.admin-panel p,
+body.admin-panel a,
+body.admin-panel span,
+body.admin-panel div {
+  font-family: "Open Sans", sans-serif !important;
+}
+
+/* Ensure proper spacing */
+body.admin-panel .main {
+  margin-top: 60px !important;
+  padding: 20px 30px !important;
+  transition: all 0.3s !important;
+}
+
+/* Ensure sidebar toggle works */
+body.admin-panel.toggle-sidebar .sidebar {
+  left: -300px !important;
+}
+
+body.admin-panel.toggle-sidebar .main {
+  margin-left: 0 !important;
+}
+
+/* Fix for RTL layout */
+html[dir="rtl"] body.admin-panel .sidebar {
+  right: 0 !important;
+  left: auto !important;
+}
+
+html[dir="rtl"] body.admin-panel.toggle-sidebar .sidebar {
+  right: -300px !important;
+  left: auto !important;
+}
+
+html[dir="rtl"] body.admin-panel .main {
+  margin-right: 300px !important;
+  margin-left: 0 !important;
+}
+
+html[dir="rtl"] body.admin-panel.toggle-sidebar .main {
+  margin-right: 0 !important;
+}
+
+/* Ensure proper z-index for dropdowns */
+body.admin-panel .dropdown-menu {
+  z-index: 1000 !important;
+}
+
+/* Fix for mobile view */
+@media (max-width: 1199px) {
+  body.admin-panel .sidebar {
+    left: -300px !important;
+  }
+
+  body.admin-panel .main {
+    margin-left: 0 !important;
+  }
+
+  body.admin-panel.toggle-sidebar .sidebar {
+    left: 0 !important;
+  }
+
+  html[dir="rtl"] body.admin-panel .sidebar {
+    right: -300px !important;
+    left: auto !important;
+  }
+
+  html[dir="rtl"] body.admin-panel .main {
+    margin-right: 0 !important;
+  }
+
+  html[dir="rtl"] body.admin-panel.toggle-sidebar .sidebar {
+    right: 0 !important;
+    left: auto !important;
+  }
+}
+
+/* Fix for charts and other components */
+body.admin-panel .card {
+  margin-bottom: 30px !important;
+  border: none !important;
+  border-radius: 5px !important;
+  box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1) !important;
+}
+
+body.admin-panel .card-title {
+  padding: 20px 0 15px 0 !important;
+  font-size: 18px !important;
+  font-weight: 500 !important;
+  color: #012970 !important;
+  font-family: "Poppins", sans-serif !important;
+}
+
+body.admin-panel .card-body {
+  padding: 0 20px 20px 20px !important;
+}
+
+/* Fix for dashboard cards */
+body.admin-panel .dashboard .card-icon {
+  font-size: 32px !important;
+  line-height: 0 !important;
+  width: 64px !important;
+  height: 64px !important;
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+body.admin-panel .dashboard .card-title {
+  font-size: 24px !important;
+  font-weight: 700 !important;
+}
+
+body.admin-panel .dashboard .card-title a {
+  color: #012970 !important;
+  transition: 0.3s !important;
+}
+
+body.admin-panel .dashboard .card-title a:hover {
+  color: #4154f1 !important;
+}
+
+body.admin-panel .dashboard .card-text {
+  font-size: 14px !important;
+  color: #6c757d !important;
+}

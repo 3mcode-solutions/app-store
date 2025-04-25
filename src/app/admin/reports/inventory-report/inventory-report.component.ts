@@ -1,0 +1,21 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+
+@Component({
+  selector: 'app-inventory-report',
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule],
+  templateUrl: './inventory-report.component.html',
+  styleUrls: ['./inventory-report.component.css']
+})
+export class InventoryReportComponent implements OnInit {
+  // سيتم تنفيذ هذا المكون لاحقاً
+  isLoading = false;
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+}

@@ -1,0 +1,150 @@
+<div class="pagetitle">
+  <h1>إضافة منتج جديد</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/admin">الرئيسية</a></li>
+      <li class="breadcrumb-item"><a routerLink="/admin/products">المنتجات</a></li>
+      <li class="breadcrumb-item active">إضافة منتج</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-12">
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">معلومات المنتج</h5>
+
+          <!-- نموذج إضافة منتج -->
+          <form [formGroup]="productForm" (ngSubmit)="saveProduct()">
+            <div class="row mb-3">
+              <label for="name" class="col-sm-2 col-form-label">اسم المنتج</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="name" formControlName="name" placeholder="أدخل اسم المنتج">
+                <div *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched" class="text-danger">
+                  <small *ngIf="productForm.get('name')?.errors?.['required']">اسم المنتج مطلوب</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="description" class="col-sm-2 col-form-label">وصف المنتج</label>
+              <div class="col-sm-10">
+                <textarea class="form-control" id="description" formControlName="description" rows="5" placeholder="أدخل وصف المنتج"></textarea>
+                <div *ngIf="productForm.get('description')?.invalid && productForm.get('description')?.touched" class="text-danger">
+                  <small *ngIf="productForm.get('description')?.errors?.['required']">وصف المنتج مطلوب</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="category" class="col-sm-2 col-form-label">الفئة</label>
+              <div class="col-sm-10">
+                <select class="form-select" id="category" formControlName="category">
+                  <option value="">اختر الفئة</option>
+                  <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+                </select>
+                <div *ngIf="productForm.get('category')?.invalid && productForm.get('category')?.touched" class="text-danger">
+                  <small *ngIf="productForm.get('category')?.errors?.['required']">الفئة مطلوبة</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="price" class="col-sm-2 col-form-label">السعر</label>
+              <div class="col-sm-4">
+                <div class="input-group">
+                  <input type="number" class="form-control" id="price" formControlName="price" min="0" step="0.01">
+                  <span class="input-group-text">ريال</span>
+                </div>
+                <div *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched" class="text-danger">
+                  <small *ngIf="productForm.get('price')?.errors?.['required']">السعر مطلوب</small>
+                  <small *ngIf="productForm.get('price')?.errors?.['min']">يجب أن يكون السعر أكبر من 0</small>
+                </div>
+              </div>
+
+              <label for="discount" class="col-sm-2 col-form-label">الخصم</label>
+              <div class="col-sm-4">
+                <div class="input-group">
+                  <input type="number" class="form-control" id="discount" formControlName="discount" min="0" max="100">
+                  <span class="input-group-text">%</span>
+                </div>
+                <div *ngIf="productForm.get('discount')?.invalid && productForm.get('discount')?.touched" class="text-danger">
+                  <small *ngIf="productForm.get('discount')?.errors?.['min']">يجب أن يكون الخصم أكبر من أو يساوي 0</small>
+                  <small *ngIf="productForm.get('discount')?.errors?.['max']">يجب أن يكون الخصم أقل من أو يساوي 100</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="imageUrl" class="col-sm-2 col-form-label">رابط الصورة</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="imageUrl" formControlName="imageUrl" placeholder="أدخل رابط صورة المنتج">
+                <div *ngIf="productForm.get('imageUrl')?.invalid && productForm.get('imageUrl')?.touched" class="text-danger">
+                  <small *ngIf="productForm.get('imageUrl')?.errors?.['required']">رابط الصورة مطلوب</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label">المخزون</label>
+              <div class="col-sm-10">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="inStock" formControlName="inStock">
+                  <label class="form-check-label" for="inStock">متوفر في المخزون</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="stockQuantity" class="col-sm-2 col-form-label">الكمية المتوفرة</label>
+              <div class="col-sm-4">
+                <input type="number" class="form-control" id="stockQuantity" formControlName="stockQuantity" min="0">
+                <div *ngIf="productForm.get('stockQuantity')?.invalid && productForm.get('stockQuantity')?.touched" class="text-danger">
+                  <small *ngIf="productForm.get('stockQuantity')?.errors?.['min']">يجب أن تكون الكمية أكبر من أو تساوي 0</small>
+                </div>
+              </div>
+
+              <label for="rating" class="col-sm-2 col-form-label">التقييم</label>
+              <div class="col-sm-4">
+                <input type="number" class="form-control" id="rating" formControlName="rating" min="0" max="5" step="0.1">
+                <div *ngIf="productForm.get('rating')?.invalid && productForm.get('rating')?.touched" class="text-danger">
+                  <small *ngIf="productForm.get('rating')?.errors?.['min']">يجب أن يكون التقييم أكبر من أو يساوي 0</small>
+                  <small *ngIf="productForm.get('rating')?.errors?.['max']">يجب أن يكون التقييم أقل من أو يساوي 5</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label">منتج مميز</label>
+              <div class="col-sm-10">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="featured" formControlName="featured">
+                  <label class="form-check-label" for="featured">عرض في القسم المميز</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-sm-10 offset-sm-2">
+                <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid || isLoading">
+                  <i class="bi bi-check-circle me-1"></i>
+                  <span *ngIf="!isLoading">حفظ المنتج</span>
+                  <span *ngIf="isLoading">جاري الحفظ...</span>
+                </button>
+                <button type="button" class="btn btn-secondary ms-2" (click)="resetForm()">
+                  <i class="bi bi-x-circle me-1"></i>
+                  إعادة تعيين
+                </button>
+              </div>
+            </div>
+          </form><!-- End Form -->
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

@@ -1,14 +1,46 @@
-<header id="header" class="header d-flex align-items-center sticky-top">
-  <div class="container-fluid container-xl position-relative d-flex align-items-center">
-    <a routerLink="/" class="logo d-flex align-items-center me-auto">
-      <img src="assets/img/logo.png" alt="متجرنا">
-      <h1 class="sitename">متجرنا</h1>
-    </a>
+<!-- شريط المعلومات العلوي -->
+<div class="top-bar">
+  <div class="container-fluid container-xl d-flex justify-content-between align-items-center">
+    <div class="contact-info d-flex align-items-center">
+      <i class="bi bi-envelope"></i> <a href="mailto:contact&#64;store.com">contact&#64;store.com</a>
+      <i class="bi bi-phone ms-4"></i> <a href="tel:+966500000000">+966 50 000 0000</a>
+    </div>
+    <div class="social-links d-flex align-items-center">
+      <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+      <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+      <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+      <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+    </div>
+  </div>
+</div>
 
+<!-- الهيدر الرئيسي -->
+<header id="header" class="header d-flex align-items-center sticky-top">
+  <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+    <!-- الشعار (في اليمين) -->
+    <div class="logo-container">
+      <a routerLink="/" class="logo d-flex align-items-center">
+        <img src="assets/img/logo.png" alt="متجرنا">
+        <h1 class="sitename">متجرنا</h1>
+      </a>
+    </div>
+
+    <!-- القائمة الرئيسية (في الوسط) -->
     <nav id="navmenu" class="navmenu" [class.mobile-nav-active]="isMenuOpen">
       <ul>
         <li><a routerLink="/home" routerLinkActive="active">الرئيسية</a></li>
-        <li><a routerLink="/products" routerLinkActive="active">المنتجات</a></li>
+        <li class="dropdown">
+          <a routerLink="/products">
+            <span>المنتجات</span> <i class="bi bi-chevron-down"></i>
+          </a>
+          <ul>
+            <li><a routerLink="/products" routerLinkActive="active">جميع المنتجات</a></li>
+            <li><a routerLink="/products/category/electronics" routerLinkActive="active">إلكترونيات</a></li>
+            <li><a routerLink="/products/category/clothing" routerLinkActive="active">ملابس</a></li>
+            <li><a routerLink="/products/category/furniture" routerLinkActive="active">أثاث منزلي</a></li>
+            <li><a routerLink="/products/category/sports" routerLinkActive="active">مستلزمات رياضية</a></li>
+          </ul>
+        </li>
         <li><a routerLink="/categories" routerLinkActive="active">التصنيفات</a></li>
         <li><a routerLink="/offers" routerLinkActive="active">العروض</a></li>
         <li><a routerLink="/about" routerLinkActive="active">من نحن</a></li>
@@ -20,12 +52,46 @@
          (click)="toggleMenu()"></i>
     </nav>
 
+    <!-- أزرار الإجراءات (في اليسار) -->
     <div class="header-actions d-flex align-items-center">
+      <!-- زر البحث -->
+      <div class="search-icon me-3" (click)="toggleSearch()">
+        <i class="bi bi-search"></i>
+      </div>
+
+      <!-- زر المفضلة -->
+      <a class="wishlist-link me-3" routerLink="/wishlist">
+        <i class="bi bi-heart"></i>
+      </a>
+
+      <!-- زر سلة التسوق -->
       <a class="cart-link me-3" routerLink="/cart">
         <i class="bi bi-cart3"></i>
         <span class="cart-count" *ngIf="(cartItemsCount$ | async) as count">{{count}}</span>
       </a>
-      <a class="btn-getstarted" routerLink="/auth/login">تسجيل الدخول</a>
+
+      <!-- زر تسجيل الدخول -->
+      <a class="btn-getstarted" routerLink="/auth/login">
+        <i class="bi bi-person me-1"></i>
+        تسجيل الدخول
+      </a>
     </div>
   </div>
 </header>
+
+<!-- شريط البحث -->
+<div class="search-bar" [class.active]="isSearchOpen">
+  <div class="container">
+    <div class="search-form-wrapper">
+      <form class="search-form" (ngSubmit)="searchProducts()">
+        <input type="text"
+               placeholder="ابحث عن منتجات..."
+               class="form-control"
+               [(ngModel)]="searchQuery"
+               name="searchQuery">
+        <button type="submit" class="btn btn-primary">بحث</button>
+        <button type="button" class="btn-close" (click)="toggleSearch()"></button>
+      </form>
+    </div>
+  </div>
+</div>

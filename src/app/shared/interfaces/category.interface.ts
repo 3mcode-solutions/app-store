@@ -5,4 +5,5 @@ export interface Category {
   imageUrl: string;
   productCount: number;
   icon?: string;
+  isActive?: boolean;
 }

@@ -1,16 +1,161 @@
-<!-- هذا ملف مؤقت سيتم استبداله بمحتوى NiceAdmin -->
-<header class="admin-header">
-  <div class="header-left">
-    <button class="toggle-sidebar-btn">
-      <i class="bi bi-list"></i>
-    </button>
-    <span class="logo">لوحة التحكم</span>
-  </div>
-  
-  <div class="header-right">
-    <div class="user-profile">
-      <img src="assets/img/profile-img.jpg" alt="Profile" class="profile-img">
-      <span class="user-name">المدير</span>
-    </div>
-  </div>
-</header>
+<header id="header" class="header fixed-top d-flex align-items-center">
+
+  <div class="d-flex align-items-center justify-content-between">
+    <a routerLink="/admin" class="logo d-flex align-items-center">
+      <img src="assets/admin/img/logo.png" alt="">
+      <span class="d-none d-lg-block">لوحة إدارة المتجر</span>
+    </a>
+    <i class="bi bi-list toggle-sidebar-btn" (click)="toggleSidebar()"></i>
+  </div><!-- End Logo -->
+
+  <div class="search-bar">
+    <form class="search-form d-flex align-items-center" method="POST" action="#">
+      <input type="text" name="query" placeholder="بحث" title="أدخل كلمة البحث">
+      <button type="submit" title="بحث"><i class="bi bi-search"></i></button>
+    </form>
+  </div><!-- End Search Bar -->
+
+  <nav class="header-nav ms-auto">
+    <ul class="d-flex align-items-center">
+
+      <li class="nav-item d-block d-lg-none">
+        <a class="nav-link nav-icon search-bar-toggle " href="#">
+          <i class="bi bi-search"></i>
+        </a>
+      </li><!-- End Search Icon-->
+
+      <li class="nav-item dropdown">
+
+        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+          <i class="bi bi-bell"></i>
+          <span class="badge bg-primary badge-number">4</span>
+        </a><!-- End Notification Icon -->
+
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+          <li class="dropdown-header">
+            لديك 4 إشعارات جديدة
+            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">عرض الكل</span></a>
+          </li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          <li class="notification-item">
+            <i class="bi bi-exclamation-circle text-warning"></i>
+            <div>
+              <h4>طلب جديد</h4>
+              <p>تم إضافة طلب جديد بقيمة 250 ريال</p>
+              <p>منذ 30 دقيقة</p>
+            </div>
+          </li>
+
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          <li class="notification-item">
+            <i class="bi bi-x-circle text-danger"></i>
+            <div>
+              <h4>طلب ملغي</h4>
+              <p>تم إلغاء الطلب رقم #2457</p>
+              <p>منذ ساعة</p>
+            </div>
+          </li>
+
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          <li class="notification-item">
+            <i class="bi bi-check-circle text-success"></i>
+            <div>
+              <h4>طلب مكتمل</h4>
+              <p>تم اكتمال الطلب رقم #3851</p>
+              <p>منذ ساعتين</p>
+            </div>
+          </li>
+
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          <li class="notification-item">
+            <i class="bi bi-info-circle text-primary"></i>
+            <div>
+              <h4>منتج جديد</h4>
+              <p>تم إضافة منتج جديد للمتجر</p>
+              <p>منذ 4 ساعات</p>
+            </div>
+          </li>
+
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+          <li class="dropdown-footer">
+            <a href="#">عرض جميع الإشعارات</a>
+          </li>
+
+        </ul><!-- End Notification Dropdown Items -->
+
+      </li><!-- End Notification Nav -->
+
+      <li class="nav-item dropdown pe-3">
+
+        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+          <img src="assets/admin/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+          <span class="d-none d-md-block dropdown-toggle ps-2">المدير</span>
+        </a><!-- End Profile Image Icon -->
+
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+          <li class="dropdown-header">
+            <h6>المدير</h6>
+            <span>مدير المتجر</span>
+          </li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          <li>
+            <a class="dropdown-item d-flex align-items-center" routerLink="/admin/profile">
+              <i class="bi bi-person"></i>
+              <span>الملف الشخصي</span>
+            </a>
+          </li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          <li>
+            <a class="dropdown-item d-flex align-items-center" routerLink="/admin/settings">
+              <i class="bi bi-gear"></i>
+              <span>إعدادات الحساب</span>
+            </a>
+          </li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          <li>
+            <a class="dropdown-item d-flex align-items-center" routerLink="/admin/help">
+              <i class="bi bi-question-circle"></i>
+              <span>تحتاج مساعدة؟</span>
+            </a>
+          </li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          <li>
+            <a class="dropdown-item d-flex align-items-center" routerLink="/auth/login">
+              <i class="bi bi-box-arrow-right"></i>
+              <span>تسجيل الخروج</span>
+            </a>
+          </li>
+
+        </ul><!-- End Profile Dropdown Items -->
+      </li><!-- End Profile Nav -->
+
+    </ul>
+  </nav><!-- End Icons Navigation -->
+
+</header><!-- End Header -->

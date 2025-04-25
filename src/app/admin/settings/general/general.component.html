@@ -1,0 +1,241 @@
+<div class="pagetitle">
+  <h1>الإعدادات العامة</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/admin">الرئيسية</a></li>
+      <li class="breadcrumb-item">الإعدادات</li>
+      <li class="breadcrumb-item active">إعدادات عامة</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-12">
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">إعدادات المتجر العامة</h5>
+
+          <!-- نموذج الإعدادات -->
+          <form [formGroup]="settingsForm" (ngSubmit)="saveSettings()">
+            
+            <!-- معلومات المتجر الأساسية -->
+            <div class="card mb-4">
+              <div class="card-body">
+                <h6 class="card-subtitle mb-3">معلومات المتجر الأساسية</h6>
+                
+                <div class="row mb-3">
+                  <label for="storeName" class="col-sm-2 col-form-label">اسم المتجر</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="storeName" formControlName="storeName" placeholder="أدخل اسم المتجر">
+                    <div *ngIf="settingsForm.get('storeName')?.invalid && settingsForm.get('storeName')?.touched" class="text-danger">
+                      <small *ngIf="settingsForm.get('storeName')?.errors?.['required']">اسم المتجر مطلوب</small>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="storeDescription" class="col-sm-2 col-form-label">وصف المتجر</label>
+                  <div class="col-sm-10">
+                    <textarea class="form-control" id="storeDescription" formControlName="storeDescription" rows="3" placeholder="أدخل وصف المتجر"></textarea>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="storeKeywords" class="col-sm-2 col-form-label">الكلمات المفتاحية</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="storeKeywords" formControlName="storeKeywords" placeholder="أدخل الكلمات المفتاحية مفصولة بفواصل">
+                    <small class="text-muted">مثال: متجر إلكتروني، ملابس، أحذية، إكسسوارات</small>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">شعار المتجر</label>
+                  <div class="col-sm-10">
+                    <div class="d-flex align-items-center">
+                      <div class="logo-preview me-3" *ngIf="logoPreview">
+                        <img [src]="logoPreview" alt="شعار المتجر" class="img-thumbnail" style="max-height: 100px;">
+                      </div>
+                      <div class="logo-upload">
+                        <input type="file" class="form-control" id="storeLogo" (change)="onLogoChange($event)" accept="image/*">
+                        <small class="text-muted d-block mt-1">يفضل أن يكون الشعار بأبعاد 200×50 بكسل</small>
+                      </div>
+                      <button type="button" class="btn btn-sm btn-outline-danger ms-2" *ngIf="logoPreview" (click)="removeLogo()">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- معلومات الاتصال -->
+            <div class="card mb-4">
+              <div class="card-body">
+                <h6 class="card-subtitle mb-3">معلومات الاتصال</h6>
+                
+                <div class="row mb-3">
+                  <label for="storeEmail" class="col-sm-2 col-form-label">البريد الإلكتروني</label>
+                  <div class="col-sm-10">
+                    <input type="email" class="form-control" id="storeEmail" formControlName="storeEmail" placeholder="أدخل البريد الإلكتروني للمتجر">
+                    <div *ngIf="settingsForm.get('storeEmail')?.invalid && settingsForm.get('storeEmail')?.touched" class="text-danger">
+                      <small *ngIf="settingsForm.get('storeEmail')?.errors?.['required']">البريد الإلكتروني مطلوب</small>
+                      <small *ngIf="settingsForm.get('storeEmail')?.errors?.['email']">يرجى إدخال بريد إلكتروني صحيح</small>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="storePhone" class="col-sm-2 col-form-label">رقم الهاتف</label>
+                  <div class="col-sm-10">
+                    <input type="tel" class="form-control" id="storePhone" formControlName="storePhone" placeholder="أدخل رقم هاتف المتجر">
+                    <div *ngIf="settingsForm.get('storePhone')?.invalid && settingsForm.get('storePhone')?.touched" class="text-danger">
+                      <small *ngIf="settingsForm.get('storePhone')?.errors?.['required']">رقم الهاتف مطلوب</small>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="storeAddress" class="col-sm-2 col-form-label">العنوان</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="storeAddress" formControlName="storeAddress" placeholder="أدخل عنوان المتجر">
+                    <div *ngIf="settingsForm.get('storeAddress')?.invalid && settingsForm.get('storeAddress')?.touched" class="text-danger">
+                      <small *ngIf="settingsForm.get('storeAddress')?.errors?.['required']">العنوان مطلوب</small>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="storeCity" class="col-sm-2 col-form-label">المدينة</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" id="storeCity" formControlName="storeCity" placeholder="أدخل المدينة">
+                    <div *ngIf="settingsForm.get('storeCity')?.invalid && settingsForm.get('storeCity')?.touched" class="text-danger">
+                      <small *ngIf="settingsForm.get('storeCity')?.errors?.['required']">المدينة مطلوبة</small>
+                    </div>
+                  </div>
+                  
+                  <label for="storeZipCode" class="col-sm-2 col-form-label">الرمز البريدي</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" id="storeZipCode" formControlName="storeZipCode" placeholder="أدخل الرمز البريدي">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="storeCountry" class="col-sm-2 col-form-label">الدولة</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="storeCountry" formControlName="storeCountry" placeholder="أدخل الدولة">
+                    <div *ngIf="settingsForm.get('storeCountry')?.invalid && settingsForm.get('storeCountry')?.touched" class="text-danger">
+                      <small *ngIf="settingsForm.get('storeCountry')?.errors?.['required']">الدولة مطلوبة</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- إعدادات اللغة والعملة -->
+            <div class="card mb-4">
+              <div class="card-body">
+                <h6 class="card-subtitle mb-3">إعدادات اللغة والعملة</h6>
+                
+                <div class="row mb-3">
+                  <label for="storeLanguage" class="col-sm-2 col-form-label">اللغة الافتراضية</label>
+                  <div class="col-sm-4">
+                    <select class="form-select" id="storeLanguage" formControlName="storeLanguage">
+                      <option value="ar">العربية</option>
+                      <option value="en">الإنجليزية</option>
+                    </select>
+                  </div>
+                  
+                  <label for="storeCurrency" class="col-sm-2 col-form-label">العملة</label>
+                  <div class="col-sm-4">
+                    <select class="form-select" id="storeCurrency" formControlName="storeCurrency">
+                      <option value="SAR">ريال سعودي (SAR)</option>
+                      <option value="USD">دولار أمريكي (USD)</option>
+                      <option value="EUR">يورو (EUR)</option>
+                      <option value="AED">درهم إماراتي (AED)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- وسائل التواصل الاجتماعي -->
+            <div class="card mb-4">
+              <div class="card-body">
+                <h6 class="card-subtitle mb-3">وسائل التواصل الاجتماعي</h6>
+                
+                <div class="row mb-3">
+                  <label for="storeFacebook" class="col-sm-2 col-form-label">فيسبوك</label>
+                  <div class="col-sm-10">
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="bi bi-facebook"></i></span>
+                      <input type="text" class="form-control" id="storeFacebook" formControlName="storeFacebook" placeholder="أدخل رابط صفحة الفيسبوك">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="storeTwitter" class="col-sm-2 col-form-label">تويتر</label>
+                  <div class="col-sm-10">
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="bi bi-twitter"></i></span>
+                      <input type="text" class="form-control" id="storeTwitter" formControlName="storeTwitter" placeholder="أدخل رابط حساب تويتر">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="storeInstagram" class="col-sm-2 col-form-label">انستغرام</label>
+                  <div class="col-sm-10">
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="bi bi-instagram"></i></span>
+                      <input type="text" class="form-control" id="storeInstagram" formControlName="storeInstagram" placeholder="أدخل رابط حساب انستغرام">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="storeLinkedIn" class="col-sm-2 col-form-label">لينكد إن</label>
+                  <div class="col-sm-10">
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="bi bi-linkedin"></i></span>
+                      <input type="text" class="form-control" id="storeLinkedIn" formControlName="storeLinkedIn" placeholder="أدخل رابط حساب لينكد إن">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="storeYouTube" class="col-sm-2 col-form-label">يوتيوب</label>
+                  <div class="col-sm-10">
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="bi bi-youtube"></i></span>
+                      <input type="text" class="form-control" id="storeYouTube" formControlName="storeYouTube" placeholder="أدخل رابط قناة يوتيوب">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- أزرار الحفظ -->
+            <div class="row">
+              <div class="col-sm-12 text-center">
+                <button type="submit" class="btn btn-primary px-5" [disabled]="settingsForm.invalid || isLoading">
+                  <i class="bi bi-check-circle me-1"></i>
+                  <span *ngIf="!isLoading">حفظ الإعدادات</span>
+                  <span *ngIf="isLoading">جاري الحفظ...</span>
+                </button>
+                <button type="button" class="btn btn-secondary ms-2" (click)="loadSettings()">
+                  <i class="bi bi-arrow-clockwise me-1"></i>
+                  إعادة تحميل
+                </button>
+              </div>
+            </div>
+          </form><!-- End Form -->
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

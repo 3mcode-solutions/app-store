@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../../shared/services/cart.service';
 import { Product } from '../../shared/interfaces/product.interface';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-cart',
@@ -13,11 +14,13 @@ import { Product } from '../../shared/interfaces/product.interface';
   styleUrls: ['./cart.component.css']
 })
 export class CartComponent implements OnInit {
-  cartItems$ = this.cartService.getCartItems();
+  cartItems$!: Observable<any[]>;
 
   constructor(private cartService: CartService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.cartItems$ = this.cartService.getCartItems();
+  }
 
   updateQuantity(productId: number, quantity: number): void {
     if (quantity > 0) {

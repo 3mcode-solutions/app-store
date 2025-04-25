@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { Product } from '../../shared/interfaces/product.interface';
 import { WishlistService } from '../../shared/services/wishlist.service';
 import { CartService } from '../../shared/services/cart.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-wishlist',
@@ -13,14 +14,16 @@ import { CartService } from '../../shared/services/cart.service';
   styleUrls: ['./wishlist.component.css']
 })
 export class WishlistComponent implements OnInit {
-  wishlistItems$ = this.wishlistService.getWishlistItems();
+  wishlistItems$!: Observable<Product[]>;
 
   constructor(
     private wishlistService: WishlistService,
     private cartService: CartService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.wishlistItems$ = this.wishlistService.getWishlistItems();
+  }
 
   removeFromWishlist(productId: number): void {
     this.wishlistService.removeFromWishlist(productId);

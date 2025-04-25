@@ -7,6 +7,8 @@ export interface Product {
   category: string;
   inStock: boolean;
   quantity?: number;
+  stockQuantity?: number;
+  featured?: boolean;
   rating?: number;
   discount?: number;
 }

@@ -1,14 +1,18 @@
-<!-- هذا ملف مؤقت سيتم استبداله بمحتوى NiceAdmin -->
-<div class="admin-container">
-  <app-admin-header></app-admin-header>
+<!-- ======= Header ======= -->
+<app-admin-header></app-admin-header>
 
-  <div class="main-content">
-    <div class="admin-sidebar">
-      <app-admin-sidebar></app-admin-sidebar>
-    </div>
+<!-- ======= Sidebar ======= -->
+<app-admin-sidebar></app-admin-sidebar>
 
-    <div class="admin-content">
-      <router-outlet></router-outlet>
-    </div>
+<main id="main" class="main">
+  <router-outlet></router-outlet>
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<footer id="footer" class="footer">
+  <div class="copyright">
+    &copy; Copyright <strong><span>متجر الكتروني</span></strong>. جميع الحقوق محفوظة
   </div>
-</div>
+</footer><!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
