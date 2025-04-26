@@ -64,6 +64,23 @@ export const ADMIN_ROUTES: Routes = [
         loadComponent: () => import('./orders/shipping-orders/shipping-orders.component')
           .then(m => m.ShippingOrdersComponent)
       },
+      {
+        path: 'orders/all',
+        loadComponent: () => import('./orders/orders.component')
+          .then(m => m.OrdersComponent)
+      },
+
+      // العملاء
+      {
+        path: 'customers',
+        loadComponent: () => import('./customers/customers.component')
+          .then(m => m.CustomersComponent)
+      },
+      {
+        path: 'customers/groups',
+        loadComponent: () => import('./customers/groups/customer-groups.component')
+          .then(m => m.CustomerGroupsComponent)
+      },
 
       // المستخدمين
       {
@@ -88,6 +105,11 @@ export const ADMIN_ROUTES: Routes = [
         loadComponent: () => import('./marketing/promotions/promotions.component')
           .then(m => m.PromotionsComponent)
       },
+      {
+        path: 'marketing/newsletter',
+        loadComponent: () => import('./marketing/newsletter/newsletter.component')
+          .then(m => m.NewsletterComponent)
+      },
 
       // التقارير
       {
@@ -104,6 +126,11 @@ export const ADMIN_ROUTES: Routes = [
         path: 'reports/inventory',
         loadComponent: () => import('./reports/inventory-report/inventory-report.component')
           .then(m => m.InventoryReportComponent)
+      },
+      {
+        path: 'reports/products',
+        loadComponent: () => import('./reports/products-report/products-report.component')
+          .then(m => m.ProductsReportComponent)
       },
 
       // الإعدادات
@@ -126,6 +153,11 @@ export const ADMIN_ROUTES: Routes = [
         path: 'settings/account',
         loadComponent: () => import('./settings/account/account.component')
           .then(m => m.AccountSettingsComponent)
+      },
+      {
+        path: 'settings/users',
+        loadComponent: () => import('./settings/users/users-settings.component')
+          .then(m => m.UsersSettingsComponent)
       },
 
       // الملف الشخصي

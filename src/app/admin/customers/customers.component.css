@@ -1,0 +1,67 @@
+.card-title {
+  padding: 20px 0 15px 0;
+  font-size: 18px;
+  font-weight: 500;
+  color: #012970;
+  font-family: "Poppins", sans-serif;
+}
+
+.info-card {
+  padding-bottom: 10px;
+}
+
+.info-card h6 {
+  font-size: 28px;
+  color: #012970;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+}
+
+.card-icon {
+  font-size: 32px;
+  line-height: 0;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+
+.sales-card .card-icon {
+  color: #4154f1;
+  background: #f6f6fe;
+}
+
+.revenue-card .card-icon {
+  color: #2eca6a;
+  background: #e0f8e9;
+}
+
+.customers-card .card-icon {
+  color: #ff771d;
+  background: #ffecdf;
+}
+
+.table th {
+  font-weight: 600;
+  color: #012970;
+}
+
+.form-label {
+  color: #012970;
+  font-weight: 500;
+}
+
+.modal-header {
+  border-bottom: 1px solid #dee2e6;
+  background-color: #f8f9fa;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+  background-color: #f8f9fa;
+}
+
+.list-group-item strong {
+  color: #012970;
+}

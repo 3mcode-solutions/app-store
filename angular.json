@@ -34,6 +34,7 @@
               "src/assets/admin/vendor/quill/quill.bubble.css",
               "src/assets/admin/vendor/remixicon/remixicon.css",
               "src/assets/admin/vendor/simple-datatables/style.css",
+              "src/styles/theme.css",
               "src/styles.css"
             ],
             "scripts": [

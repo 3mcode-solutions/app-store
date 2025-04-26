@@ -1,0 +1,124 @@
+<div class="pagetitle">
+  <h1>مجموعات العملاء</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/admin">الرئيسية</a></li>
+      <li class="breadcrumb-item"><a routerLink="/admin/customers">العملاء</a></li>
+      <li class="breadcrumb-item active">مجموعات العملاء</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">قائمة مجموعات العملاء</h5>
+
+          <div class="d-flex justify-content-between mb-3">
+            <a routerLink="/admin/customers" class="btn btn-secondary">
+              <i class="bi bi-arrow-right me-1"></i> العودة إلى قائمة العملاء
+            </a>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#groupModal" (click)="openAddForm()">
+              <i class="bi bi-plus-circle me-1"></i> إضافة مجموعة جديدة
+            </button>
+          </div>
+
+          <div *ngIf="isLoading" class="text-center p-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">جاري التحميل...</span>
+            </div>
+            <p class="mt-2">جاري تحميل مجموعات العملاء...</p>
+          </div>
+
+          <div *ngIf="!isLoading" class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">اسم المجموعة</th>
+                  <th scope="col">الوصف</th>
+                  <th scope="col">نسبة الخصم</th>
+                  <th scope="col">عدد الأعضاء</th>
+                  <th scope="col">الحالة</th>
+                  <th scope="col">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let group of customerGroups; let i = index">
+                  <th scope="row">{{ i + 1 }}</th>
+                  <td>{{ group.name }}</td>
+                  <td>{{ group.description }}</td>
+                  <td>{{ group.discount }}%</td>
+                  <td>{{ group.membersCount }}</td>
+                  <td>
+                    <span class="badge" [class.bg-success]="group.status === 'active'" [class.bg-danger]="group.status === 'inactive'">
+                      {{ group.status === 'active' ? 'نشط' : 'غير نشط' }}
+                    </span>
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#groupModal" (click)="openEditForm(group)">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm" [class.btn-warning]="group.status === 'active'" [class.btn-success]="group.status === 'inactive'" (click)="toggleGroupStatus(group)">
+                      <i class="bi" [class.bi-toggle-on]="group.status === 'active'" [class.bi-toggle-off]="group.status === 'inactive'"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-danger ms-1" (click)="deleteGroup(group.id)" [disabled]="group.membersCount > 0">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div *ngIf="!isLoading && customerGroups.length === 0" class="text-center p-4">
+            <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
+            <p class="mt-2">لا توجد مجموعات عملاء</p>
+          </div>
+
+          <!-- نموذج إضافة/تعديل مجموعة -->
+          <div class="modal fade" id="groupModal" tabindex="-1" aria-labelledby="groupModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="groupModalLabel">{{ isEditing ? 'تعديل مجموعة' : 'إضافة مجموعة جديدة' }}</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form>
+                    <div class="mb-3">
+                      <label for="groupName" class="form-label">اسم المجموعة</label>
+                      <input type="text" class="form-control" id="groupName" [(ngModel)]="groupForm.name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="groupDescription" class="form-label">الوصف</label>
+                      <textarea class="form-control" id="groupDescription" rows="3" [(ngModel)]="groupForm.description" name="description"></textarea>
+                    </div>
+                    <div class="mb-3">
+                      <label for="groupDiscount" class="form-label">نسبة الخصم (%)</label>
+                      <input type="number" class="form-control" id="groupDiscount" [(ngModel)]="groupForm.discount" name="discount" min="0" max="100">
+                    </div>
+                    <div class="mb-3">
+                      <label for="groupStatus" class="form-label">الحالة</label>
+                      <select class="form-select" id="groupStatus" [(ngModel)]="groupForm.status" name="status">
+                        <option value="active">نشط</option>
+                        <option value="inactive">غير نشط</option>
+                      </select>
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                  <button type="button" class="btn btn-primary" (click)="saveGroup()" data-bs-dismiss="modal">حفظ</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

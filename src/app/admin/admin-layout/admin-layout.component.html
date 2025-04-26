@@ -210,6 +210,16 @@
           </li>
 
           <li>
+            <a class="dropdown-item d-flex align-items-center" href="#" (click)="toggleTheme($event)">
+              <i class="bi" [ngClass]="{'bi-moon-stars': currentTheme === 'light', 'bi-sun': currentTheme === 'dark'}"></i>
+              <span>{{ currentTheme === 'light' ? 'السمة الداكنة' : 'السمة الفاتحة' }}</span>
+            </a>
+          </li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          <li>
             <a class="dropdown-item d-flex align-items-center" routerLink="/admin/help">
               <i class="bi bi-question-circle"></i>
               <span>تحتاج مساعدة؟</span>
@@ -378,6 +388,22 @@
         </li>
       </ul>
     </li><!-- End Settings Nav -->
+
+    <li class="nav-heading">الصفحات</li>
+
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/admin/profile" routerLinkActive="active">
+        <i class="bi bi-person"></i>
+        <span>الملف الشخصي</span>
+      </a>
+    </li><!-- End Profile Page Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link" href="#" (click)="toggleTheme($event)">
+        <i class="bi" [ngClass]="{'bi-moon-stars': currentTheme === 'light', 'bi-sun': currentTheme === 'dark'}"></i>
+        <span>{{ currentTheme === 'light' ? 'السمة الداكنة' : 'السمة الفاتحة' }}</span>
+      </a>
+    </li><!-- End Theme Toggle Nav -->
 
   </ul>
 

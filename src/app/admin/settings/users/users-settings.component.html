@@ -1,0 +1,234 @@
+<div class="pagetitle">
+  <h1>المستخدمين والصلاحيات</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/admin">الرئيسية</a></li>
+      <li class="breadcrumb-item">الإعدادات</li>
+      <li class="breadcrumb-item active">المستخدمين والصلاحيات</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <ul class="nav nav-tabs nav-tabs-bordered" id="usersTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" [class.active]="activeTab === 'users'" id="users-tab" (click)="setActiveTab('users')">
+                المستخدمين
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" [class.active]="activeTab === 'roles'" id="roles-tab" (click)="setActiveTab('roles')">
+                الأدوار والصلاحيات
+              </button>
+            </li>
+          </ul>
+          
+          <div class="tab-content pt-4" id="usersTabContent">
+            <!-- تبويب المستخدمين -->
+            <div class="tab-pane fade" [class.show]="activeTab === 'users'" [class.active]="activeTab === 'users'" id="users">
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <h5 class="card-title">قائمة المستخدمين</h5>
+                </div>
+                <div class="col-md-6 text-end">
+                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userModal" (click)="openAddUserForm()">
+                    <i class="bi bi-plus-circle me-1"></i> إضافة مستخدم جديد
+                  </button>
+                </div>
+              </div>
+              
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">الاسم</th>
+                      <th scope="col">البريد الإلكتروني</th>
+                      <th scope="col">الدور</th>
+                      <th scope="col">الحالة</th>
+                      <th scope="col">آخر تسجيل دخول</th>
+                      <th scope="col">الإجراءات</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let user of users; let i = index">
+                      <th scope="row">{{ i + 1 }}</th>
+                      <td>{{ user.name }}</td>
+                      <td>{{ user.email }}</td>
+                      <td>{{ user.role }}</td>
+                      <td>
+                        <span class="badge" [class.bg-success]="user.status === 'active'" [class.bg-danger]="user.status === 'inactive'">
+                          {{ user.status === 'active' ? 'نشط' : 'غير نشط' }}
+                        </span>
+                      </td>
+                      <td>{{ formatDate(user.lastLogin) }}</td>
+                      <td>
+                        <button type="button" class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#userModal" (click)="openEditUserForm(user)">
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger" (click)="deleteUser(user.id)">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+            <!-- تبويب الأدوار والصلاحيات -->
+            <div class="tab-pane fade" [class.show]="activeTab === 'roles'" [class.active]="activeTab === 'roles'" id="roles">
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <h5 class="card-title">قائمة الأدوار</h5>
+                </div>
+                <div class="col-md-6 text-end">
+                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#roleModal" (click)="openAddRoleForm()">
+                    <i class="bi bi-plus-circle me-1"></i> إضافة دور جديد
+                  </button>
+                </div>
+              </div>
+              
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">اسم الدور</th>
+                      <th scope="col">الصلاحيات</th>
+                      <th scope="col">الإجراءات</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let role of roles; let i = index">
+                      <th scope="row">{{ i + 1 }}</th>
+                      <td>{{ role.name }}</td>
+                      <td>
+                        <span *ngFor="let permission of role.permissions; let last = last" class="badge bg-primary me-1">
+                          {{ permission }}{{ !last ? '، ' : '' }}
+                        </span>
+                      </td>
+                      <td>
+                        <button type="button" class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#roleModal" (click)="openEditRoleForm(role)">
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger" (click)="deleteRole(role.id)">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal إضافة/تعديل مستخدم -->
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="userModalLabel">{{ isEditingUser ? 'تعديل مستخدم' : 'إضافة مستخدم جديد' }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="userName" class="form-label">الاسم</label>
+            <input type="text" class="form-control" id="userName" [(ngModel)]="userForm.name" name="name" required>
+          </div>
+          <div class="mb-3">
+            <label for="userEmail" class="form-label">البريد الإلكتروني</label>
+            <input type="email" class="form-control" id="userEmail" [(ngModel)]="userForm.email" name="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="userPassword" class="form-label">كلمة المرور {{ isEditingUser ? '(اتركها فارغة إذا لم ترغب في تغييرها)' : '' }}</label>
+            <input type="password" class="form-control" id="userPassword" [(ngModel)]="userForm.password" name="password" [required]="!isEditingUser">
+          </div>
+          <div class="mb-3">
+            <label for="userConfirmPassword" class="form-label">تأكيد كلمة المرور</label>
+            <input type="password" class="form-control" id="userConfirmPassword" [(ngModel)]="userForm.confirmPassword" name="confirmPassword" [required]="!isEditingUser">
+          </div>
+          <div class="mb-3">
+            <label for="userRole" class="form-label">الدور</label>
+            <select class="form-select" id="userRole" [(ngModel)]="userForm.role" name="role" required>
+              <option value="">اختر الدور</option>
+              <option *ngFor="let role of roles" [value]="role.name">{{ role.name }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="userStatus" class="form-label">الحالة</label>
+            <select class="form-select" id="userStatus" [(ngModel)]="userForm.status" name="status" required>
+              <option value="active">نشط</option>
+              <option value="inactive">غير نشط</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+        <button type="button" class="btn btn-primary" (click)="saveUser()" data-bs-dismiss="modal">حفظ</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal إضافة/تعديل دور -->
+<div class="modal fade" id="roleModal" tabindex="-1" aria-labelledby="roleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="roleModalLabel">{{ isEditingRole ? 'تعديل دور' : 'إضافة دور جديد' }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="roleName" class="form-label">اسم الدور</label>
+            <input type="text" class="form-control" id="roleName" [(ngModel)]="roleForm.name" name="name" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">الصلاحيات</label>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="manageUsers" [(ngModel)]="roleForm.permissions.manageUsers" name="manageUsers">
+              <label class="form-check-label" for="manageUsers">إدارة المستخدمين</label>
+            </div>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="manageProducts" [(ngModel)]="roleForm.permissions.manageProducts" name="manageProducts">
+              <label class="form-check-label" for="manageProducts">إدارة المنتجات</label>
+            </div>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="manageOrders" [(ngModel)]="roleForm.permissions.manageOrders" name="manageOrders">
+              <label class="form-check-label" for="manageOrders">إدارة الطلبات</label>
+            </div>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="viewReports" [(ngModel)]="roleForm.permissions.viewReports" name="viewReports">
+              <label class="form-check-label" for="viewReports">عرض التقارير</label>
+            </div>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="manageReports" [(ngModel)]="roleForm.permissions.manageReports" name="manageReports">
+              <label class="form-check-label" for="manageReports">إدارة التقارير</label>
+            </div>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="manageSettings" [(ngModel)]="roleForm.permissions.manageSettings" name="manageSettings">
+              <label class="form-check-label" for="manageSettings">إدارة الإعدادات</label>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+        <button type="button" class="btn btn-primary" (click)="saveRole()" data-bs-dismiss="modal">حفظ</button>
+      </div>
+    </div>
+  </div>
+</div>

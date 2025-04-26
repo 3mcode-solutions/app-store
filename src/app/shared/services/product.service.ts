@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, map, catchError, tap } from 'rxjs/operators';
 import { Product } from '../interfaces/product.interface';
+import { ApiService } from './api.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -153,72 +155,170 @@ export class ProductService {
     }
   ];
 
-  constructor() { }
+  constructor(private apiService: ApiService) { }
 
   /**
    * الحصول على جميع المنتجات
    */
   getProducts(): Observable<Product[]> {
-    return of([...this.products]).pipe(delay(500));
+    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
+    if (!environment.production) {
+      return of([...this.products]).pipe(delay(500));
+    }
+
+    // استخدام API حقيقي
+    return this.apiService.get<Product[]>('products').pipe(
+      catchError(error => {
+        console.error('Error fetching products:', error);
+        // في حالة حدوث خطأ، نعود إلى البيانات الوهمية
+        return of([...this.products]);
+      })
+    );
   }
 
   /**
    * الحصول على منتج بواسطة المعرف
    */
   getProductById(id: number): Observable<Product | undefined> {
-    const product = this.products.find(p => p.id === id);
-    return of(product).pipe(delay(300));
+    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
+    if (!environment.production) {
+      const product = this.products.find(p => p.id === id);
+      return of(product).pipe(delay(300));
+    }
+
+    // استخدام API حقيقي
+    return this.apiService.get<Product>(`products/${id}`).pipe(
+      catchError(error => {
+        console.error(`Error fetching product with id ${id}:`, error);
+        // في حالة حدوث خطأ، نعود إلى البيانات الوهمية
+        const product = this.products.find(p => p.id === id);
+        return of(product);
+      })
+    );
   }
 
   /**
    * الحصول على المنتجات حسب الفئة
    */
   getProductsByCategory(categoryId: string): Observable<Product[]> {
-    const filteredProducts = this.products.filter(p => p.category === categoryId);
-    return of(filteredProducts).pipe(delay(500));
+    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
+    if (!environment.production) {
+      const filteredProducts = this.products.filter(p => p.category === categoryId);
+      return of(filteredProducts).pipe(delay(500));
+    }
+
+    // استخدام API حقيقي
+    return this.apiService.get<Product[]>('products', { params: { categoryId } }).pipe(
+      catchError(error => {
+        console.error(`Error fetching products for category ${categoryId}:`, error);
+        // في حالة حدوث خطأ، نعود إلى البيانات الوهمية
+        const filteredProducts = this.products.filter(p => p.category === categoryId);
+        return of(filteredProducts);
+      })
+    );
   }
 
   /**
    * إضافة منتج جديد
    */
   addProduct(product: Product): Observable<Product> {
-    // إنشاء معرف جديد
-    const newId = Math.max(...this.products.map(p => p.id)) + 1;
-    const newProduct = { ...product, id: newId };
-    
-    // إضافة المنتج إلى المصفوفة
-    this.products.push(newProduct);
-    
-    return of(newProduct).pipe(delay(500));
+    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
+    if (!environment.production) {
+      // إنشاء معرف جديد
+      const newId = Math.max(...this.products.map(p => p.id)) + 1;
+      const newProduct = { ...product, id: newId };
+
+      // إضافة المنتج إلى المصفوفة
+      this.products.push(newProduct);
+
+      return of(newProduct).pipe(delay(500));
+    }
+
+    // استخدام API حقيقي
+    return this.apiService.post<Product>('products', product).pipe(
+      tap(newProduct => {
+        // إضافة المنتج الجديد إلى الذاكرة المؤقتة
+        this.products.push(newProduct);
+      }),
+      catchError(error => {
+        console.error('Error adding product:', error);
+        // في حالة حدوث خطأ، نعود إلى البيانات الوهمية
+        const newId = Math.max(...this.products.map(p => p.id)) + 1;
+        const newProduct = { ...product, id: newId };
+        this.products.push(newProduct);
+        return of(newProduct);
+      })
+    );
   }
 
   /**
    * تحديث منتج موجود
    */
   updateProduct(product: Product): Observable<Product> {
-    // البحث عن المنتج وتحديثه
-    const index = this.products.findIndex(p => p.id === product.id);
-    
-    if (index !== -1) {
-      this.products[index] = { ...product };
-      return of(this.products[index]).pipe(delay(500));
+    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
+    if (!environment.production) {
+      // البحث عن المنتج وتحديثه
+      const index = this.products.findIndex(p => p.id === product.id);
+
+      if (index !== -1) {
+        this.products[index] = { ...product };
+        return of(this.products[index]).pipe(delay(500));
+      }
+
+      // إذا لم يتم العثور على المنتج
+      return of(product).pipe(delay(500));
     }
-    
-    // إذا لم يتم العثور على المنتج
-    return of(product).pipe(delay(500));
+
+    // استخدام API حقيقي
+    return this.apiService.put<Product>(`products/${product.id}`, product).pipe(
+      tap(updatedProduct => {
+        // تحديث المنتج في الذاكرة المؤقتة
+        const index = this.products.findIndex(p => p.id === updatedProduct.id);
+        if (index !== -1) {
+          this.products[index] = updatedProduct;
+        }
+      }),
+      catchError(error => {
+        console.error(`Error updating product with id ${product.id}:`, error);
+        // في حالة حدوث خطأ، نعود إلى البيانات الوهمية
+        const index = this.products.findIndex(p => p.id === product.id);
+        if (index !== -1) {
+          this.products[index] = { ...product };
+          return of(this.products[index]);
+        }
+        return of(product);
+      })
+    );
   }
 
   /**
    * حذف منتج
    */
   deleteProduct(id: number): Observable<boolean> {
-    const initialLength = this.products.length;
-    this.products = this.products.filter(p => p.id !== id);
-    
-    // التحقق من نجاح الحذف
-    const success = initialLength > this.products.length;
-    
-    return of(success).pipe(delay(500));
+    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
+    if (!environment.production) {
+      const initialLength = this.products.length;
+      this.products = this.products.filter(p => p.id !== id);
+
+      // التحقق من نجاح الحذف
+      const success = initialLength > this.products.length;
+
+      return of(success).pipe(delay(500));
+    }
+
+    // استخدام API حقيقي
+    return this.apiService.delete<any>(`products/${id}`).pipe(
+      map(() => {
+        // حذف المنتج من الذاكرة المؤقتة
+        this.products = this.products.filter(p => p.id !== id);
+        return true;
+      }),
+      catchError(error => {
+        console.error(`Error deleting product with id ${id}:`, error);
+        // في حالة حدوث خطأ، نعود إلى البيانات الوهمية
+        return of(false);
+      })
+    );
   }
 
   /**
@@ -228,33 +328,78 @@ export class ProductService {
     if (!query.trim()) {
       return of([]);
     }
-    
-    const searchTerm = query.toLowerCase();
-    const results = this.products.filter(product => 
-      product.name.toLowerCase().includes(searchTerm) || 
-      product.description.toLowerCase().includes(searchTerm)
+
+    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
+    if (!environment.production) {
+      const searchTerm = query.toLowerCase();
+      const results = this.products.filter(product =>
+        product.name.toLowerCase().includes(searchTerm) ||
+        product.description.toLowerCase().includes(searchTerm)
+      );
+
+      return of(results).pipe(delay(300));
+    }
+
+    // استخدام API حقيقي
+    return this.apiService.get<Product[]>('products/search', { params: { query } }).pipe(
+      catchError(error => {
+        console.error(`Error searching products with query "${query}":`, error);
+        // في حالة حدوث خطأ، نعود إلى البيانات الوهمية
+        const searchTerm = query.toLowerCase();
+        const results = this.products.filter(product =>
+          product.name.toLowerCase().includes(searchTerm) ||
+          product.description.toLowerCase().includes(searchTerm)
+        );
+        return of(results);
+      })
     );
-    
-    return of(results).pipe(delay(300));
   }
 
   /**
    * الحصول على المنتجات المخفضة
    */
   getDiscountedProducts(): Observable<Product[]> {
-    const discountedProducts = this.products.filter(p => p.discount && p.discount > 0);
-    return of(discountedProducts).pipe(delay(500));
+    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
+    if (!environment.production) {
+      const discountedProducts = this.products.filter(p => p.discount && p.discount > 0);
+      return of(discountedProducts).pipe(delay(500));
+    }
+
+    // استخدام API حقيقي
+    return this.apiService.get<Product[]>('products/discounted').pipe(
+      catchError(error => {
+        console.error('Error fetching discounted products:', error);
+        // في حالة حدوث خطأ، نعود إلى البيانات الوهمية
+        const discountedProducts = this.products.filter(p => p.discount && p.discount > 0);
+        return of(discountedProducts);
+      })
+    );
   }
 
   /**
-   * الحصول على المنتجات الأكثر مبيعاً (محاكاة)
+   * الحصول على المنتجات الأكثر مبيعاً
    */
   getTopSellingProducts(limit: number = 5): Observable<Product[]> {
-    // هنا نقوم بمحاكاة المنتجات الأكثر مبيعاً عن طريق ترتيب المنتجات حسب التقييم
-    const topProducts = [...this.products]
-      .sort((a, b) => (b.rating || 0) - (a.rating || 0))
-      .slice(0, limit);
-    
-    return of(topProducts).pipe(delay(500));
+    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
+    if (!environment.production) {
+      // هنا نقوم بمحاكاة المنتجات الأكثر مبيعاً عن طريق ترتيب المنتجات حسب التقييم
+      const topProducts = [...this.products]
+        .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+        .slice(0, limit);
+
+      return of(topProducts).pipe(delay(500));
+    }
+
+    // استخدام API حقيقي
+    return this.apiService.get<Product[]>('products/top-selling', { params: { limit: limit.toString() } }).pipe(
+      catchError(error => {
+        console.error('Error fetching top selling products:', error);
+        // في حالة حدوث خطأ، نعود إلى البيانات الوهمية
+        const topProducts = [...this.products]
+          .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+          .slice(0, limit);
+        return of(topProducts);
+      })
+    );
   }
 }

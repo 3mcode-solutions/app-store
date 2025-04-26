@@ -1,0 +1,221 @@
+<div class="pagetitle">
+  <h1>النشرة البريدية</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/admin">الرئيسية</a></li>
+      <li class="breadcrumb-item">التسويق</li>
+      <li class="breadcrumb-item active">النشرة البريدية</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <ul class="nav nav-tabs nav-tabs-bordered" id="newsletterTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" [class.active]="activeTab === 'subscribers'" id="subscribers-tab" (click)="setActiveTab('subscribers')">
+                المشتركون
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" [class.active]="activeTab === 'campaigns'" id="campaigns-tab" (click)="setActiveTab('campaigns')">
+                الحملات السابقة
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" [class.active]="activeTab === 'new-campaign'" id="new-campaign-tab" (click)="setActiveTab('new-campaign')">
+                إنشاء حملة جديدة
+              </button>
+            </li>
+          </ul>
+
+          <div class="tab-content pt-4" id="newsletterTabContent">
+            <!-- تبويب المشتركين -->
+            <div class="tab-pane fade" [class.show]="activeTab === 'subscribers'" [class.active]="activeTab === 'subscribers'" id="subscribers">
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <h5 class="card-title">قائمة المشتركين</h5>
+                </div>
+                <div class="col-md-6 text-end">
+                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSubscriberModal">
+                    <i class="bi bi-plus-circle me-1"></i> إضافة مشترك جديد
+                  </button>
+                </div>
+              </div>
+
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">البريد الإلكتروني</th>
+                      <th scope="col">الاسم</th>
+                      <th scope="col">تاريخ الاشتراك</th>
+                      <th scope="col">الحالة</th>
+                      <th scope="col">الإجراءات</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let subscriber of subscribers; let i = index">
+                      <th scope="row">{{ i + 1 }}</th>
+                      <td>{{ subscriber.email }}</td>
+                      <td>{{ subscriber.name }}</td>
+                      <td>{{ formatDate(subscriber.subscriptionDate) }}</td>
+                      <td>
+                        <span class="badge" [class.bg-success]="subscriber.isActive" [class.bg-danger]="!subscriber.isActive">
+                          {{ subscriber.isActive ? 'نشط' : 'غير نشط' }}
+                        </span>
+                      </td>
+                      <td>
+                        <button type="button" class="btn btn-sm" [class.btn-warning]="subscriber.isActive" [class.btn-success]="!subscriber.isActive" (click)="toggleSubscriberStatus(subscriber.id)">
+                          <i class="bi" [class.bi-toggle-on]="subscriber.isActive" [class.bi-toggle-off]="!subscriber.isActive"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger ms-1" (click)="deleteSubscriber(subscriber.id)">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- تبويب الحملات السابقة -->
+            <div class="tab-pane fade" [class.show]="activeTab === 'campaigns'" [class.active]="activeTab === 'campaigns'" id="campaigns">
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <h5 class="card-title">الحملات السابقة</h5>
+                </div>
+                <div class="col-md-6 text-end">
+                  <button type="button" class="btn btn-primary" (click)="setActiveTab('new-campaign')">
+                    <i class="bi bi-plus-circle me-1"></i> إنشاء حملة جديدة
+                  </button>
+                </div>
+              </div>
+
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">العنوان</th>
+                      <th scope="col">الموضوع</th>
+                      <th scope="col">تاريخ الإرسال</th>
+                      <th scope="col">المستلمون</th>
+                      <th scope="col">نسبة الفتح</th>
+                      <th scope="col">نسبة النقر</th>
+                      <th scope="col">الإجراءات</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let campaign of campaigns; let i = index">
+                      <th scope="row">{{ i + 1 }}</th>
+                      <td>{{ campaign.title }}</td>
+                      <td>{{ campaign.subject }}</td>
+                      <td>{{ formatDate(campaign.sentDate) }}</td>
+                      <td>{{ campaign.recipients }}</td>
+                      <td>{{ campaign.openRate }}%</td>
+                      <td>{{ campaign.clickRate }}%</td>
+                      <td>
+                        <button type="button" class="btn btn-sm btn-primary me-1">
+                          <i class="bi bi-eye"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger" (click)="deleteCampaign(campaign.id)">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- تبويب إنشاء حملة جديدة -->
+            <div class="tab-pane fade" [class.show]="activeTab === 'new-campaign'" [class.active]="activeTab === 'new-campaign'" id="new-campaign">
+              <h5 class="card-title">إنشاء حملة جديدة</h5>
+
+              <form>
+                <div class="row mb-3">
+                  <label for="campaignTitle" class="col-sm-2 col-form-label">عنوان الحملة</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="campaignTitle" [(ngModel)]="newCampaign.title" name="title" required>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="campaignSubject" class="col-sm-2 col-form-label">موضوع الرسالة</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="campaignSubject" [(ngModel)]="newCampaign.subject" name="subject" required>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="campaignContent" class="col-sm-2 col-form-label">محتوى الرسالة</label>
+                  <div class="col-sm-10">
+                    <textarea class="form-control" id="campaignContent" rows="10" [(ngModel)]="newCampaign.content" name="content" required></textarea>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">المستلمون</label>
+                  <div class="col-sm-10">
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="recipients" id="allSubscribers" value="all" [(ngModel)]="newCampaign.recipients">
+                      <label class="form-check-label" for="allSubscribers">
+                        جميع المشتركين ({{ subscribers.length }})
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="recipients" id="activeSubscribers" value="active" [(ngModel)]="newCampaign.recipients">
+                      <label class="form-check-label" for="activeSubscribers">
+                        المشتركون النشطون فقط ({{ getActiveSubscribersCount() }})
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <div class="col-sm-10 offset-sm-2">
+                    <button type="button" class="btn btn-primary" (click)="createCampaign()">إنشاء الحملة</button>
+                    <button type="button" class="btn btn-secondary ms-2" (click)="setActiveTab('campaigns')">إلغاء</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal إضافة مشترك جديد -->
+<div class="modal fade" id="addSubscriberModal" tabindex="-1" aria-labelledby="addSubscriberModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addSubscriberModalLabel">إضافة مشترك جديد</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="subscriberEmail" class="form-label">البريد الإلكتروني</label>
+            <input type="email" class="form-control" id="subscriberEmail" [(ngModel)]="newSubscriber.email" name="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="subscriberName" class="form-label">الاسم</label>
+            <input type="text" class="form-control" id="subscriberName" [(ngModel)]="newSubscriber.name" name="name" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+        <button type="button" class="btn btn-primary" (click)="addSubscriber()" data-bs-dismiss="modal">إضافة</button>
+      </div>
+    </div>
+  </div>
+</div>

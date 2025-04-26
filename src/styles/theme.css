@@ -1,0 +1,186 @@
+/* أنماط السمة الفاتحة والداكنة */
+
+/* متغيرات السمة الفاتحة (الافتراضية) */
+:root {
+  --body-bg: #f6f9ff;
+  --card-bg: #fff;
+  --text-color: #444444;
+  --text-secondary: #899bbd;
+  --border-color: #ebeef4;
+  --header-bg: #fff;
+  --sidebar-bg: #fff;
+  --sidebar-link-color: #012970;
+  --sidebar-link-hover-bg: #f6f9ff;
+  --sidebar-link-active-bg: #f6f9ff;
+  --sidebar-link-active-color: #4154f1;
+  --dropdown-bg: #fff;
+  --dropdown-border: #ebeef4;
+  --dropdown-divider: #e9ecef;
+  --dropdown-item-hover: #f6f9ff;
+  --input-bg: #fff;
+  --input-border: #ced4da;
+  --input-focus-border: #80bdff;
+  --btn-default-bg: #f5f5f5;
+  --btn-default-color: #444444;
+  --shadow-color: rgba(1, 41, 112, 0.1);
+  --shadow-color-dark: rgba(1, 41, 112, 0.15);
+  --card-title-color: #012970;
+  --notification-unread-bg: #f0f7ff;
+  --notification-unread-border: #4154f1;
+}
+
+/* متغيرات السمة الداكنة */
+[data-bs-theme="dark"] {
+  --body-bg: #1a1a1a;
+  --card-bg: #2d2d2d;
+  --text-color: #e4e6eb;
+  --text-secondary: #b0b3b8;
+  --border-color: #3e3e3e;
+  --header-bg: #242526;
+  --sidebar-bg: #242526;
+  --sidebar-link-color: #e4e6eb;
+  --sidebar-link-hover-bg: #3a3b3c;
+  --sidebar-link-active-bg: #3a3b3c;
+  --sidebar-link-active-color: #4154f1;
+  --dropdown-bg: #2d2d2d;
+  --dropdown-border: #3e3e3e;
+  --dropdown-divider: #3e3e3e;
+  --dropdown-item-hover: #3a3b3c;
+  --input-bg: #3a3b3c;
+  --input-border: #4e4e4e;
+  --input-focus-border: #4154f1;
+  --btn-default-bg: #3a3b3c;
+  --btn-default-color: #e4e6eb;
+  --shadow-color: rgba(0, 0, 0, 0.2);
+  --shadow-color-dark: rgba(0, 0, 0, 0.3);
+  --card-title-color: #e4e6eb;
+  --notification-unread-bg: #2c3344;
+  --notification-unread-border: #4154f1;
+}
+
+/* تطبيق المتغيرات على العناصر */
+
+/* الخلفية الرئيسية */
+body {
+  background-color: var(--body-bg);
+  color: var(--text-color);
+}
+
+/* البطاقات */
+.card {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+  box-shadow: 0 0 30px 0 var(--shadow-color);
+}
+
+.card-title {
+  color: var(--card-title-color);
+}
+
+/* الهيدر */
+.header {
+  background-color: var(--header-bg);
+  border-color: var(--border-color);
+}
+
+/* الشريط الجانبي */
+.sidebar {
+  background-color: var(--sidebar-bg);
+  border-color: var(--border-color);
+}
+
+.sidebar-nav .nav-link {
+  color: var(--sidebar-link-color);
+}
+
+.sidebar-nav .nav-link:hover {
+  background-color: var(--sidebar-link-hover-bg);
+}
+
+.sidebar-nav .nav-link.active {
+  background-color: var(--sidebar-link-active-bg);
+  color: var(--sidebar-link-active-color);
+}
+
+/* القوائم المنسدلة */
+.dropdown-menu {
+  background-color: var(--dropdown-bg);
+  border-color: var(--dropdown-border);
+}
+
+.dropdown-divider {
+  border-color: var(--dropdown-divider);
+}
+
+.dropdown-item {
+  color: var(--text-color);
+}
+
+.dropdown-item:hover {
+  background-color: var(--dropdown-item-hover);
+}
+
+/* حقول الإدخال */
+.form-control, .form-select {
+  background-color: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text-color);
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--input-focus-border);
+}
+
+/* الأزرار */
+.btn-outline-primary, .btn-outline-secondary, .btn-outline-success, 
+.btn-outline-danger, .btn-outline-warning, .btn-outline-info {
+  color: var(--text-color);
+}
+
+/* الإشعارات والرسائل */
+.notification-item.unread, .message-item.unread {
+  background-color: var(--notification-unread-bg);
+  border-right-color: var(--notification-unread-border);
+}
+
+/* النصوص */
+.text-muted {
+  color: var(--text-secondary) !important;
+}
+
+/* الجداول */
+.table {
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+[data-bs-theme="dark"] .table-striped > tbody > tr:nth-of-type(odd) > * {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* أيقونات Bootstrap */
+.bi {
+  color: var(--text-color);
+}
+
+/* تأثيرات التمرير */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--body-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-secondary);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-color);
+}

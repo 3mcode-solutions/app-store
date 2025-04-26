@@ -1,0 +1,160 @@
+<div class="pagetitle">
+  <h1>تقارير المنتجات</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/admin">الرئيسية</a></li>
+      <li class="breadcrumb-item">التقارير</li>
+      <li class="breadcrumb-item active">تقارير المنتجات</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<section class="section">
+  <div class="row">
+    <!-- بطاقات الإحصائيات -->
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-xxl-4 col-md-4">
+          <div class="card info-card sales-card">
+            <div class="card-body">
+              <h5 class="card-title">إجمالي المبيعات</h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-cart"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{ getTotalSales() }}</h6>
+                  <span class="text-success small pt-1 fw-bold">وحدة</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-md-4">
+          <div class="card info-card revenue-card">
+            <div class="card-body">
+              <h5 class="card-title">إجمالي الإيرادات</h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-currency-dollar"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{ formatCurrency(getTotalRevenue()) }}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-md-4">
+          <div class="card info-card customers-card">
+            <div class="card-body">
+              <h5 class="card-title">عدد المنتجات</h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-box"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{ filteredProducts.length }}</h6>
+                  <span class="text-primary small pt-1 fw-bold">منتج</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- فلاتر التقرير -->
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">فلاتر التقرير</h5>
+          
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <label for="categoryFilter" class="form-label">التصنيف</label>
+              <select class="form-select" id="categoryFilter" [(ngModel)]="filterOptions.category" (change)="applyFilters()">
+                <option value="">جميع التصنيفات</option>
+                <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+              </select>
+            </div>
+            
+            <div class="col-md-3">
+              <label for="statusFilter" class="form-label">حالة المخزون</label>
+              <select class="form-select" id="statusFilter" [(ngModel)]="filterOptions.status" (change)="applyFilters()">
+                <option value="">جميع الحالات</option>
+                <option *ngFor="let status of statuses" [value]="status.value">{{ status.label }}</option>
+              </select>
+            </div>
+            
+            <div class="col-md-3">
+              <label for="sortByFilter" class="form-label">ترتيب حسب</label>
+              <select class="form-select" id="sortByFilter" [(ngModel)]="filterOptions.sortBy" (change)="applyFilters()">
+                <option value="totalSales">المبيعات</option>
+                <option value="revenue">الإيرادات</option>
+                <option value="stock">المخزون</option>
+              </select>
+            </div>
+            
+            <div class="col-md-3">
+              <label for="sortOrderFilter" class="form-label">اتجاه الترتيب</label>
+              <select class="form-select" id="sortOrderFilter" [(ngModel)]="filterOptions.sortOrder" (change)="applyFilters()">
+                <option value="desc">تنازلي</option>
+                <option value="asc">تصاعدي</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="text-end">
+            <button type="button" class="btn btn-secondary" (click)="resetFilters()">إعادة تعيين</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- جدول المنتجات -->
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">تقرير المنتجات</h5>
+          
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">اسم المنتج</th>
+                  <th scope="col">التصنيف</th>
+                  <th scope="col">المبيعات</th>
+                  <th scope="col">الإيرادات</th>
+                  <th scope="col">المخزون</th>
+                  <th scope="col">الحالة</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let product of filteredProducts; let i = index">
+                  <th scope="row">{{ i + 1 }}</th>
+                  <td>{{ product.name }}</td>
+                  <td>{{ product.category }}</td>
+                  <td>{{ product.totalSales }}</td>
+                  <td>{{ formatCurrency(product.revenue) }}</td>
+                  <td>{{ product.stock }}</td>
+                  <td>
+                    <span class="badge bg-{{ getStatusColor(product.status) }}">{{ getStatusText(product.status) }}</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div *ngIf="filteredProducts.length === 0" class="text-center p-4">
+            <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
+            <p class="mt-2">لا توجد منتجات تطابق معايير البحث</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

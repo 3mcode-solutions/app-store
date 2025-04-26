@@ -1,0 +1,253 @@
+<div class="pagetitle">
+  <h1>العملاء</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/admin">الرئيسية</a></li>
+      <li class="breadcrumb-item active">العملاء</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<section class="section">
+  <div class="row">
+    <!-- بطاقات الإحصائيات -->
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-xxl-4 col-md-4">
+          <div class="card info-card customers-card">
+            <div class="card-body">
+              <h5 class="card-title">إجمالي العملاء</h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-people"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{ totalCustomers }}</h6>
+                  <span class="text-primary small pt-1 fw-bold">عميل</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-md-4">
+          <div class="card info-card sales-card">
+            <div class="card-body">
+              <h5 class="card-title">إجمالي الطلبات</h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-cart"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{ totalOrders }}</h6>
+                  <span class="text-success small pt-1 fw-bold">طلب</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-md-4">
+          <div class="card info-card revenue-card">
+            <div class="card-body">
+              <h5 class="card-title">إجمالي المبيعات</h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-currency-dollar"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{ formatCurrency(totalRevenue) }}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- فلاتر العملاء -->
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">فلاتر العملاء</h5>
+
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" class="form-control" placeholder="بحث بالاسم، البريد الإلكتروني، أو رقم الهاتف" [(ngModel)]="filterOptions.search" (input)="applyFilters()">
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <select class="form-select" [(ngModel)]="filterOptions.status" (change)="applyFilters()">
+                <option value="">جميع الحالات</option>
+                <option value="active">نشط</option>
+                <option value="inactive">غير نشط</option>
+                <option value="blocked">محظور</option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <select class="form-select" [(ngModel)]="filterOptions.group" (change)="applyFilters()">
+                <option value="">جميع المجموعات</option>
+                <option *ngFor="let group of getUniqueGroups()" [value]="group">{{ group }}</option>
+              </select>
+            </div>
+
+            <div class="col-md-3 text-end">
+              <button type="button" class="btn btn-secondary" (click)="resetFilters()">إعادة تعيين</button>
+              <a routerLink="/admin/customers/groups" class="btn btn-primary ms-2">
+                <i class="bi bi-people-fill me-1"></i> مجموعات العملاء
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- جدول العملاء -->
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">قائمة العملاء</h5>
+
+          <div *ngIf="isLoading" class="text-center p-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">جاري التحميل...</span>
+            </div>
+            <p class="mt-2">جاري تحميل بيانات العملاء...</p>
+          </div>
+
+          <div *ngIf="!isLoading" class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">الاسم</th>
+                  <th scope="col">البريد الإلكتروني</th>
+                  <th scope="col">رقم الهاتف</th>
+                  <th scope="col">المجموعة</th>
+                  <th scope="col">تاريخ التسجيل</th>
+                  <th scope="col">الطلبات</th>
+                  <th scope="col">المبلغ المنفق</th>
+                  <th scope="col">الحالة</th>
+                  <th scope="col">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let customer of filteredCustomers; let i = index">
+                  <th scope="row">{{ i + 1 }}</th>
+                  <td>{{ customer.name }}</td>
+                  <td>{{ customer.email }}</td>
+                  <td>{{ customer.phone }}</td>
+                  <td>{{ customer.groupName || '-' }}</td>
+                  <td>{{ formatDate(customer.registrationDate) }}</td>
+                  <td>{{ customer.totalOrders }}</td>
+                  <td>{{ formatCurrency(customer.totalSpent) }}</td>
+                  <td>
+                    <span class="badge bg-{{ getStatusColor(customer.status) }}">
+                      {{ getStatusText(customer.status) }}
+                    </span>
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-sm btn-primary me-1" (click)="viewCustomerDetails(customer)">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm" [class.btn-warning]="customer.status === 'active'" [class.btn-success]="customer.status === 'inactive'" (click)="toggleCustomerStatus(customer)" *ngIf="customer.status !== 'blocked'">
+                      <i class="bi" [class.bi-toggle-on]="customer.status === 'active'" [class.bi-toggle-off]="customer.status === 'inactive'"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div *ngIf="!isLoading && filteredCustomers.length === 0" class="text-center p-4">
+            <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
+            <p class="mt-2">لا يوجد عملاء تطابق معايير البحث</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal تفاصيل العميل -->
+<div class="modal fade" [class.show]="selectedCustomer !== null" [style.display]="selectedCustomer !== null ? 'block' : 'none'" tabindex="-1" aria-labelledby="customerDetailsModalLabel" [attr.aria-hidden]="selectedCustomer === null">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="customerDetailsModalLabel">تفاصيل العميل</h5>
+        <button type="button" class="btn-close" (click)="closeCustomerDetails()"></button>
+      </div>
+      <div class="modal-body" *ngIf="selectedCustomer">
+        <div class="row">
+          <div class="col-md-6">
+            <h6>المعلومات الشخصية</h6>
+            <ul class="list-group list-group-flush mb-3">
+              <li class="list-group-item"><strong>الاسم:</strong> {{ selectedCustomer.name }}</li>
+              <li class="list-group-item"><strong>البريد الإلكتروني:</strong> {{ selectedCustomer.email }}</li>
+              <li class="list-group-item"><strong>رقم الهاتف:</strong> {{ selectedCustomer.phone }}</li>
+              <li class="list-group-item"><strong>العنوان:</strong> {{ selectedCustomer.address }}</li>
+              <li class="list-group-item"><strong>المدينة:</strong> {{ selectedCustomer.city }}</li>
+              <li class="list-group-item"><strong>الدولة:</strong> {{ selectedCustomer.country }}</li>
+              <li class="list-group-item"><strong>الرمز البريدي:</strong> {{ selectedCustomer.postalCode || '-' }}</li>
+              <li class="list-group-item"><strong>المجموعة:</strong> {{ selectedCustomer.groupName || '-' }}</li>
+              <li class="list-group-item"><strong>تاريخ التسجيل:</strong> {{ formatDate(selectedCustomer.registrationDate) }}</li>
+              <li class="list-group-item"><strong>آخر تسجيل دخول:</strong> {{ formatDate(selectedCustomer.lastLoginDate) }}</li>
+              <li class="list-group-item"><strong>الحالة:</strong>
+                <span class="badge bg-{{ getStatusColor(selectedCustomer.status) }}">
+                  {{ getStatusText(selectedCustomer.status) }}
+                </span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="col-md-6">
+            <h6>إحصائيات المشتريات</h6>
+            <ul class="list-group list-group-flush mb-3">
+              <li class="list-group-item"><strong>عدد الطلبات:</strong> {{ selectedCustomer.totalOrders }}</li>
+              <li class="list-group-item"><strong>إجمالي المبلغ المنفق:</strong> {{ formatCurrency(selectedCustomer.totalSpent) }}</li>
+              <li class="list-group-item"><strong>متوسط قيمة الطلب:</strong> {{ formatCurrency(selectedCustomer.totalSpent / (selectedCustomer.totalOrders || 1)) }}</li>
+            </ul>
+
+            <h6>ملاحظات</h6>
+            <div class="card mb-3">
+              <div class="card-body">
+                {{ selectedCustomer.notes || 'لا توجد ملاحظات' }}
+              </div>
+            </div>
+
+            <h6>الإجراءات</h6>
+            <div class="d-grid gap-2">
+              <button type="button" class="btn btn-primary">
+                <i class="bi bi-envelope me-1"></i> إرسال بريد إلكتروني
+              </button>
+              <button type="button" class="btn btn-success">
+                <i class="bi bi-cart-plus me-1"></i> إنشاء طلب جديد
+              </button>
+              <button type="button" class="btn" [class.btn-warning]="selectedCustomer.status === 'active'" [class.btn-success]="selectedCustomer.status === 'inactive'" (click)="toggleCustomerStatus(selectedCustomer)" *ngIf="selectedCustomer.status !== 'blocked'">
+                <i class="bi" [class.bi-toggle-on]="selectedCustomer.status === 'active'" [class.bi-toggle-off]="selectedCustomer.status === 'inactive'"></i>
+                {{ selectedCustomer.status === 'active' ? 'تعطيل الحساب' : 'تفعيل الحساب' }}
+              </button>
+              <button type="button" class="btn btn-danger" (click)="blockCustomer(selectedCustomer)" *ngIf="selectedCustomer.status !== 'blocked'">
+                <i class="bi bi-slash-circle me-1"></i> حظر الحساب
+              </button>
+              <button type="button" class="btn btn-success" (click)="toggleCustomerStatus(selectedCustomer)" *ngIf="selectedCustomer.status === 'blocked'">
+                <i class="bi bi-check-circle me-1"></i> إلغاء الحظر
+              </button>
+              <button type="button" class="btn btn-outline-danger" (click)="deleteCustomer(selectedCustomer)">
+                <i class="bi bi-trash me-1"></i> حذف الحساب
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeCustomerDetails()">إغلاق</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show" *ngIf="selectedCustomer !== null"></div>

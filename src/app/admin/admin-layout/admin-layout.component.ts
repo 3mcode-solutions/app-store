@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../shared/services/auth.service';
 import { NotificationService, Notification } from '../../shared/services/notification.service';
 import { MessageService, Message } from '../../shared/services/message.service';
+import { ThemeService, ThemeType } from '../../shared/services/theme.service';
 
 @Component({
   selector: 'app-admin-layout',
@@ -38,6 +39,9 @@ export class AdminLayoutComponent implements OnInit {
   messages: Message[] = [];
   unreadMessagesCount: number = 0;
 
+  // متغيرات السمة
+  currentTheme: ThemeType = 'light';
+
   constructor(
     private renderer: Renderer2,
     @Inject(DOCUMENT) private document: Document,
@@ -45,7 +49,8 @@ export class AdminLayoutComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private notificationService: NotificationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private themeService: ThemeService
   ) { }
 
   ngOnInit(): void {
@@ -101,6 +106,48 @@ export class AdminLayoutComponent implements OnInit {
     this.messageService.getUnreadCount().subscribe(count => {
       this.unreadMessagesCount = count;
     });
+
+    // الاشتراك في تغييرات السمة
+    this.themeService.getTheme().subscribe(theme => {
+      this.currentTheme = theme;
+    });
+
+    // تفعيل القوائم المنسدلة في الشريط الجانبي
+    setTimeout(() => {
+      this.initSidebarDropdowns();
+    }, 1000);
+  }
+
+  /**
+   * تفعيل القوائم المنسدلة في الشريط الجانبي
+   */
+  private initSidebarDropdowns(): void {
+    // الحصول على جميع روابط القوائم المنسدلة
+    const dropdownLinks = this.document.querySelectorAll('.sidebar-nav .nav-link.collapsed');
+
+    // إضافة مستمع أحداث لكل رابط
+    dropdownLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        // الحصول على الهدف من السمة data-bs-target
+        const target = (link as HTMLElement).getAttribute('data-bs-target');
+        if (target) {
+          // الحصول على عنصر القائمة المنسدلة
+          const dropdown = this.document.querySelector(target);
+          if (dropdown) {
+            // تبديل فئة collapse
+            dropdown.classList.toggle('collapse');
+            dropdown.classList.toggle('show');
+
+            // تبديل فئة collapsed للرابط
+            link.classList.toggle('collapsed');
+          }
+        }
+      });
+    });
+
+    console.log('Sidebar dropdowns initialized');
   }
 
   /**
@@ -377,6 +424,20 @@ export class AdminLayoutComponent implements OnInit {
 
     // استدعاء خدمة المصادقة لتسجيل الخروج
     this.authService.logout();
+
+    // إغلاق القائمة المنسدلة
+    this.isProfileOpen = false;
+  }
+
+  /**
+   * تبديل السمة
+   */
+  toggleTheme(event: Event): void {
+    event.preventDefault();
+
+    // تبديل السمة
+    const newTheme: ThemeType = this.currentTheme === 'light' ? 'dark' : 'light';
+    this.themeService.setTheme(newTheme);
 
     // إغلاق القائمة المنسدلة
     this.isProfileOpen = false;

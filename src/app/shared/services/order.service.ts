@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, map, catchError, tap } from 'rxjs/operators';
 import { Order, OrderStatus, PaymentMethod, PaymentStatus } from '../interfaces/order.interface';
+import { ApiService } from './api.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -301,145 +303,339 @@ export class OrderService {
     }
   ];
 
-  constructor() { }
+  constructor(private apiService: ApiService) { }
 
   /**
    * الحصول على جميع الطلبات
    */
   getOrders(): Observable<Order[]> {
-    return of([...this.orders]).pipe(delay(500));
+    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
+    if (!environment.production) {
+      return of([...this.orders]).pipe(delay(500));
+    }
+
+    // استخدام API حقيقي
+    return this.apiService.get<Order[]>('orders').pipe(
+      catchError(error => {
+        console.error('Error fetching orders:', error);
+        // في حالة حدوث خطأ، نعود إلى البيانات الوهمية
+        return of([...this.orders]);
+      })
+    );
   }
 
   /**
    * الحصول على طلب بواسطة المعرف
    */
   getOrderById(id: number): Observable<Order | undefined> {
-    const order = this.orders.find(o => o.id === id);
-    return of(order).pipe(delay(300));
+    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
+    if (!environment.production) {
+      const order = this.orders.find(o => o.id === id);
+      return of(order).pipe(delay(300));
+    }
+
+    // استخدام API حقيقي
+    return this.apiService.get<Order>(`orders/${id}`).pipe(
+      catchError(error => {
+        console.error(`Error fetching order with id ${id}:`, error);
+        // في حالة حدوث خطأ، نعود إلى البيانات الوهمية
+        const order = this.orders.find(o => o.id === id);
+        return of(order);
+      })
+    );
   }
 
   /**
    * الحصول على طلبات المستخدم
    */
   getOrdersByUserId(userId: number): Observable<Order[]> {
-    const userOrders = this.orders.filter(o => o.userId === userId);
-    return of(userOrders).pipe(delay(500));
+    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
+    if (!environment.production) {
+      const userOrders = this.orders.filter(o => o.userId === userId);
+      return of(userOrders).pipe(delay(500));
+    }
+
+    // استخدام API حقيقي
+    return this.apiService.get<Order[]>(`users/${userId}/orders`).pipe(
+      catchError(error => {
+        console.error(`Error fetching orders for user ${userId}:`, error);
+        // في حالة حدوث خطأ، نعود إلى البيانات الوهمية
+        const userOrders = this.orders.filter(o => o.userId === userId);
+        return of(userOrders);
+      })
+    );
   }
 
   /**
    * إضافة طلب جديد
    */
   addOrder(order: Order): Observable<Order> {
-    // إنشاء معرف جديد
-    const newId = Math.max(...this.orders.map(o => o.id)) + 1;
+    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
+    if (!environment.production) {
+      // إنشاء معرف جديد
+      const newId = Math.max(...this.orders.map(o => o.id)) + 1;
 
-    // إنشاء رقم طلب جديد
-    const year = new Date().getFullYear();
-    const orderNumber = `ORD-${year}-${String(newId).padStart(4, '0')}`;
+      // إنشاء رقم طلب جديد
+      const year = new Date().getFullYear();
+      const orderNumber = `ORD-${year}-${String(newId).padStart(4, '0')}`;
 
-    const newOrder = {
-      ...order,
-      id: newId,
-      orderNumber,
-      createdAt: new Date()
-    };
+      const newOrder = {
+        ...order,
+        id: newId,
+        orderNumber,
+        createdAt: new Date()
+      };
 
-    // إضافة الطلب إلى المصفوفة
-    this.orders.push(newOrder);
+      // إضافة الطلب إلى المصفوفة
+      this.orders.push(newOrder);
 
-    return of(newOrder).pipe(delay(500));
+      return of(newOrder).pipe(delay(500));
+    }
+
+    // استخدام API حقيقي
+    return this.apiService.post<Order>('orders', order).pipe(
+      tap(newOrder => {
+        // إضافة الطلب الجديد إلى الذاكرة المؤقتة
+        this.orders.push(newOrder);
+      }),
+      catchError(error => {
+        console.error('Error adding order:', error);
+        // في حالة حدوث خطأ، نعود إلى البيانات الوهمية
+        const newId = Math.max(...this.orders.map(o => o.id)) + 1;
+        const year = new Date().getFullYear();
+        const orderNumber = `ORD-${year}-${String(newId).padStart(4, '0')}`;
+
+        const newOrder = {
+          ...order,
+          id: newId,
+          orderNumber,
+          createdAt: new Date()
+        };
+
+        this.orders.push(newOrder);
+        return of(newOrder);
+      })
+    );
   }
 
   /**
    * تحديث طلب موجود
    */
   updateOrder(order: Order): Observable<Order> {
-    // البحث عن الطلب وتحديثه
-    const index = this.orders.findIndex(o => o.id === order.id);
+    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
+    if (!environment.production) {
+      // البحث عن الطلب وتحديثه
+      const index = this.orders.findIndex(o => o.id === order.id);
 
-    if (index !== -1) {
-      this.orders[index] = {
-        ...order,
-        updatedAt: new Date()
-      };
-      return of(this.orders[index]).pipe(delay(500));
+      if (index !== -1) {
+        this.orders[index] = {
+          ...order,
+          updatedAt: new Date()
+        };
+        return of(this.orders[index]).pipe(delay(500));
+      }
+
+      // إذا لم يتم العثور على الطلب
+      return of(order).pipe(delay(500));
     }
 
-    // إذا لم يتم العثور على الطلب
-    return of(order).pipe(delay(500));
+    // استخدام API حقيقي
+    return this.apiService.put<Order>(`orders/${order.id}`, order).pipe(
+      tap(updatedOrder => {
+        // تحديث الطلب في الذاكرة المؤقتة
+        const index = this.orders.findIndex(o => o.id === updatedOrder.id);
+        if (index !== -1) {
+          this.orders[index] = updatedOrder;
+        }
+      }),
+      catchError(error => {
+        console.error(`Error updating order with id ${order.id}:`, error);
+        // في حالة حدوث خطأ، نعود إلى البيانات الوهمية
+        const index = this.orders.findIndex(o => o.id === order.id);
+        if (index !== -1) {
+          this.orders[index] = {
+            ...order,
+            updatedAt: new Date()
+          };
+          return of(this.orders[index]);
+        }
+        return of(order);
+      })
+    );
   }
 
   /**
    * تحديث حالة الطلب
    */
   updateOrderStatus(id: number, status: OrderStatus): Observable<Order | undefined> {
-    const order = this.orders.find(o => o.id === id);
+    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
+    if (!environment.production) {
+      const order = this.orders.find(o => o.id === id);
 
-    if (order) {
-      order.status = status;
-      order.updatedAt = new Date();
-      return of(order).pipe(delay(300));
+      if (order) {
+        order.status = status;
+        order.updatedAt = new Date();
+        return of(order).pipe(delay(300));
+      }
+
+      return of(undefined).pipe(delay(300));
     }
 
-    return of(undefined).pipe(delay(300));
+    // استخدام API حقيقي
+    return this.apiService.patch<Order>(`orders/${id}/status`, { status }).pipe(
+      tap(updatedOrder => {
+        // تحديث الطلب في الذاكرة المؤقتة
+        const index = this.orders.findIndex(o => o.id === updatedOrder.id);
+        if (index !== -1) {
+          this.orders[index] = updatedOrder;
+        }
+      }),
+      catchError(error => {
+        console.error(`Error updating order status with id ${id}:`, error);
+        // في حالة حدوث خطأ، نعود إلى البيانات الوهمية
+        const order = this.orders.find(o => o.id === id);
+        if (order) {
+          order.status = status;
+          order.updatedAt = new Date();
+          return of(order);
+        }
+        return of(undefined);
+      })
+    );
   }
 
   /**
    * تحديث حالة الدفع
    */
   updatePaymentStatus(id: number, status: PaymentStatus): Observable<Order | undefined> {
-    const order = this.orders.find(o => o.id === id);
+    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
+    if (!environment.production) {
+      const order = this.orders.find(o => o.id === id);
 
-    if (order) {
-      order.paymentStatus = status;
-      order.updatedAt = new Date();
-      return of(order).pipe(delay(300));
+      if (order) {
+        order.paymentStatus = status;
+        order.updatedAt = new Date();
+        return of(order).pipe(delay(300));
+      }
+
+      return of(undefined).pipe(delay(300));
     }
 
-    return of(undefined).pipe(delay(300));
+    // استخدام API حقيقي
+    return this.apiService.patch<Order>(`orders/${id}/payment-status`, { status }).pipe(
+      tap(updatedOrder => {
+        // تحديث الطلب في الذاكرة المؤقتة
+        const index = this.orders.findIndex(o => o.id === updatedOrder.id);
+        if (index !== -1) {
+          this.orders[index] = updatedOrder;
+        }
+      }),
+      catchError(error => {
+        console.error(`Error updating payment status for order with id ${id}:`, error);
+        // في حالة حدوث خطأ، نعود إلى البيانات الوهمية
+        const order = this.orders.find(o => o.id === id);
+        if (order) {
+          order.paymentStatus = status;
+          order.updatedAt = new Date();
+          return of(order);
+        }
+        return of(undefined);
+      })
+    );
   }
 
   /**
    * حذف طلب
    */
   deleteOrder(id: number): Observable<boolean> {
-    const initialLength = this.orders.length;
-    this.orders = this.orders.filter(o => o.id !== id);
+    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
+    if (!environment.production) {
+      const initialLength = this.orders.length;
+      this.orders = this.orders.filter(o => o.id !== id);
 
-    // التحقق من نجاح الحذف
-    const success = initialLength > this.orders.length;
+      // التحقق من نجاح الحذف
+      const success = initialLength > this.orders.length;
 
-    return of(success).pipe(delay(500));
+      return of(success).pipe(delay(500));
+    }
+
+    // استخدام API حقيقي
+    return this.apiService.delete<any>(`orders/${id}`).pipe(
+      map(() => {
+        // حذف الطلب من الذاكرة المؤقتة
+        const initialLength = this.orders.length;
+        this.orders = this.orders.filter(o => o.id !== id);
+        return initialLength > this.orders.length;
+      }),
+      catchError(error => {
+        console.error(`Error deleting order with id ${id}:`, error);
+        // في حالة حدوث خطأ، نعود إلى البيانات الوهمية
+        return of(false);
+      })
+    );
   }
 
   /**
    * الحصول على إحصائيات الطلبات
    */
   getOrderStats(): Observable<any> {
-    const totalOrders = this.orders.length;
-    const pendingOrders = this.orders.filter(o => o.status === OrderStatus.Pending).length;
-    const processingOrders = this.orders.filter(o => o.status === OrderStatus.Processing).length;
-    const shippedOrders = this.orders.filter(o => o.status === OrderStatus.Shipped).length;
-    const deliveredOrders = this.orders.filter(o => o.status === OrderStatus.Delivered).length;
-    const cancelledOrders = this.orders.filter(o => o.status === OrderStatus.Cancelled).length;
-    const returnedOrders = this.orders.filter(o => o.status === OrderStatus.Returned).length;
+    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
+    if (!environment.production) {
+      const totalOrders = this.orders.length;
+      const pendingOrders = this.orders.filter(o => o.status === OrderStatus.Pending).length;
+      const processingOrders = this.orders.filter(o => o.status === OrderStatus.Processing).length;
+      const shippedOrders = this.orders.filter(o => o.status === OrderStatus.Shipped).length;
+      const deliveredOrders = this.orders.filter(o => o.status === OrderStatus.Delivered).length;
+      const cancelledOrders = this.orders.filter(o => o.status === OrderStatus.Cancelled).length;
+      const returnedOrders = this.orders.filter(o => o.status === OrderStatus.Returned).length;
 
-    const totalRevenue = this.orders
-      .filter(o => o.paymentStatus === PaymentStatus.Paid)
-      .reduce((sum, order) => sum + order.totalAmount, 0);
+      const totalRevenue = this.orders
+        .filter(o => o.paymentStatus === PaymentStatus.Paid)
+        .reduce((sum, order) => sum + order.totalAmount, 0);
 
-    const stats = {
-      totalOrders,
-      pendingOrders,
-      processingOrders,
-      shippedOrders,
-      deliveredOrders,
-      cancelledOrders,
-      returnedOrders,
-      totalRevenue
-    };
+      const stats = {
+        totalOrders,
+        pendingOrders,
+        processingOrders,
+        shippedOrders,
+        deliveredOrders,
+        cancelledOrders,
+        returnedOrders,
+        totalRevenue
+      };
 
-    return of(stats).pipe(delay(500));
+      return of(stats).pipe(delay(500));
+    }
+
+    // استخدام API حقيقي
+    return this.apiService.get<any>('orders/stats').pipe(
+      catchError(error => {
+        console.error('Error fetching order stats:', error);
+        // في حالة حدوث خطأ، نعود إلى البيانات الوهمية
+        const totalOrders = this.orders.length;
+        const pendingOrders = this.orders.filter(o => o.status === OrderStatus.Pending).length;
+        const processingOrders = this.orders.filter(o => o.status === OrderStatus.Processing).length;
+        const shippedOrders = this.orders.filter(o => o.status === OrderStatus.Shipped).length;
+        const deliveredOrders = this.orders.filter(o => o.status === OrderStatus.Delivered).length;
+        const cancelledOrders = this.orders.filter(o => o.status === OrderStatus.Cancelled).length;
+        const returnedOrders = this.orders.filter(o => o.status === OrderStatus.Returned).length;
+
+        const totalRevenue = this.orders
+          .filter(o => o.paymentStatus === PaymentStatus.Paid)
+          .reduce((sum, order) => sum + order.totalAmount, 0);
+
+        return of({
+          totalOrders,
+          pendingOrders,
+          processingOrders,
+          shippedOrders,
+          deliveredOrders,
+          cancelledOrders,
+          returnedOrders,
+          totalRevenue
+        });
+      })
+    );
   }
 
   /**
@@ -473,9 +669,21 @@ export class OrderService {
         orderStatus = OrderStatus.Pending;
     }
 
-    // فلترة الطلبات حسب الحالة
-    const filteredOrders = this.orders.filter(order => order.status === orderStatus);
+    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
+    if (!environment.production) {
+      // فلترة الطلبات حسب الحالة
+      const filteredOrders = this.orders.filter(order => order.status === orderStatus);
+      return of(filteredOrders).pipe(delay(500));
+    }
 
-    return of(filteredOrders).pipe(delay(500));
+    // استخدام API حقيقي
+    return this.apiService.get<Order[]>(`orders/status/${status}`).pipe(
+      catchError(error => {
+        console.error(`Error fetching orders with status ${status}:`, error);
+        // في حالة حدوث خطأ، نعود إلى البيانات الوهمية
+        const filteredOrders = this.orders.filter(order => order.status === orderStatus);
+        return of(filteredOrders);
+      })
+    );
   }
 }
