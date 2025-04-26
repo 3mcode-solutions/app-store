@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -22,6 +23,21 @@ export class LoginComponent {
   isLoading = false;
   isError = false;
   errorMessage = '';
+  returnUrl: string = '/';
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+    // إذا كان المستخدم مسجل الدخول بالفعل، قم بتوجيهه إلى الصفحة الرئيسية
+    if (this.authService.hasUser()) {
+      this.router.navigate(['/']);
+    }
+
+    // الحصول على عنوان URL للعودة من المعلمات أو الصفحة الرئيسية كافتراضي
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+  }
 
   onSubmit() {
     if (!this.isFormValid()) {
@@ -32,16 +48,20 @@ export class LoginComponent {
     this.isLoading = true;
     this.isError = false;
 
-    // محاكاة عملية تسجيل الدخول
-    setTimeout(() => {
-      this.isLoading = false;
-      if (this.loginForm.email === 'admin@example.com' && this.loginForm.password === 'password') {
-        // تم تسجيل الدخول بنجاح
-        console.log('تم تسجيل الدخول بنجاح');
-      } else {
-        this.showError('البريد الإلكتروني أو كلمة المرور غير صحيحة');
-      }
-    }, 1500);
+    this.authService.login(this.loginForm.email, this.loginForm.password)
+      .subscribe({
+        next: (user) => {
+          console.log('تم تسجيل الدخول بنجاح', user);
+          this.isLoading = false;
+          // توجيه المستخدم إلى الصفحة المطلوبة أو الصفحة الرئيسية
+          this.router.navigate([this.returnUrl]);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.showError(error.message || 'فشل تسجيل الدخول. يرجى التحقق من بيانات الاعتماد الخاصة بك.');
+          console.error('خطأ في تسجيل الدخول:', error);
+        }
+      });
   }
 
   private isFormValid(): boolean {

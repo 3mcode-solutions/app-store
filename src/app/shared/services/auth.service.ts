@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { Router } from '@angular/router';
-import { ApiService } from './api.service';
+import { HttpClient } from '@angular/common/http';
 import { tap, map, catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
@@ -14,10 +14,13 @@ export interface User {
   token?: string;
 }
 
-export interface LoginResponse {
-  user: User;
+export interface AuthResponseDto {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
   token: string;
-  message: string;
+  avatar: string;
 }
 
 @Injectable({
@@ -29,7 +32,7 @@ export class AuthService {
   private tokenKey = 'auth_token';
   private userKey = 'currentUser';
 
-  constructor(private router: Router, private apiService: ApiService) {
+  constructor(private router: Router, private http: HttpClient) {
     // التحقق من وجود مستخدم مسجل في التخزين المحلي
     this.loadUserFromStorage();
   }
@@ -61,49 +64,17 @@ export class AuthService {
    * @returns Observable مع نتيجة تسجيل الدخول
    */
   login(email: string, password: string): Observable<User> {
-    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
-    if (!environment.production) {
-      // محاكاة طلب API
-      return of({
-        user: {
-          id: 1,
-          name: 'المدير',
-          email: 'admin@example.com',
-          role: 'مدير الموقع',
-          avatar: 'assets/admin/img/profile-img.jpg'
-        },
-        token: 'mock-jwt-token',
-        message: 'تم تسجيل الدخول بنجاح'
-      } as LoginResponse).pipe(
-        tap(response => {
-          if (email === 'admin@example.com' && password === 'admin123') {
-            const user = response.user;
-            user.token = response.token;
-
-            // حفظ بيانات المستخدم في التخزين المحلي
-            localStorage.setItem(this.tokenKey, response.token);
-            localStorage.setItem(this.userKey, JSON.stringify(user));
-
-            this.currentUserSubject.next(user);
-            this.isAuthenticatedSubject.next(true);
-          } else {
-            throw new Error('بيانات تسجيل الدخول غير صحيحة');
-          }
-        }),
-        map(response => response.user),
-        catchError(error => {
-          console.error('خطأ في تسجيل الدخول', error);
-          return throwError(() => new Error('بيانات تسجيل الدخول غير صحيحة'));
-        })
-      );
-    }
-
-    // استخدام API حقيقي
-    return this.apiService.post<LoginResponse>('auth/login', { email, password })
+    return this.http.post<AuthResponseDto>(`${environment.apiUrl}/users/login`, { email, password })
       .pipe(
         tap(response => {
-          const user = response.user;
-          user.token = response.token;
+          const user: User = {
+            id: response.id,
+            name: response.name,
+            email: response.email,
+            role: response.role,
+            avatar: response.avatar,
+            token: response.token
+          };
 
           // حفظ بيانات المستخدم في التخزين المحلي
           localStorage.setItem(this.tokenKey, response.token);
@@ -112,7 +83,34 @@ export class AuthService {
           this.currentUserSubject.next(user);
           this.isAuthenticatedSubject.next(true);
         }),
-        map(response => response.user)
+        map(response => {
+          return {
+            id: response.id,
+            name: response.name,
+            email: response.email,
+            role: response.role,
+            avatar: response.avatar,
+            token: response.token
+          };
+        }),
+        catchError(error => {
+          console.error('خطأ في تسجيل الدخول', error);
+
+          // معالجة أنواع مختلفة من الأخطاء
+          if (error.status === 0) {
+            // خطأ في الاتصال بالخادم
+            return throwError(() => new Error('لا يمكن الاتصال بالخادم. يرجى التأكد من تشغيل خادم API.'));
+          } else if (error.status === 401) {
+            // خطأ في المصادقة
+            return throwError(() => new Error('البريد الإلكتروني أو كلمة المرور غير صحيحة.'));
+          } else if (error.error && typeof error.error === 'string') {
+            // رسالة خطأ من الخادم
+            return throwError(() => new Error(error.error));
+          } else {
+            // خطأ غير معروف
+            return throwError(() => new Error('حدث خطأ أثناء تسجيل الدخول. يرجى المحاولة مرة أخرى.'));
+          }
+        })
       );
   }
 
@@ -130,6 +128,13 @@ export class AuthService {
 
     // توجيه المستخدم إلى صفحة تسجيل الدخول
     this.router.navigate(['/auth/login']);
+  }
+
+  /**
+   * تسجيل مستخدم جديد
+   */
+  register(user: any): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/users/register`, user);
   }
 
   /**
@@ -165,29 +170,6 @@ export class AuthService {
    */
   getToken(): string | null {
     return this.currentUserSubject.getValue()?.token || null;
-  }
-
-  /**
-   * التحقق من صلاحية الرمز
-   */
-  validateToken(): Observable<boolean> {
-    const token = this.getToken();
-
-    if (!token) {
-      return of(false);
-    }
-
-    // في حالة عدم وجود API حقيقي
-    if (!environment.production) {
-      // محاكاة التحقق من الرمز
-      return of(true);
-    }
-
-    return this.apiService.get<{ valid: boolean }>('auth/validate-token')
-      .pipe(
-        map(response => response.valid),
-        catchError(() => of(false))
-      );
   }
 
   /**

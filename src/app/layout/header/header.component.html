@@ -70,11 +70,62 @@
         <span class="cart-count" *ngIf="(cartItemsCount$ | async) as count">{{count}}</span>
       </a>
 
-      <!-- زر تسجيل الدخول -->
-      <a class="btn-getstarted" routerLink="/auth/login">
+      <!-- زر تسجيل الدخول (يظهر فقط إذا لم يكن المستخدم مسجل الدخول) -->
+      <a *ngIf="!isAuthenticated" class="btn-getstarted" routerLink="/auth/login">
         <i class="bi bi-person me-1"></i>
         تسجيل الدخول
       </a>
+
+      <!-- قائمة المستخدم (تظهر فقط إذا كان المستخدم مسجل الدخول) -->
+      <div *ngIf="isAuthenticated" class="user-dropdown position-relative">
+        <div class="user-info d-flex align-items-center" (click)="toggleUserDropdown()">
+          <img *ngIf="currentUser?.avatar" [src]="currentUser?.avatar" class="user-avatar me-2" alt="صورة المستخدم">
+          <img *ngIf="!currentUser?.avatar" src="assets/img/default-avatar.png" class="user-avatar me-2" alt="صورة المستخدم">
+          <span class="user-name d-none d-md-inline">{{ currentUser?.name }}</span>
+          <i class="bi bi-chevron-down ms-1"></i>
+        </div>
+
+        <!-- قائمة منسدلة للمستخدم -->
+        <div class="user-dropdown-menu" [class.show]="isUserDropdownOpen">
+          <div class="user-dropdown-header">
+            <h6>{{ currentUser?.name }}</h6>
+            <p>{{ currentUser?.email }}</p>
+          </div>
+          <div class="user-dropdown-divider"></div>
+
+          <!-- رابط الملف الشخصي -->
+          <a class="user-dropdown-item" routerLink="/profile">
+            <i class="bi bi-person me-2"></i>
+            الملف الشخصي
+          </a>
+
+          <!-- رابط الطلبات -->
+          <a class="user-dropdown-item" routerLink="/orders">
+            <i class="bi bi-bag me-2"></i>
+            طلباتي
+          </a>
+
+          <!-- رابط الإعدادات -->
+          <a class="user-dropdown-item" routerLink="/settings">
+            <i class="bi bi-gear me-2"></i>
+            الإعدادات
+          </a>
+
+          <!-- رابط لوحة التحكم (يظهر فقط للمدير) -->
+          <a *ngIf="currentUser?.role === 'Admin'" class="user-dropdown-item" routerLink="/admin">
+            <i class="bi bi-speedometer2 me-2"></i>
+            لوحة التحكم
+          </a>
+
+          <div class="user-dropdown-divider"></div>
+
+          <!-- زر تسجيل الخروج -->
+          <a class="user-dropdown-item" (click)="logout()">
+            <i class="bi bi-box-arrow-right me-2"></i>
+            تسجيل الخروج
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </header>

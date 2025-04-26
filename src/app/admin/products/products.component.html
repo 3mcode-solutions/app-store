@@ -377,9 +377,9 @@
               <div class="rating">
                 <i *ngFor="let star of [1,2,3,4,5]"
                    class="bi"
-                   [class.bi-star-fill]="star <= (selectedProduct?.rating || 0)"
-                   [class.bi-star]="star > (selectedProduct?.rating || 0)"></i>
-                <span class="ms-1">{{ selectedProduct?.rating || 0 }}</span>
+                   [class.bi-star-fill]="star <= (selectedProduct.rating || 0)"
+                   [class.bi-star]="star > (selectedProduct.rating || 0)"></i>
+                <span class="ms-1">{{ selectedProduct.rating || 0 }}</span>
               </div>
             </div>
 

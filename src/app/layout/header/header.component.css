@@ -266,6 +266,95 @@
   transform: translateY(-2px);
 }
 
+/* أنماط قائمة المستخدم */
+.user-dropdown {
+  cursor: pointer;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.user-name {
+  font-weight: 500;
+  color: #012970;
+}
+
+.user-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  width: 250px;
+  z-index: 1000;
+  margin-top: 10px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+
+.user-dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.user-dropdown-header {
+  padding: 15px;
+  border-bottom: 1px solid #f1f1f1;
+  text-align: center;
+}
+
+.user-dropdown-header h6 {
+  margin: 0;
+  font-weight: 600;
+  color: #012970;
+  font-size: 16px;
+}
+
+.user-dropdown-header p {
+  margin: 5px 0 0;
+  font-size: 13px;
+  color: #899bbd;
+}
+
+.user-dropdown-divider {
+  height: 1px;
+  background-color: #f1f1f1;
+  margin: 0;
+}
+
+.user-dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  color: #012970;
+  font-size: 14px;
+  transition: all 0.3s;
+  text-decoration: none;
+}
+
+.user-dropdown-item:hover {
+  background-color: #f6f9ff;
+  color: #4154f1;
+  cursor: pointer;
+}
+
+.user-dropdown-item i {
+  font-size: 16px;
+  margin-right: 10px;
+  color: #899bbd;
+}
+
 /* شريط البحث */
 .search-bar {
   position: fixed;

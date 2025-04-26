@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3000/api' // عنوان API المحلي للتطوير
+  apiUrl: 'https://localhost:7240/api' // عنوان API المحلي للتطوير (ASP.NET Core)
 };

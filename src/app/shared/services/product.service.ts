@@ -4,6 +4,7 @@ import { delay, map, catchError, tap } from 'rxjs/operators';
 import { Product } from '../interfaces/product.interface';
 import { ApiService } from './api.service';
 import { environment } from '../../../environments/environment';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -208,7 +209,8 @@ export class ProductService {
     }
 
     // استخدام API حقيقي
-    return this.apiService.get<Product[]>('products', { params: { categoryId } }).pipe(
+    const params = new HttpParams().set('categoryId', categoryId);
+    return this.apiService.get<Product[]>('products', params).pipe(
       catchError(error => {
         console.error(`Error fetching products for category ${categoryId}:`, error);
         // في حالة حدوث خطأ، نعود إلى البيانات الوهمية
@@ -341,7 +343,8 @@ export class ProductService {
     }
 
     // استخدام API حقيقي
-    return this.apiService.get<Product[]>('products/search', { params: { query } }).pipe(
+    const params = new HttpParams().set('query', query);
+    return this.apiService.get<Product[]>('products/search', params).pipe(
       catchError(error => {
         console.error(`Error searching products with query "${query}":`, error);
         // في حالة حدوث خطأ، نعود إلى البيانات الوهمية
@@ -391,7 +394,8 @@ export class ProductService {
     }
 
     // استخدام API حقيقي
-    return this.apiService.get<Product[]>('products/top-selling', { params: { limit: limit.toString() } }).pipe(
+    const params = new HttpParams().set('limit', limit.toString());
+    return this.apiService.get<Product[]>('products/top-selling', params).pipe(
       catchError(error => {
         console.error('Error fetching top selling products:', error);
         // في حالة حدوث خطأ، نعود إلى البيانات الوهمية

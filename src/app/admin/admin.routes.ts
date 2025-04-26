@@ -1,14 +1,13 @@
 import { Routes } from '@angular/router';
 import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
-
-// سيتم إضافة حارس المصادقة لاحقاً
-// import { AuthGuard } from '../shared/guards/auth.guard';
+import { AuthGuard } from '../shared/guards/auth.guard';
 
 export const ADMIN_ROUTES: Routes = [
   {
     path: 'admin',
     component: AdminLayoutComponent,
-    // canActivate: [AuthGuard], // سيتم تفعيله لاحقاً
+    canActivate: [AuthGuard],
+    data: { roles: ['Admin'] },
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 
