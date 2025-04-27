@@ -1,56 +1,101 @@
 import { Injectable } from '@angular/core';
+import { ToastrService as NgxToastrService } from 'ngx-toastr';
+import { IndividualConfig } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ToastrService {
-  constructor() { }
+  private defaultOptions: Partial<IndividualConfig> = {
+    timeOut: 3000,
+    progressBar: true,
+    closeButton: true,
+    enableHtml: true,
+    tapToDismiss: true,
+    positionClass: 'toast-top-right'
+  };
+
+  constructor(private ngxToastr: NgxToastrService) {
+    console.log('ToastrService initialized');
+  }
 
   /**
    * عرض رسالة نجاح
    */
-  success(message: string): void {
+  success(message: string, title: string = 'نجاح'): void {
     console.log('Success:', message);
-    this.showToast(message, 'success');
+    try {
+      this.ngxToastr.success(message, title, this.defaultOptions);
+      console.log('Toast success displayed');
+    } catch (error) {
+      console.error('Error displaying success toast:', error);
+      // استخدام alert كحل بديل في حالة فشل ngx-toastr
+      alert(`✅ ${title}: ${message}`);
+    }
   }
 
   /**
    * عرض رسالة خطأ
    */
-  error(message: string): void {
+  error(message: string, title: string = 'خطأ'): void {
     console.error('Error:', message);
-    this.showToast(message, 'error');
+    try {
+      this.ngxToastr.error(message, title, {
+        ...this.defaultOptions,
+        timeOut: 5000
+      });
+      console.log('Toast error displayed');
+    } catch (error) {
+      console.error('Error displaying error toast:', error);
+      // استخدام alert كحل بديل في حالة فشل ngx-toastr
+      alert(`❌ ${title}: ${message}`);
+    }
   }
 
   /**
    * عرض رسالة تحذير
    */
-  warning(message: string): void {
+  warning(message: string, title: string = 'تحذير'): void {
     console.warn('Warning:', message);
-    this.showToast(message, 'warning');
+    try {
+      this.ngxToastr.warning(message, title, {
+        ...this.defaultOptions,
+        timeOut: 4000
+      });
+      console.log('Toast warning displayed');
+    } catch (error) {
+      console.error('Error displaying warning toast:', error);
+      // استخدام alert كحل بديل في حالة فشل ngx-toastr
+      alert(`⚠️ ${title}: ${message}`);
+    }
   }
 
   /**
    * عرض رسالة معلومات
    */
-  info(message: string): void {
+  info(message: string, title: string = 'معلومات'): void {
     console.info('Info:', message);
-    this.showToast(message, 'info');
+    try {
+      this.ngxToastr.info(message, title, this.defaultOptions);
+      console.log('Toast info displayed');
+    } catch (error) {
+      console.error('Error displaying info toast:', error);
+      // استخدام alert كحل بديل في حالة فشل ngx-toastr
+      alert(`ℹ️ ${title}: ${message}`);
+    }
   }
 
   /**
-   * عرض رسالة منبثقة
+   * عرض رسالة منبثقة مباشرة (للاختبار)
    */
-  private showToast(message: string, type: 'success' | 'error' | 'warning' | 'info'): void {
-    // هنا يمكن إضافة منطق لعرض رسائل منبثقة باستخدام مكتبة مثل ngx-toastr
-    // حاليًا نستخدم alert بسيط للتوضيح
-    const icons = {
-      success: '✅',
-      error: '❌',
-      warning: '⚠️',
-      info: 'ℹ️'
-    };
-    
-    alert(`${icons[type]} ${message}`);
+  showTestToast(): void {
+    console.log('Showing test toast');
+    try {
+      this.ngxToastr.success('هذا اختبار للإشعارات المنبثقة', 'اختبار', this.defaultOptions);
+      console.log('Test toast displayed');
+    } catch (error) {
+      console.error('Error displaying test toast:', error);
+      alert('⚠️ فشل في عرض الإشعار المنبثق للاختبار');
+    }
   }
 }

@@ -185,6 +185,13 @@ export const ADMIN_ROUTES: Routes = [
         path: 'messages',
         loadComponent: () => import('./messages/messages.component')
           .then(m => m.MessagesComponent)
+      },
+
+      // اختبار الإشعارات المنبثقة
+      {
+        path: 'toast-demo',
+        loadComponent: () => import('./toast-demo/toast-demo.component')
+          .then(m => m.ToastDemoComponent)
       }
     ]
   }

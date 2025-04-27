@@ -19,6 +19,7 @@ export class ApiService {
    * @returns Observable مع البيانات المطلوبة
    */
   get<T>(path: string, params: HttpParams = new HttpParams()): Observable<T> {
+    console.log(`API GET Request: ${this.apiUrl}/${path}`, { params });
     return this.http.get<T>(`${this.apiUrl}/${path}`, { params })
       .pipe(
         catchError(this.handleError)
@@ -32,6 +33,7 @@ export class ApiService {
    * @returns Observable مع البيانات المنشأة
    */
   post<T>(path: string, body: any): Observable<T> {
+    console.log(`API POST Request: ${this.apiUrl}/${path}`, body);
     return this.http.post<T>(`${this.apiUrl}/${path}`, body)
       .pipe(
         catchError(this.handleError)
@@ -45,6 +47,7 @@ export class ApiService {
    * @returns Observable مع البيانات المحدثة
    */
   put<T>(path: string, body: any): Observable<T> {
+    console.log(`API PUT Request: ${this.apiUrl}/${path}`, body);
     return this.http.put<T>(`${this.apiUrl}/${path}`, body)
       .pipe(
         catchError(this.handleError)
@@ -83,7 +86,7 @@ export class ApiService {
    */
   private handleError(error: any) {
     let errorMessage = 'حدث خطأ في الاتصال بالخادم';
-    
+
     if (error.error instanceof ErrorEvent) {
       // خطأ في الشبكة
       errorMessage = `خطأ: ${error.error.message}`;
@@ -91,8 +94,12 @@ export class ApiService {
       // خطأ من الخادم
       errorMessage = `رمز الخطأ: ${error.status}\nرسالة: ${error.message}`;
     }
-    
-    console.error(errorMessage);
+
+    console.error('API Error:', error);
+    console.error('Error Message:', errorMessage);
+    console.error('Error Status:', error.status);
+    console.error('Error Response:', error.error);
+
     return throwError(() => new Error(errorMessage));
   }
 }

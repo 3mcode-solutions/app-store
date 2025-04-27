@@ -9,11 +9,12 @@ import { AuthService } from '../../shared/services/auth.service';
 import { NotificationService, Notification } from '../../shared/services/notification.service';
 import { MessageService, Message } from '../../shared/services/message.service';
 import { ThemeService, ThemeType } from '../../shared/services/theme.service';
+import { ToastTestComponent } from '../../shared/components/toast-test/toast-test.component';
 
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, ToastTestComponent],
   templateUrl: './admin-layout.component.html',
   styleUrls: [
     './admin-layout.component.css',

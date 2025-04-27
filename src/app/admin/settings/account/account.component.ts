@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService, User } from '../../../shared/services/auth.service';
 import { ThemeService, ThemeType } from '../../../shared/services/theme.service';
+import { ToastrService } from '../../../shared/services/toastr.service';
 
 @Component({
   selector: 'app-account-settings',
@@ -30,7 +31,8 @@ export class AccountSettingsComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -55,7 +57,7 @@ export class AccountSettingsComponent implements OnInit {
     this.themeService.setTheme(this.accountSettings.theme as ThemeType);
 
     // هنا يمكن إضافة منطق حفظ الإعدادات الأخرى
-    alert('تم حفظ الإعدادات بنجاح');
+    this.toastr.success('تم حفظ الإعدادات بنجاح', 'إعدادات الحساب');
   }
 
   /**
@@ -63,7 +65,7 @@ export class AccountSettingsComponent implements OnInit {
    */
   enableTwoFactorAuth(): void {
     this.accountSettings.twoFactorAuth = true;
-    alert('تم تفعيل المصادقة الثنائية بنجاح');
+    this.toastr.success('تم تفعيل المصادقة الثنائية بنجاح', 'الأمان');
   }
 
   /**
@@ -71,6 +73,6 @@ export class AccountSettingsComponent implements OnInit {
    */
   disableTwoFactorAuth(): void {
     this.accountSettings.twoFactorAuth = false;
-    alert('تم تعطيل المصادقة الثنائية بنجاح');
+    this.toastr.warning('تم تعطيل المصادقة الثنائية', 'الأمان');
   }
 }

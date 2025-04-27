@@ -172,12 +172,7 @@ export class UserService {
    * الحصول على جميع المستخدمين
    */
   getUsers(): Observable<User[]> {
-    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
-    if (!environment.production) {
-      return of([...this.users]).pipe(delay(500));
-    }
-
-    // استخدام API حقيقي
+    // استخدام API حقيقي دائمًا
     return this.apiService.get<User[]>('users').pipe(
       catchError(error => {
         console.error('Error fetching users:', error);
@@ -191,13 +186,7 @@ export class UserService {
    * الحصول على مستخدم بواسطة المعرف
    */
   getUserById(id: number): Observable<User | undefined> {
-    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
-    if (!environment.production) {
-      const user = this.users.find(u => u.id === id);
-      return of(user).pipe(delay(300));
-    }
-
-    // استخدام API حقيقي
+    // استخدام API حقيقي دائمًا
     return this.apiService.get<User>(`users/${id}`).pipe(
       catchError(error => {
         console.error(`Error fetching user with id ${id}:`, error);
@@ -212,13 +201,7 @@ export class UserService {
    * الحصول على المستخدمين حسب الدور
    */
   getUsersByRole(role: UserRole): Observable<User[]> {
-    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
-    if (!environment.production) {
-      const filteredUsers = this.users.filter(u => u.role === role);
-      return of(filteredUsers).pipe(delay(500));
-    }
-
-    // استخدام API حقيقي
+    // استخدام API حقيقي دائمًا
     const params = new HttpParams().set('role', role);
     return this.apiService.get<User[]>('users', params).pipe(
       catchError(error => {
@@ -234,19 +217,7 @@ export class UserService {
    * إضافة مستخدم جديد
    */
   addUser(user: User): Observable<User> {
-    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
-    if (!environment.production) {
-      // إنشاء معرف جديد
-      const newId = Math.max(...this.users.map(u => u.id)) + 1;
-      const newUser = { ...user, id: newId, createdAt: new Date() };
-
-      // إضافة المستخدم إلى المصفوفة
-      this.users.push(newUser);
-
-      return of(newUser).pipe(delay(500));
-    }
-
-    // استخدام API حقيقي
+    // استخدام API حقيقي دائمًا
     return this.apiService.post<User>('users', user).pipe(
       tap(newUser => {
         // إضافة المستخدم الجديد إلى الذاكرة المؤقتة
@@ -267,21 +238,7 @@ export class UserService {
    * تحديث مستخدم موجود
    */
   updateUser(user: User): Observable<User> {
-    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
-    if (!environment.production) {
-      // البحث عن المستخدم وتحديثه
-      const index = this.users.findIndex(u => u.id === user.id);
-
-      if (index !== -1) {
-        this.users[index] = { ...user };
-        return of(this.users[index]).pipe(delay(500));
-      }
-
-      // إذا لم يتم العثور على المستخدم
-      return of(user).pipe(delay(500));
-    }
-
-    // استخدام API حقيقي
+    // استخدام API حقيقي دائمًا
     return this.apiService.put<User>(`users/${user.id}`, user).pipe(
       tap(updatedUser => {
         // تحديث المستخدم في الذاكرة المؤقتة
@@ -307,19 +264,7 @@ export class UserService {
    * تحديث حالة المستخدم
    */
   updateUserStatus(id: number, status: UserStatus): Observable<User | undefined> {
-    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
-    if (!environment.production) {
-      const user = this.users.find(u => u.id === id);
-
-      if (user) {
-        user.status = status;
-        return of(user).pipe(delay(300));
-      }
-
-      return of(undefined).pipe(delay(300));
-    }
-
-    // استخدام API حقيقي
+    // استخدام API حقيقي دائمًا
     return this.apiService.patch<User>(`users/${id}/status`, { status }).pipe(
       tap(updatedUser => {
         // تحديث المستخدم في الذاكرة المؤقتة
@@ -345,18 +290,7 @@ export class UserService {
    * حذف مستخدم
    */
   deleteUser(id: number): Observable<boolean> {
-    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
-    if (!environment.production) {
-      const initialLength = this.users.length;
-      this.users = this.users.filter(u => u.id !== id);
-
-      // التحقق من نجاح الحذف
-      const success = initialLength > this.users.length;
-
-      return of(success).pipe(delay(500));
-    }
-
-    // استخدام API حقيقي
+    // استخدام API حقيقي دائمًا
     return this.apiService.delete<any>(`users/${id}`).pipe(
       map(() => {
         // حذف المستخدم من الذاكرة المؤقتة
@@ -379,20 +313,7 @@ export class UserService {
       return of([]);
     }
 
-    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
-    if (!environment.production) {
-      const searchTerm = query.toLowerCase();
-      const results = this.users.filter(user =>
-        user.firstName.toLowerCase().includes(searchTerm) ||
-        user.lastName.toLowerCase().includes(searchTerm) ||
-        user.email.toLowerCase().includes(searchTerm) ||
-        (user.phone && user.phone.includes(searchTerm))
-      );
-
-      return of(results).pipe(delay(300));
-    }
-
-    // استخدام API حقيقي
+    // استخدام API حقيقي دائمًا
     const params = new HttpParams().set('query', query);
     return this.apiService.get<User[]>('users/search', params).pipe(
       catchError(error => {
@@ -414,40 +335,7 @@ export class UserService {
    * الحصول على إحصائيات المستخدمين
    */
   getUserStats(): Observable<any> {
-    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
-    if (!environment.production) {
-      const totalUsers = this.users.length;
-      const activeUsers = this.users.filter(u => u.status === UserStatus.Active).length;
-      const inactiveUsers = this.users.filter(u => u.status === UserStatus.Inactive).length;
-      const suspendedUsers = this.users.filter(u => u.status === UserStatus.Suspended).length;
-      const pendingUsers = this.users.filter(u => u.status === UserStatus.Pending).length;
-
-      const adminUsers = this.users.filter(u => u.role === UserRole.Admin).length;
-      const customerUsers = this.users.filter(u => u.role === UserRole.Customer).length;
-      const editorUsers = this.users.filter(u => u.role === UserRole.Editor).length;
-      const vendorUsers = this.users.filter(u => u.role === UserRole.Vendor).length;
-
-      const verifiedUsers = this.users.filter(u => u.isVerified).length;
-      const unverifiedUsers = this.users.filter(u => !u.isVerified).length;
-
-      const stats = {
-        totalUsers,
-        activeUsers,
-        inactiveUsers,
-        suspendedUsers,
-        pendingUsers,
-        adminUsers,
-        customerUsers,
-        editorUsers,
-        vendorUsers,
-        verifiedUsers,
-        unverifiedUsers
-      };
-
-      return of(stats).pipe(delay(500));
-    }
-
-    // استخدام API حقيقي
+    // استخدام API حقيقي دائمًا
     return this.apiService.get<any>('users/stats').pipe(
       catchError(error => {
         console.error('Error fetching user stats:', error);

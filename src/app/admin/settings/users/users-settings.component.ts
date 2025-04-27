@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ToastrService } from '../../../shared/services/toastr.service';
 
 interface User {
   id: number;
@@ -112,7 +113,7 @@ export class UsersSettingsComponent implements OnInit {
   isEditingRole: boolean = false;
   activeTab: 'users' | 'roles' = 'users';
 
-  constructor() { }
+  constructor(private toastr: ToastrService) { }
 
   ngOnInit(): void {
   }
@@ -161,20 +162,20 @@ export class UsersSettingsComponent implements OnInit {
    */
   saveUser(): void {
     if (!this.userForm.name || !this.userForm.email || !this.userForm.role) {
-      alert('يرجى ملء جميع الحقول المطلوبة');
+      this.toastr.error('يرجى ملء جميع الحقول المطلوبة', 'خطأ في النموذج');
       return;
     }
 
     // التحقق من صحة البريد الإلكتروني
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(this.userForm.email)) {
-      alert('يرجى إدخال بريد إلكتروني صحيح');
+      this.toastr.error('يرجى إدخال بريد إلكتروني صحيح', 'خطأ في النموذج');
       return;
     }
 
     // التحقق من تطابق كلمة المرور
     if (this.userForm.password !== this.userForm.confirmPassword) {
-      alert('كلمة المرور غير متطابقة');
+      this.toastr.error('كلمة المرور غير متطابقة', 'خطأ في النموذج');
       return;
     }
 
@@ -189,12 +190,12 @@ export class UsersSettingsComponent implements OnInit {
           role: this.userForm.role,
           status: this.userForm.status as 'active' | 'inactive'
         };
-        alert('تم تعديل المستخدم بنجاح');
+        this.toastr.success('تم تعديل المستخدم بنجاح', 'المستخدمين');
       }
     } else {
       // إضافة مستخدم جديد
       if (!this.userForm.password) {
-        alert('يرجى إدخال كلمة المرور');
+        this.toastr.error('يرجى إدخال كلمة المرور', 'خطأ في النموذج');
         return;
       }
 
@@ -207,7 +208,7 @@ export class UsersSettingsComponent implements OnInit {
         status: this.userForm.status as 'active' | 'inactive',
         lastLogin: null
       });
-      alert('تم إضافة المستخدم بنجاح');
+      this.toastr.success('تم إضافة المستخدم بنجاح', 'المستخدمين');
     }
 
     // إعادة تعيين النموذج
@@ -228,7 +229,7 @@ export class UsersSettingsComponent implements OnInit {
   deleteUser(id: number): void {
     if (confirm('هل أنت متأكد من رغبتك في حذف هذا المستخدم؟')) {
       this.users = this.users.filter(u => u.id !== id);
-      alert('تم حذف المستخدم بنجاح');
+      this.toastr.success('تم حذف المستخدم بنجاح', 'المستخدمين');
     }
   }
 
@@ -275,7 +276,7 @@ export class UsersSettingsComponent implements OnInit {
    */
   saveRole(): void {
     if (!this.roleForm.name) {
-      alert('يرجى إدخال اسم الدور');
+      this.toastr.error('يرجى إدخال اسم الدور', 'خطأ في النموذج');
       return;
     }
 
@@ -297,7 +298,7 @@ export class UsersSettingsComponent implements OnInit {
           name: this.roleForm.name,
           permissions: permissions
         };
-        alert('تم تعديل الدور بنجاح');
+        this.toastr.success('تم تعديل الدور بنجاح', 'الأدوار');
       }
     } else {
       // إضافة دور جديد
@@ -307,7 +308,7 @@ export class UsersSettingsComponent implements OnInit {
         name: this.roleForm.name,
         permissions: permissions
       });
-      alert('تم إضافة الدور بنجاح');
+      this.toastr.success('تم إضافة الدور بنجاح', 'الأدوار');
     }
 
     // إعادة تعيين النموذج
@@ -331,13 +332,13 @@ export class UsersSettingsComponent implements OnInit {
   deleteRole(id: number): void {
     // التحقق من عدم استخدام الدور
     if (this.users.some(u => u.role === this.roles.find(r => r.id === id)?.name)) {
-      alert('لا يمكن حذف هذا الدور لأنه مستخدم من قبل مستخدم واحد أو أكثر');
+      this.toastr.error('لا يمكن حذف هذا الدور لأنه مستخدم من قبل مستخدم واحد أو أكثر', 'خطأ');
       return;
     }
 
     if (confirm('هل أنت متأكد من رغبتك في حذف هذا الدور؟')) {
       this.roles = this.roles.filter(r => r.id !== id);
-      alert('تم حذف الدور بنجاح');
+      this.toastr.success('تم حذف الدور بنجاح', 'الأدوار');
     }
   }
 

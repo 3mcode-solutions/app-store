@@ -23,11 +23,15 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
-              }
+                "input": "public",
+                "output": "/"
+              },
+              "src/favicon.ico",
+              "src/assets"
             ],
             "styles": [
               "./node_modules/bootstrap/dist/css/bootstrap.css",
+              "./node_modules/ngx-toastr/toastr.css",
               "src/assets/admin/vendor/bootstrap-icons/bootstrap-icons.css",
               "src/assets/admin/vendor/boxicons/css/boxicons.min.css",
               "src/assets/admin/vendor/quill/quill.snow.css",
@@ -35,6 +39,7 @@
               "src/assets/admin/vendor/remixicon/remixicon.css",
               "src/assets/admin/vendor/simple-datatables/style.css",
               "src/styles/theme.css",
+              "src/styles/toastr-custom.css",
               "src/styles.css"
             ],
             "scripts": [
@@ -98,8 +103,11 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
-              }
+                "input": "public",
+                "output": "/"
+              },
+              "src/favicon.ico",
+              "src/assets"
             ],
             "styles": [
               "src/styles.css"

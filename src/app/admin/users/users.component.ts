@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { User, UserRole, UserStatus } from '../../shared/interfaces/user.interface';
 import { UserService } from '../../shared/services/user.service';
 import { ToastrService } from '../../shared/services/toastr.service';
+import { NotificationToastService } from '../../shared/services/notification-toast.service';
 
 declare var bootstrap: any;
 
@@ -62,7 +63,8 @@ export class UsersComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private notificationToast: NotificationToastService
   ) {
     // إنشاء نموذج المستخدم
     this.userForm = this.fb.group({
@@ -320,33 +322,40 @@ export class UsersComponent implements OnInit {
     }
 
     const userData = this.userForm.value;
+    console.log('Saving user data:', userData);
 
     if (this.isEditMode) {
       // تعديل مستخدم موجود
+      console.log('Updating existing user with ID:', userData.id);
       this.userService.updateUser(userData).subscribe(
-        () => {
-          this.toastr.success('تم تعديل المستخدم بنجاح');
+        (updatedUser) => {
+          console.log('User updated successfully:', updatedUser);
+          // استخدام خدمة الإشعارات المنبثقة
+          this.notificationToast.showUpdateSuccess('المستخدم', `${updatedUser.firstName} ${updatedUser.lastName}`);
           this.loadUsers();
           this.loadUserStats();
           this.userModal.hide();
         },
         (error) => {
           console.error('Error updating user:', error);
-          this.toastr.error('حدث خطأ أثناء تعديل المستخدم');
+          this.notificationToast.showError(`حدث خطأ أثناء تعديل المستخدم: ${error.message || 'خطأ غير معروف'}`);
         }
       );
     } else {
       // إضافة مستخدم جديد
+      console.log('Adding new user');
       this.userService.addUser(userData).subscribe(
-        () => {
-          this.toastr.success('تم إضافة المستخدم بنجاح');
+        (newUser) => {
+          console.log('User added successfully:', newUser);
+          // استخدام خدمة الإشعارات المنبثقة
+          this.notificationToast.showAddSuccess('المستخدم', `${newUser.firstName} ${newUser.lastName}`);
           this.loadUsers();
           this.loadUserStats();
           this.userModal.hide();
         },
         (error) => {
           console.error('Error adding user:', error);
-          this.toastr.error('حدث خطأ أثناء إضافة المستخدم');
+          this.notificationToast.showError(`حدث خطأ أثناء إضافة المستخدم: ${error.message || 'خطأ غير معروف'}`);
         }
       );
     }
@@ -382,7 +391,8 @@ export class UsersComponent implements OnInit {
           updatedUser.notes = formValues.notes;
           this.userService.updateUser(updatedUser).subscribe(
             () => {
-              this.toastr.success('تم تحديث حالة المستخدم بنجاح');
+              // استخدام خدمة الإشعارات المنبثقة
+              this.notificationToast.showUpdateSuccess('حالة المستخدم', `${updatedUser.firstName} ${updatedUser.lastName}`);
               this.loadUsers();
               this.loadUserStats();
               this.updateStatusModal.hide();
@@ -418,7 +428,9 @@ export class UsersComponent implements OnInit {
     this.userService.deleteUser(this.selectedUser.id).subscribe(
       (success) => {
         if (success) {
-          this.toastr.success('تم حذف المستخدم بنجاح');
+          // استخدام خدمة الإشعارات المنبثقة
+          const userName = `${this.selectedUser?.firstName} ${this.selectedUser?.lastName}`;
+          this.notificationToast.showDeleteSuccess('المستخدم', userName);
           this.loadUsers();
           this.loadUserStats();
           this.deleteModal.hide();
