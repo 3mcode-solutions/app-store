@@ -1,0 +1,39 @@
+/* تنسيق جدول الصفحات */
+.table th, .table td {
+  vertical-align: middle;
+}
+
+/* تنسيق محرر النصوص */
+:host ::ng-deep .ck-editor__editable {
+  min-height: 300px;
+  max-height: 500px;
+  direction: rtl;
+}
+
+:host ::ng-deep .ck-editor__editable p {
+  margin: 0.5em 0;
+}
+
+/* تنسيق رابط الصفحة */
+code {
+  background-color: #f8f9fa;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+/* تنسيق أزرار الإجراءات */
+.btn-group .btn {
+  margin-right: 2px;
+}
+
+/* تنسيق نافذة المحرر */
+.modal-xl {
+  max-width: 90%;
+}
+
+@media (max-width: 992px) {
+  .modal-xl {
+    max-width: 95%;
+  }
+}

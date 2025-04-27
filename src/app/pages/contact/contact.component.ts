@@ -1,26 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { PageService, Page } from '../../shared/services/page.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule, HttpClientModule],
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.css']
 })
-export class ContactComponent {
+export class ContactComponent implements OnInit {
   pageTitle = {
-    title: 'Contact Us',
-    description: 'Get in touch with us for any inquiries or support needs.'
+    title: 'اتصل بنا',
+    description: 'تواصل معنا لأي استفسارات أو احتياجات دعم.'
   };
 
   contactInfo = {
-    address: '123 Business Street, New York, NY 12345',
+    address: 'شارع الملك فهد، الرياض، المملكة العربية السعودية',
     email: 'info@example.com',
-    phone: '+1 (555) 123-4567',
-    mapUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387193.30591910525!2d-74.25986432970971!3d40.69714941680757!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2s!4v1682237287261!5m2!1sen!2s'
+    phone: '+966 12 345 6789',
+    mapUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3624.1832756968327!2d46.6885!3d24.7136!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e2f03890d489399%3A0xba974d1c98e79fd5!2sRiyadh%20Saudi%20Arabia!5e0!3m2!1sen!2s!4v1682237287261!5m2!1sen!2s'
   };
+
+  pageData: Page | null = null;
+  isPageLoading = true;
+  pageError = false;
 
   formData = {
     name: '',
@@ -34,10 +41,37 @@ export class ContactComponent {
   isSuccess = false;
   errorMessage = '';
 
+  constructor(private pageService: PageService) {}
+
+  ngOnInit(): void {
+    this.loadPageData();
+  }
+
+  loadPageData(): void {
+    this.isPageLoading = true;
+    this.pageError = false;
+
+    this.pageService.getPageBySlug('contact').subscribe({
+      next: (page) => {
+        this.pageData = page;
+        if (page) {
+          this.pageTitle.title = page.title;
+          this.pageTitle.description = page.metaDescription || '';
+        }
+        this.isPageLoading = false;
+      },
+      error: (err) => {
+        console.error('Error loading contact page:', err);
+        this.pageError = true;
+        this.isPageLoading = false;
+      }
+    });
+  }
+
   async onSubmit() {
     if (!this.formData.name || !this.formData.email || !this.formData.subject || !this.formData.message) {
       this.isError = true;
-      this.errorMessage = 'Please fill in all fields';
+      this.errorMessage = 'يرجى ملء جميع الحقول';
       return;
     }
 
@@ -62,7 +96,7 @@ export class ContactComponent {
       };
     } catch (error) {
       this.isError = true;
-      this.errorMessage = 'An error occurred while sending your message. Please try again.';
+      this.errorMessage = 'حدث خطأ أثناء إرسال رسالتك. يرجى المحاولة مرة أخرى.';
     } finally {
       this.isLoading = false;
     }

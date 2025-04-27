@@ -1,0 +1,190 @@
+<div class="pagetitle">
+  <h1>إدارة الصفحات</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/admin">الرئيسية</a></li>
+      <li class="breadcrumb-item active">إدارة الصفحات</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title">قائمة الصفحات</h5>
+            <button class="btn btn-primary" (click)="openAddPageModal()">
+              <i class="bi bi-plus-circle me-1"></i>
+              إضافة صفحة جديدة
+            </button>
+          </div>
+
+          <!-- جدول الصفحات -->
+          <div class="table-responsive">
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">العنوان</th>
+                  <th scope="col">الرابط</th>
+                  <th scope="col">الحالة</th>
+                  <th scope="col">تاريخ الإنشاء</th>
+                  <th scope="col">آخر تحديث</th>
+                  <th scope="col">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="isLoading">
+                  <td colspan="7" class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">جاري التحميل...</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngIf="!isLoading && pages.length === 0">
+                  <td colspan="7" class="text-center">لا توجد صفحات</td>
+                </tr>
+                <tr *ngFor="let page of pages; let i = index">
+                  <th scope="row">{{ i + 1 }}</th>
+                  <td>{{ page.title }}</td>
+                  <td>
+                    <code>/{{ page.slug }}</code>
+                  </td>
+                  <td>
+                    <span class="badge" [ngClass]="page.isActive ? 'bg-success' : 'bg-secondary'">
+                      {{ page.isActive ? 'نشط' : 'غير نشط' }}
+                    </span>
+                  </td>
+                  <td>{{ formatDate(page.createdAt) }}</td>
+                  <td>{{ formatDate(page.updatedAt) }}</td>
+                  <td>
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-sm btn-primary" (click)="editPage(page)" title="تعديل">
+                        <i class="bi bi-pencil-square"></i>
+                      </button>
+                      <button type="button" class="btn btn-sm btn-info" (click)="previewPage(page)" title="معاينة">
+                        <i class="bi bi-eye"></i>
+                      </button>
+                      <button type="button" class="btn btn-sm btn-danger" (click)="deletePage(page)" title="حذف">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- نافذة إضافة/تعديل صفحة -->
+<div class="modal fade" id="pageModal" tabindex="-1" aria-labelledby="pageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <form [formGroup]="pageForm" (ngSubmit)="savePage()">
+        <div class="modal-header">
+          <h5 class="modal-title" id="pageModalLabel">
+            {{ isEditMode ? 'تعديل صفحة' : 'إضافة صفحة جديدة' }}
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="pageTitle" class="form-label">عنوان الصفحة <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="pageTitle" formControlName="title" placeholder="أدخل عنوان الصفحة">
+              <div *ngIf="pageForm.get('title')?.invalid && pageForm.get('title')?.touched" class="text-danger">
+                <small *ngIf="pageForm.get('title')?.errors?.['required']">عنوان الصفحة مطلوب</small>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label for="pageSlug" class="form-label">رابط الصفحة <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text">/</span>
+                <input type="text" class="form-control" id="pageSlug" formControlName="slug" placeholder="مثال: about-us">
+              </div>
+              <div *ngIf="pageForm.get('slug')?.invalid && pageForm.get('slug')?.touched" class="text-danger">
+                <small *ngIf="pageForm.get('slug')?.errors?.['required']">رابط الصفحة مطلوب</small>
+                <small *ngIf="pageForm.get('slug')?.errors?.['pattern']">يجب أن يحتوي الرابط على أحرف صغيرة وأرقام وشرطات فقط</small>
+              </div>
+              <small class="text-muted">استخدم أحرف إنجليزية صغيرة وأرقام وشرطات فقط</small>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-12">
+              <label for="pageContent" class="form-label">محتوى الصفحة <span class="text-danger">*</span></label>
+              <textarea class="form-control" id="pageContent" formControlName="content" rows="10"></textarea>
+              <div *ngIf="pageForm.get('content')?.invalid && pageForm.get('content')?.touched" class="text-danger">
+                <small *ngIf="pageForm.get('content')?.errors?.['required']">محتوى الصفحة مطلوب</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="pageMetaDescription" class="form-label">وصف الميتا (للـ SEO)</label>
+              <textarea class="form-control" id="pageMetaDescription" formControlName="metaDescription" rows="3" placeholder="وصف قصير للصفحة يظهر في نتائج البحث"></textarea>
+              <div *ngIf="pageForm.get('metaDescription')?.invalid && pageForm.get('metaDescription')?.touched" class="text-danger">
+                <small *ngIf="pageForm.get('metaDescription')?.errors?.['maxlength']">يجب ألا يتجاوز الوصف 500 حرف</small>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label for="pageMetaKeywords" class="form-label">الكلمات المفتاحية (للـ SEO)</label>
+              <textarea class="form-control" id="pageMetaKeywords" formControlName="metaKeywords" rows="3" placeholder="كلمات مفتاحية مفصولة بفواصل"></textarea>
+              <div *ngIf="pageForm.get('metaKeywords')?.invalid && pageForm.get('metaKeywords')?.touched" class="text-danger">
+                <small *ngIf="pageForm.get('metaKeywords')?.errors?.['maxlength']">يجب ألا تتجاوز الكلمات المفتاحية 500 حرف</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-12">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="pageIsActive" formControlName="isActive">
+                <label class="form-check-label" for="pageIsActive">تفعيل الصفحة</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+          <button type="submit" class="btn btn-primary" [disabled]="pageForm.invalid || isLoading">
+            <i class="bi bi-check-circle me-1"></i>
+            <span *ngIf="!isLoading">{{ isEditMode ? 'حفظ التغييرات' : 'إضافة الصفحة' }}</span>
+            <span *ngIf="isLoading">جاري الحفظ...</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة تأكيد الحذف -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">تأكيد الحذف</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>هل أنت متأكد من رغبتك في حذف الصفحة "{{ selectedPage?.title }}"؟</p>
+        <p class="text-danger">هذا الإجراء لا يمكن التراجع عنه.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+        <button type="button" class="btn btn-danger" (click)="confirmDelete()" [disabled]="isLoading">
+          <i class="bi bi-trash me-1"></i>
+          <span *ngIf="!isLoading">تأكيد الحذف</span>
+          <span *ngIf="isLoading">جاري الحذف...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

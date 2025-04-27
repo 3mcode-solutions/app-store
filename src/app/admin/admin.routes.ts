@@ -192,6 +192,13 @@ export const ADMIN_ROUTES: Routes = [
         path: 'toast-demo',
         loadComponent: () => import('./toast-demo/toast-demo.component')
           .then(m => m.ToastDemoComponent)
+      },
+
+      // إدارة الصفحات
+      {
+        path: 'pages',
+        loadComponent: () => import('./pages/pages.component')
+          .then(m => m.PagesComponent)
       }
     ]
   }

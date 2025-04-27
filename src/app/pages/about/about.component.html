@@ -14,77 +14,68 @@
     <nav class="breadcrumbs">
       <div class="container">
         <ol>
-          <li><a routerLink="/">Home</a></li>
-          <li class="current">About</li>
+          <li><a routerLink="/">الرئيسية</a></li>
+          <li class="current">من نحن</li>
         </ol>
       </div>
     </nav>
   </div>
 
-  <!-- About Section -->
-  <section id="about" class="about section">
+  <!-- Loading Indicator -->
+  <div class="container mt-5 mb-5 text-center" *ngIf="isLoading">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">جاري التحميل...</span>
+    </div>
+    <p class="mt-2">جاري تحميل المحتوى...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div class="container mt-5 mb-5 text-center" *ngIf="error">
+    <div class="alert alert-danger">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      حدث خطأ أثناء تحميل المحتوى. يرجى المحاولة مرة أخرى لاحقًا.
+    </div>
+    <button class="btn btn-primary mt-3" (click)="loadPageData()">
+      <i class="bi bi-arrow-clockwise me-2"></i>
+      إعادة المحاولة
+    </button>
+  </div>
+
+  <!-- Page Content from Database -->
+  <section class="about section" *ngIf="!isLoading && !error && pageData">
+    <div class="container" data-aos="fade-up">
+      <div class="page-content" [innerHTML]="pageData.content"></div>
+    </div>
+  </section>
+
+  <!-- Fallback Content if no data found -->
+  <section class="about section" *ngIf="!isLoading && !error && !pageData">
     <div class="container" data-aos="fade-up">
       <div class="row gx-0">
         <div class="col-lg-6 d-flex flex-column justify-content-center" data-aos="fade-up" data-aos-delay="200">
           <div class="content">
-            <h3>Who We Are</h3>
-            <h2>Expert Solutions for Business Growth</h2>
+            <h3>من نحن</h3>
+            <h2>حلول متخصصة لنمو الأعمال</h2>
             <p>
-              We are a dedicated team of professionals committed to delivering innovative solutions that help businesses thrive in the digital age. Our expertise spans across various domains, ensuring comprehensive support for all your business needs.
+              نحن فريق متخصص من المحترفين ملتزمون بتقديم حلول مبتكرة تساعد الشركات على الازدهار في العصر الرقمي. تمتد خبرتنا عبر مجالات متنوعة، مما يضمن دعمًا شاملاً لجميع احتياجات عملك.
             </p>
             <ul class="mt-4">
-              <li><i class="bi bi-check-circle"></i> Expert team with years of experience</li>
-              <li><i class="bi bi-check-circle"></i> Customized solutions for your business</li>
-              <li><i class="bi bi-check-circle"></i> 24/7 support and maintenance</li>
-              <li><i class="bi bi-check-circle"></i> Cutting-edge technologies and methodologies</li>
+              <li><i class="bi bi-check-circle"></i> فريق خبير بسنوات من الخبرة</li>
+              <li><i class="bi bi-check-circle"></i> حلول مخصصة لعملك</li>
+              <li><i class="bi bi-check-circle"></i> دعم وصيانة على مدار الساعة</li>
+              <li><i class="bi bi-check-circle"></i> تقنيات ومنهجيات متطورة</li>
             </ul>
             <div class="text-center text-lg-start">
               <a href="#services" class="btn-read-more d-inline-flex align-items-center justify-content-center align-self-center">
-                <span>Our Services</span>
-                <i class="bi bi-arrow-right"></i>
+                <span>خدماتنا</span>
+                <i class="bi bi-arrow-left"></i>
               </a>
             </div>
           </div>
         </div>
 
         <div class="col-lg-6 d-flex align-items-center" data-aos="zoom-out" data-aos-delay="200">
-          <img src="assets/img/about.jpg" class="img-fluid" alt="About Us Image">
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Features Section -->
-  <section id="features" class="features section">
-    <div class="container" data-aos="fade-up">
-      <header class="section-header">
-        <h2>Our Features</h2>
-        <p>What Makes Us Different</p>
-      </header>
-
-      <div class="row">
-        <div class="col-lg-4 mt-5 mt-lg-0" data-aos="fade-up" data-aos-delay="200">
-          <div class="box">
-            <i class="bi bi-shield-check"></i>
-            <h3>Quality Assurance</h3>
-            <p>Rigorous testing and quality control processes to ensure excellent results.</p>
-          </div>
-        </div>
-
-        <div class="col-lg-4 mt-5 mt-lg-0" data-aos="fade-up" data-aos-delay="400">
-          <div class="box">
-            <i class="bi bi-speedometer2"></i>
-            <h3>Fast Delivery</h3>
-            <p>Quick turnaround times without compromising on quality.</p>
-          </div>
-        </div>
-
-        <div class="col-lg-4 mt-5 mt-lg-0" data-aos="fade-up" data-aos-delay="600">
-          <div class="box">
-            <i class="bi bi-headset"></i>
-            <h3>24/7 Support</h3>
-            <p>Round-the-clock support to address your concerns and queries.</p>
-          </div>
+          <img src="assets/img/about.jpg" class="img-fluid" alt="صورة من نحن">
         </div>
       </div>
     </div>
