@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { CartService } from '../../shared/services/cart.service';
 import { WishlistService } from '../../shared/services/wishlist.service';
 import { AuthService, User } from '../../shared/services/auth.service';
+import { PageService, Page } from '../../shared/services/page.service';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -27,10 +28,14 @@ export class HeaderComponent implements OnInit {
   // تتبع تمرير الصفحة لتغيير مظهر الهيدر
   isScrolled = false;
 
+  // الصفحات الديناميكية
+  dynamicPages: Page[] = [];
+
   constructor(
     private cartService: CartService,
     private wishlistService: WishlistService,
-    private authService: AuthService
+    private authService: AuthService,
+    private pageService: PageService
   ) {}
 
   ngOnInit(): void {
@@ -46,6 +51,24 @@ export class HeaderComponent implements OnInit {
         this.currentUser = this.authService.getCurrentUserValue();
       } else {
         this.currentUser = null;
+      }
+    });
+
+    // تحميل الصفحات الديناميكية
+    this.loadDynamicPages();
+  }
+
+  /**
+   * تحميل الصفحات الديناميكية
+   */
+  loadDynamicPages(): void {
+    this.pageService.getAllPages().subscribe({
+      next: (pages) => {
+        // تصفية الصفحات النشطة فقط
+        this.dynamicPages = pages.filter(page => page.isActive);
+      },
+      error: (err) => {
+        console.error('Error loading dynamic pages:', err);
       }
     });
   }

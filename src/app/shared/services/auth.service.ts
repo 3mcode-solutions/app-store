@@ -64,7 +64,11 @@ export class AuthService {
    * @returns Observable مع نتيجة تسجيل الدخول
    */
   login(email: string, password: string): Observable<User> {
-    return this.http.post<AuthResponseDto>(`${environment.apiUrl}/users/login`, { email, password })
+    const loginDto = { email, password };
+    console.log('Sending login data:', loginDto);
+    return this.http.post<AuthResponseDto>(`${environment.apiUrl}/users/login`, loginDto, {
+      headers: { 'Content-Type': 'application/json' }
+    })
       .pipe(
         tap(response => {
           const user: User = {
@@ -103,6 +107,16 @@ export class AuthService {
           } else if (error.status === 401) {
             // خطأ في المصادقة
             return throwError(() => new Error('البريد الإلكتروني أو كلمة المرور غير صحيحة.'));
+          } else if (error.status === 400) {
+            // خطأ في البيانات المرسلة
+            if (error.error && error.error.errors) {
+              console.error('خطأ في البيانات المرسلة:', error.error.errors);
+              return throwError(() => new Error('بيانات تسجيل الدخول غير صالحة. يرجى التحقق من البيانات المدخلة.'));
+            } else if (error.error && typeof error.error === 'string') {
+              return throwError(() => new Error(error.error));
+            } else {
+              return throwError(() => new Error('بيانات تسجيل الدخول غير صالحة.'));
+            }
           } else if (error.error && typeof error.error === 'string') {
             // رسالة خطأ من الخادم
             return throwError(() => new Error(error.error));

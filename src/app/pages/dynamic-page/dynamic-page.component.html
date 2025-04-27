@@ -1,0 +1,50 @@
+<main class="main">
+  <!-- Page Title -->
+  <div class="page-title">
+    <div class="heading">
+      <div class="container">
+        <div class="row d-flex justify-content-center text-center">
+          <div class="col-lg-8">
+            <h1>{{pageTitle.title}}</h1>
+            <p class="mb-0">{{pageTitle.description}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <nav class="breadcrumbs">
+      <div class="container">
+        <ol>
+          <li><a routerLink="/">الرئيسية</a></li>
+          <li class="current">{{pageTitle.title}}</li>
+        </ol>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div class="container mt-5 mb-5 text-center" *ngIf="isLoading">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">جاري التحميل...</span>
+    </div>
+    <p class="mt-2">جاري تحميل المحتوى...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div class="container mt-5 mb-5 text-center" *ngIf="error">
+    <div class="alert alert-danger">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      لم يتم العثور على الصفحة المطلوبة. يرجى التحقق من الرابط أو العودة إلى الصفحة الرئيسية.
+    </div>
+    <button class="btn btn-primary mt-3" routerLink="/">
+      <i class="bi bi-house me-2"></i>
+      العودة إلى الصفحة الرئيسية
+    </button>
+  </div>
+
+  <!-- Page Content from Database -->
+  <section class="page-content section" *ngIf="!isLoading && !error && pageData">
+    <div class="container" data-aos="fade-up">
+      <div class="content" [innerHTML]="pageData.content"></div>
+    </div>
+  </section>
+</main>

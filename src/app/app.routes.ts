@@ -96,12 +96,22 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/compare/compare.component').then(m => m.CompareComponent),
         title: 'مقارنة المنتجات'
       },
+      {
+        path: 'page/:slug',
+        loadComponent: () => import('./pages/dynamic-page/dynamic-page.component').then(m => m.DynamicPageComponent)
+      },
       ...AUTH_ROUTES
     ]
   },
 
   // Admin routes - completely separate from store routes
   ...ADMIN_ROUTES,
+
+  // Dynamic page route
+  {
+    path: ':slug',
+    loadComponent: () => import('./pages/dynamic-page/dynamic-page.component').then(m => m.DynamicPageComponent)
+  },
 
   // Fallback route
   {

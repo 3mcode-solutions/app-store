@@ -43,8 +43,30 @@
         </li>
         <li><a routerLink="/categories" routerLinkActive="active">التصنيفات</a></li>
         <li><a routerLink="/offers" routerLinkActive="active">العروض</a></li>
-        <li><a routerLink="/about" routerLinkActive="active">من نحن</a></li>
-        <li><a routerLink="/contact" routerLinkActive="active">اتصل بنا</a></li>
+        <li><a routerLink="/page/about" routerLinkActive="active">من نحن</a></li>
+        <li><a routerLink="/page/contact" routerLinkActive="active">اتصل بنا</a></li>
+
+        <!-- قائمة منسدلة للسياسات والشروط -->
+        <li class="dropdown">
+          <a href="javascript:void(0);">
+            <span>معلومات مهمة</span> <i class="bi bi-chevron-down"></i>
+          </a>
+          <ul>
+            <li><a routerLink="/page/privacy-policy" routerLinkActive="active">سياسة الخصوصية</a></li>
+            <li><a routerLink="/page/terms-conditions" routerLinkActive="active">الشروط والأحكام</a></li>
+            <li><a routerLink="/page/shipping-policy" routerLinkActive="active">سياسة الشحن</a></li>
+            <li><a routerLink="/page/return-policy" routerLinkActive="active">سياسة الإرجاع</a></li>
+
+            <!-- الصفحات الديناميكية الأخرى -->
+            <ng-container *ngFor="let page of dynamicPages">
+              <li *ngIf="page.slug !== 'about' && page.slug !== 'contact' &&
+                         page.slug !== 'privacy-policy' && page.slug !== 'terms-conditions' &&
+                         page.slug !== 'shipping-policy' && page.slug !== 'return-policy'">
+                <a routerLink="/page/{{page.slug}}" routerLinkActive="active">{{page.title}}</a>
+              </li>
+            </ng-container>
+          </ul>
+        </li>
       </ul>
       <i class="mobile-nav-toggle d-xl-none bi"
          [class.bi-list]="!isMenuOpen"

@@ -32,12 +32,18 @@ export class CategoriesComponent implements OnInit {
 
   // فلترة وترتيب
   searchTerm = '';
-  sortBy = 'id';
+  sortBy = 'displayOrder';
+  sortOrder = 'asc';
+  showParentOnly = true;
+  showActiveOnly = true;
 
   // ترقيم الصفحات
   currentPage = 1;
   pageSize = 10;
   totalPages = 1;
+
+  // قائمة الفئات الرئيسية (للاختيار منها عند إنشاء فئة فرعية)
+  parentCategories: Category[] = [];
 
   // النوافذ المنبثقة
   categoryModal: any;
@@ -56,15 +62,20 @@ export class CategoriesComponent implements OnInit {
       name: ['', [Validators.required]],
       description: ['', [Validators.required]],
       imageUrl: ['', [Validators.required]],
-      icon: [''],
-      productCount: [0],
-      isActive: [true]
+      icon: ['', [Validators.required]],
+      slug: [''],
+      displayOrder: [0],
+      isParent: [true],
+      parentId: [null],
+      active: [true],
+      productCount: [0]
     });
   }
 
   ngOnInit(): void {
     // تحميل البيانات
     this.loadCategories();
+    this.loadParentCategories();
 
     // تهيئة النوافذ المنبثقة
     this.initModals();
@@ -74,16 +85,31 @@ export class CategoriesComponent implements OnInit {
    * تحميل الفئات
    */
   loadCategories(): void {
-    this.categoryService.getCategories().subscribe(
-      (categories) => {
+    this.categoryService.getCategories(this.showParentOnly, this.showActiveOnly, this.sortBy, this.sortOrder).subscribe({
+      next: (categories) => {
         this.categories = categories;
         this.applyFilter();
       },
-      (error) => {
+      error: (error) => {
         console.error('Error loading categories:', error);
         this.toastr.error('حدث خطأ أثناء تحميل الفئات');
       }
-    );
+    });
+  }
+
+  /**
+   * تحميل الفئات الرئيسية (للاختيار منها عند إنشاء فئة فرعية)
+   */
+  loadParentCategories(): void {
+    this.categoryService.getParentCategories().subscribe({
+      next: (categories) => {
+        this.parentCategories = categories;
+      },
+      error: (error) => {
+        console.error('Error loading parent categories:', error);
+        this.toastr.error('حدث خطأ أثناء تحميل الفئات الرئيسية');
+      }
+    });
   }
 
   /**
@@ -105,7 +131,8 @@ export class CategoriesComponent implements OnInit {
     this.filteredCategories = this.categories.filter(category => {
       const matchesSearch = !this.searchTerm ||
         category.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        (category.description && category.description.toLowerCase().includes(this.searchTerm.toLowerCase()));
+        (category.description && category.description.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
+        (category.slug && category.slug.toLowerCase().includes(this.searchTerm.toLowerCase()));
 
       return matchesSearch;
     });
@@ -123,15 +150,56 @@ export class CategoriesComponent implements OnInit {
   sortCategories(): void {
     switch (this.sortBy) {
       case 'name':
-        this.filteredCategories.sort((a, b) => a.name.localeCompare(b.name));
+        this.filteredCategories.sort((a, b) => {
+          return this.sortOrder === 'asc'
+            ? a.name.localeCompare(b.name)
+            : b.name.localeCompare(a.name);
+        });
         break;
       case 'productCount':
-        this.filteredCategories.sort((a, b) => (b.productCount || 0) - (a.productCount || 0));
+        this.filteredCategories.sort((a, b) => {
+          return this.sortOrder === 'asc'
+            ? (a.productCount || 0) - (b.productCount || 0)
+            : (b.productCount || 0) - (a.productCount || 0);
+        });
+        break;
+      case 'displayOrder':
+        this.filteredCategories.sort((a, b) => {
+          return this.sortOrder === 'asc'
+            ? (a.displayOrder || 0) - (b.displayOrder || 0)
+            : (b.displayOrder || 0) - (a.displayOrder || 0);
+        });
         break;
       default:
-        this.filteredCategories.sort((a, b) => a.id - b.id);
+        this.filteredCategories.sort((a, b) => {
+          return this.sortOrder === 'asc' ? a.id - b.id : b.id - a.id;
+        });
         break;
     }
+  }
+
+  /**
+   * تغيير ترتيب الفئات
+   */
+  changeSorting(sortBy: string): void {
+    if (this.sortBy === sortBy) {
+      // إذا كان نفس حقل الترتيب، نقوم بتبديل اتجاه الترتيب
+      this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    } else {
+      // إذا كان حقل ترتيب مختلف، نقوم بتعيين الحقل الجديد واتجاه الترتيب الافتراضي (تصاعدي)
+      this.sortBy = sortBy;
+      this.sortOrder = 'asc';
+    }
+
+    // إعادة تطبيق الفلتر مع الترتيب الجديد
+    this.applyFilter();
+  }
+
+  /**
+   * تغيير فلتر عرض الفئات
+   */
+  changeFilter(): void {
+    this.loadCategories();
   }
 
   /**
@@ -177,9 +245,17 @@ export class CategoriesComponent implements OnInit {
   openAddCategoryModal(): void {
     this.isEditMode = false;
     this.categoryForm.reset({
-      productCount: 0,
-      isActive: true
+      displayOrder: 0,
+      isParent: true,
+      parentId: null,
+      active: true,
+      productCount: 0
     });
+
+    // توليد رقم عشوائي للترتيب
+    const randomOrder = Math.floor(Math.random() * 100) + 1;
+    this.categoryForm.get('displayOrder')?.setValue(randomOrder);
+
     this.categoryModal.show();
   }
 
@@ -196,8 +272,12 @@ export class CategoriesComponent implements OnInit {
       description: category.description,
       imageUrl: category.imageUrl,
       icon: category.icon ? category.icon.replace('bi bi-', '') : '',
-      productCount: category.productCount || 0,
-      isActive: category.isActive !== false
+      slug: category.slug || '',
+      displayOrder: category.displayOrder || 0,
+      isParent: category.isParent,
+      parentId: category.parentId || null,
+      active: category.active,
+      productCount: category.productCount || 0
     });
 
     this.categoryModal.show();
@@ -223,33 +303,99 @@ export class CategoriesComponent implements OnInit {
       categoryData.icon = `bi bi-${categoryData.icon}`;
     }
 
+    // إنشاء slug من الاسم إذا لم يتم إدخاله
+    if (!categoryData.slug) {
+      categoryData.slug = this.generateSlug(categoryData.name);
+    }
+
+    // التحقق من parentId
+    if (!categoryData.isParent && !categoryData.parentId) {
+      this.toastr.error('يجب اختيار تصنيف رئيسي للتصنيف الفرعي');
+      return;
+    }
+
+    // إذا كان تصنيف رئيسي، نجعل parentId = null
+    if (categoryData.isParent) {
+      categoryData.parentId = null;
+    }
+
     if (this.isEditMode) {
       // تعديل فئة موجودة
-      this.categoryService.updateCategory(categoryData).subscribe(
-        () => {
-          this.toastr.success('تم تعديل الفئة بنجاح');
+      this.categoryService.updateCategory(categoryData).subscribe({
+        next: () => {
+          this.toastr.success('تم تعديل التصنيف بنجاح');
           this.loadCategories();
+          this.loadParentCategories();
           this.categoryModal.hide();
         },
-        (error) => {
+        error: (error) => {
           console.error('Error updating category:', error);
-          this.toastr.error('حدث خطأ أثناء تعديل الفئة');
+          if (error.error && typeof error.error === 'string') {
+            this.toastr.error(error.error);
+          } else {
+            this.toastr.error('حدث خطأ أثناء تعديل التصنيف');
+          }
         }
-      );
+      });
     } else {
       // إضافة فئة جديدة
-      this.categoryService.addCategory(categoryData).subscribe(
-        () => {
-          this.toastr.success('تم إضافة الفئة بنجاح');
+      this.categoryService.addCategory(categoryData).subscribe({
+        next: () => {
+          this.toastr.success('تم إضافة التصنيف بنجاح');
           this.loadCategories();
+          this.loadParentCategories();
           this.categoryModal.hide();
         },
-        (error) => {
+        error: (error) => {
           console.error('Error adding category:', error);
-          this.toastr.error('حدث خطأ أثناء إضافة الفئة');
+          if (error.error && typeof error.error === 'string') {
+            this.toastr.error(error.error);
+          } else {
+            this.toastr.error('حدث خطأ أثناء إضافة التصنيف');
+          }
         }
-      );
+      });
     }
+  }
+
+  /**
+   * إنشاء slug من النص
+   */
+  private generateSlug(text: string): string {
+    // تحويل النص إلى أحرف صغيرة
+    let slug = text.toLowerCase();
+
+    // استبدال الأحرف العربية بأحرف إنجليزية (تبسيط)
+    const arabicToEnglish: { [key: string]: string } = {
+      'أ': 'a', 'إ': 'a', 'آ': 'a', 'ا': 'a',
+      'ب': 'b', 'ت': 't', 'ث': 'th',
+      'ج': 'j', 'ح': 'h', 'خ': 'kh',
+      'د': 'd', 'ذ': 'th',
+      'ر': 'r', 'ز': 'z',
+      'س': 's', 'ش': 'sh', 'ص': 's', 'ض': 'd',
+      'ط': 't', 'ظ': 'z',
+      'ع': 'a', 'غ': 'gh',
+      'ف': 'f', 'ق': 'q', 'ك': 'k',
+      'ل': 'l', 'م': 'm', 'ن': 'n',
+      'ه': 'h', 'و': 'w', 'ي': 'y', 'ى': 'a', 'ئ': 'e'
+    };
+
+    // استبدال الأحرف العربية
+    for (const arabic in arabicToEnglish) {
+      const english = arabicToEnglish[arabic];
+      slug = slug.replace(new RegExp(arabic, 'g'), english);
+    }
+
+    // استبدال المسافات والأحرف الخاصة بشرطات
+    slug = slug.replace(/[^a-z0-9]/g, '-');
+
+    // إزالة الشرطات المتكررة
+    slug = slug.replace(/-+/g, '-');
+
+    // إزالة الشرطات من البداية والنهاية
+    slug = slug.replace(/^-+|-+$/g, '');
+
+    return slug;
   }
 
   /**
@@ -266,17 +412,25 @@ export class CategoriesComponent implements OnInit {
   confirmDelete(): void {
     if (!this.selectedCategory) return;
 
-    this.categoryService.deleteCategory(this.selectedCategory.id).subscribe(
-      () => {
-        this.toastr.success('تم حذف الفئة بنجاح');
+    this.categoryService.deleteCategory(this.selectedCategory.id).subscribe({
+      next: () => {
+        this.toastr.success('تم حذف التصنيف بنجاح');
         this.loadCategories();
+        this.loadParentCategories();
         this.deleteModal.hide();
       },
-      (error) => {
+      error: (error) => {
         console.error('Error deleting category:', error);
-        this.toastr.error('حدث خطأ أثناء حذف الفئة');
+        if (error.error && typeof error.error === 'object' && error.error.message) {
+          this.toastr.error(error.error.message);
+        } else if (error.error && typeof error.error === 'string') {
+          this.toastr.error(error.error);
+        } else {
+          this.toastr.error('حدث خطأ أثناء حذف التصنيف');
+        }
+        this.deleteModal.hide();
       }
-    );
+    });
   }
 
   /**

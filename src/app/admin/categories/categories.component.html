@@ -21,9 +21,9 @@
             </button>
           </div>
 
-          <!-- أدوات البحث -->
+          <!-- أدوات البحث والفلترة -->
           <div class="row mb-3">
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="input-group">
                 <input type="text" class="form-control" placeholder="ابحث عن تصنيف..." [(ngModel)]="searchTerm" (keyup)="applyFilter()">
                 <button class="btn btn-outline-secondary" type="button">
@@ -31,12 +31,31 @@
                 </button>
               </div>
             </div>
-            <div class="col-md-3">
-              <select class="form-select" [(ngModel)]="sortBy" (change)="applyFilter()">
+            <div class="col-md-2">
+              <select class="form-select" [(ngModel)]="sortBy" (change)="changeSorting(sortBy)">
                 <option value="id">الترتيب الافتراضي</option>
-                <option value="name">الاسم (أ-ي)</option>
+                <option value="name">الاسم</option>
+                <option value="displayOrder">ترتيب العرض</option>
                 <option value="productCount">عدد المنتجات</option>
               </select>
+            </div>
+            <div class="col-md-2">
+              <select class="form-select" [(ngModel)]="sortOrder" (change)="applyFilter()">
+                <option value="asc">تصاعدي</option>
+                <option value="desc">تنازلي</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="showParentOnly" [(ngModel)]="showParentOnly" (change)="changeFilter()">
+                <label class="form-check-label" for="showParentOnly">التصنيفات الرئيسية فقط</label>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="showActiveOnly" [(ngModel)]="showActiveOnly" (change)="changeFilter()">
+                <label class="form-check-label" for="showActiveOnly">التصنيفات النشطة فقط</label>
+              </div>
             </div>
           </div>
 
@@ -48,8 +67,11 @@
                   <th scope="col">#</th>
                   <th scope="col">الصورة</th>
                   <th scope="col">اسم التصنيف</th>
-                  <th scope="col">الوصف</th>
+                  <th scope="col">النوع</th>
+                  <th scope="col">الرابط المختصر</th>
+                  <th scope="col">ترتيب العرض</th>
                   <th scope="col">عدد المنتجات</th>
+                  <th scope="col">الحالة</th>
                   <th scope="col">الإجراءات</th>
                 </tr>
               </thead>
@@ -57,7 +79,7 @@
                 <tr *ngFor="let category of filteredCategories; let i = index">
                   <th scope="row">{{ i + 1 }}</th>
                   <td>
-                    <img [src]="category.imageUrl" alt="{{ category.name }}" class="category-thumbnail">
+                    <img [src]="category.imageUrl" alt="{{ category.name }}" class="category-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
                   </td>
                   <td>
                     <div class="d-flex align-items-center">
@@ -65,19 +87,32 @@
                       {{ category.name }}
                     </div>
                   </td>
-                  <td>{{ category.description }}</td>
+                  <td>
+                    <span *ngIf="category.isParent" class="badge bg-primary">رئيسي</span>
+                    <span *ngIf="!category.isParent" class="badge bg-secondary">فرعي</span>
+                  </td>
+                  <td>
+                    <code>{{ category.slug }}</code>
+                  </td>
+                  <td>
+                    {{ category.displayOrder }}
+                  </td>
                   <td>
                     <span class="badge bg-info">{{ category.productCount }} منتج</span>
                   </td>
                   <td>
+                    <span *ngIf="category.active" class="badge bg-success">نشط</span>
+                    <span *ngIf="!category.active" class="badge bg-danger">غير نشط</span>
+                  </td>
+                  <td>
                     <div class="btn-group" role="group">
-                      <button type="button" class="btn btn-sm btn-primary" (click)="editCategory(category)">
+                      <button type="button" class="btn btn-sm btn-primary" (click)="editCategory(category)" title="تعديل">
                         <i class="bi bi-pencil"></i>
                       </button>
-                      <button type="button" class="btn btn-sm btn-danger" (click)="deleteCategory(category)">
+                      <button type="button" class="btn btn-sm btn-danger" (click)="deleteCategory(category)" title="حذف">
                         <i class="bi bi-trash"></i>
                       </button>
-                      <button type="button" class="btn btn-sm btn-info" (click)="viewCategoryDetails(category)">
+                      <button type="button" class="btn btn-sm btn-info" (click)="viewCategoryDetails(category)" title="عرض التفاصيل">
                         <i class="bi bi-eye"></i>
                       </button>
                     </div>
