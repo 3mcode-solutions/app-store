@@ -19,8 +19,8 @@ export class CategoryService {
       id: 1,
       name: 'إلكترونيات',
       description: 'هواتف ذكية، أجهزة لوحية، لابتوب وإكسسوارات',
-      imageUrl: 'assets/img/categories/electronics.jpg',
-      icon: 'bi bi-phone',
+      imageUrl: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?q=80&w=600&h=400&auto=format&fit=crop',
+      icon: 'bi bi-laptop',
       slug: 'electronics',
       displayOrder: 1,
       isParent: true,
@@ -31,7 +31,7 @@ export class CategoryService {
           id: 5,
           name: 'هواتف ذكية',
           description: 'هواتف ذكية وملحقاتها',
-          imageUrl: 'assets/img/categories/smartphones.jpg',
+          imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=600&h=400&auto=format&fit=crop',
           icon: 'bi bi-phone-fill',
           slug: 'smartphones',
           displayOrder: 1,
@@ -44,7 +44,7 @@ export class CategoryService {
           id: 6,
           name: 'أجهزة لوحية',
           description: 'أجهزة لوحية وملحقاتها',
-          imageUrl: 'assets/img/categories/tablets.jpg',
+          imageUrl: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?q=80&w=600&h=400&auto=format&fit=crop',
           icon: 'bi bi-tablet',
           slug: 'tablets',
           displayOrder: 2,
@@ -59,8 +59,8 @@ export class CategoryService {
       id: 2,
       name: 'ملابس',
       description: 'ملابس رجالية ونسائية وأطفال',
-      imageUrl: 'assets/img/categories/fashion.jpg',
-      icon: 'bi bi-bag',
+      imageUrl: 'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?q=80&w=600&h=400&auto=format&fit=crop',
+      icon: 'bi bi-basket',
       slug: 'clothing',
       displayOrder: 2,
       isParent: true,
@@ -71,8 +71,8 @@ export class CategoryService {
           id: 7,
           name: 'ملابس رجالية',
           description: 'ملابس وإكسسوارات رجالية',
-          imageUrl: 'assets/img/categories/men-clothing.jpg',
-          icon: 'bi bi-person',
+          imageUrl: 'https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=600&h=400&auto=format&fit=crop',
+          icon: 'bi bi-person-standing',
           slug: 'men-clothing',
           displayOrder: 1,
           isParent: false,
@@ -84,7 +84,7 @@ export class CategoryService {
           id: 8,
           name: 'ملابس نسائية',
           description: 'ملابس وإكسسوارات نسائية',
-          imageUrl: 'assets/img/categories/women-clothing.jpg',
+          imageUrl: 'https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?q=80&w=600&h=400&auto=format&fit=crop',
           icon: 'bi bi-person-dress',
           slug: 'women-clothing',
           displayOrder: 2,
@@ -99,8 +99,8 @@ export class CategoryService {
       id: 3,
       name: 'المنزل والمطبخ',
       description: 'أدوات منزلية وأجهزة مطبخ',
-      imageUrl: 'assets/img/categories/home-kitchen.jpg',
-      icon: 'bi bi-house',
+      imageUrl: 'https://images.unsplash.com/photo-1556911220-bda9f7f7597e?q=80&w=600&h=400&auto=format&fit=crop',
+      icon: 'bi bi-house-heart',
       slug: 'home-kitchen',
       displayOrder: 3,
       isParent: true,
@@ -111,8 +111,8 @@ export class CategoryService {
           id: 9,
           name: 'الأثاث',
           description: 'أثاث منزلي ومكتبي',
-          imageUrl: 'assets/img/categories/furniture.jpg',
-          icon: 'bi bi-lamp',
+          imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=600&h=400&auto=format&fit=crop',
+          icon: 'bi bi-lamp-fill',
           slug: 'furniture',
           displayOrder: 1,
           isParent: false,
@@ -124,8 +124,8 @@ export class CategoryService {
           id: 10,
           name: 'أجهزة المطبخ',
           description: 'أجهزة وأدوات المطبخ',
-          imageUrl: 'assets/img/categories/kitchen-appliances.jpg',
-          icon: 'bi bi-cup-hot',
+          imageUrl: 'https://images.unsplash.com/photo-1556909114-44e3e9699e2b?q=80&w=600&h=400&auto=format&fit=crop',
+          icon: 'bi bi-cup-hot-fill',
           slug: 'kitchen-appliances',
           displayOrder: 2,
           isParent: false,
@@ -136,22 +136,17 @@ export class CategoryService {
       ]
     },
     {
-      id: 5,
+      id: 4,
       name: 'كتب',
       description: 'كتب ورقية وإلكترونية',
-      imageUrl: 'assets/img/categories/books.jpg',
+      imageUrl: 'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?q=80&w=600&h=400&auto=format&fit=crop',
+      icon: 'bi bi-book-half',
+      slug: 'books',
+      displayOrder: 4,
+      isParent: true,
+      active: true,
       productCount: 200,
-      icon: 'bi bi-book',
-      isActive: true
-    },
-    {
-      id: 6,
-      name: 'مستلزمات منزلية',
-      description: 'أدوات ومستلزمات للمنزل',
-      imageUrl: 'assets/img/categories/home.jpg',
-      productCount: 180,
-      icon: 'bi bi-house-door',
-      isActive: true
+      subCategories: []
     }
   ];
 
@@ -351,27 +346,6 @@ export class CategoryService {
    */
   getSelectedCategory(): Observable<string | null> {
     return this.selectedCategoryId.asObservable();
-  }
-
-  /**
-   * الحصول على فئة بواسطة المعرف
-   */
-  getCategoryById(id: number): Observable<Category | undefined> {
-    // في حالة عدم وجود API حقيقي، نستخدم البيانات الوهمية
-    if (!environment.production) {
-      const category = this.categories.find(category => category.id === id);
-      return of(category).pipe(delay(200));
-    }
-
-    // استخدام API حقيقي
-    return this.apiService.get<Category>(`categories/${id}`).pipe(
-      catchError(error => {
-        console.error(`Error fetching category with id ${id}:`, error);
-        // في حالة حدوث خطأ، نعود إلى البيانات الوهمية
-        const category = this.categories.find(category => category.id === id);
-        return of(category);
-      })
-    );
   }
 
   /**

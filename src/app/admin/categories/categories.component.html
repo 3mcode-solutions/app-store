@@ -161,25 +161,41 @@
         <form [formGroup]="categoryForm" (ngSubmit)="saveCategory()">
           <div class="row mb-3">
             <div class="col-md-6">
-              <label for="name" class="form-label">اسم التصنيف</label>
+              <label for="name" class="form-label">اسم التصنيف <span class="text-danger">*</span></label>
               <input type="text" class="form-control" id="name" formControlName="name" placeholder="أدخل اسم التصنيف">
               <div *ngIf="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched" class="text-danger">
                 اسم التصنيف مطلوب
               </div>
             </div>
             <div class="col-md-6">
-              <label for="icon" class="form-label">الأيقونة</label>
+              <label for="icon" class="form-label">الأيقونة <span class="text-danger">*</span></label>
               <div class="input-group">
                 <span class="input-group-text">bi bi-</span>
                 <input type="text" class="form-control" id="icon" formControlName="icon" placeholder="مثال: cart, bag, phone">
               </div>
               <small class="form-text text-muted">اختر أيقونة من <a href="https://icons.getbootstrap.com/" target="_blank">Bootstrap Icons</a></small>
+              <div *ngIf="categoryForm.get('icon')?.invalid && categoryForm.get('icon')?.touched" class="text-danger">
+                الأيقونة مطلوبة
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="slug" class="form-label">الرابط المختصر</label>
+              <input type="text" class="form-control" id="slug" formControlName="slug" placeholder="مثال: electronics, clothing">
+              <small class="form-text text-muted">سيتم إنشاؤه تلقائيًا من الاسم إذا تركته فارغًا</small>
+            </div>
+            <div class="col-md-6">
+              <label for="displayOrder" class="form-label">ترتيب العرض</label>
+              <input type="number" class="form-control" id="displayOrder" formControlName="displayOrder" placeholder="أدخل ترتيب العرض">
+              <small class="form-text text-muted">الأرقام الأصغر تظهر أولاً</small>
             </div>
           </div>
 
           <div class="row mb-3">
             <div class="col-md-12">
-              <label for="description" class="form-label">وصف التصنيف</label>
+              <label for="description" class="form-label">وصف التصنيف <span class="text-danger">*</span></label>
               <textarea class="form-control" id="description" formControlName="description" rows="3" placeholder="أدخل وصف التصنيف"></textarea>
               <div *ngIf="categoryForm.get('description')?.invalid && categoryForm.get('description')?.touched" class="text-danger">
                 وصف التصنيف مطلوب
@@ -189,7 +205,7 @@
 
           <div class="row mb-3">
             <div class="col-md-6">
-              <label for="imageUrl" class="form-label">رابط الصورة</label>
+              <label for="imageUrl" class="form-label">رابط الصورة <span class="text-danger">*</span></label>
               <input type="text" class="form-control" id="imageUrl" formControlName="imageUrl" placeholder="أدخل رابط صورة التصنيف">
               <div *ngIf="categoryForm.get('imageUrl')?.invalid && categoryForm.get('imageUrl')?.touched" class="text-danger">
                 رابط الصورة مطلوب
@@ -197,7 +213,36 @@
             </div>
             <div class="col-md-6">
               <label for="productCount" class="form-label">عدد المنتجات</label>
-              <input type="number" class="form-control" id="productCount" formControlName="productCount" placeholder="أدخل عدد المنتجات">
+              <input type="number" class="form-control" id="productCount" formControlName="productCount" placeholder="أدخل عدد المنتجات" readonly>
+              <small class="form-text text-muted">يتم حسابه تلقائيًا</small>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="isParent" formControlName="isParent">
+                <label class="form-check-label" for="isParent">تصنيف رئيسي</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="active" formControlName="active">
+                <label class="form-check-label" for="active">نشط</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3" *ngIf="!categoryForm.get('isParent')?.value">
+            <div class="col-md-12">
+              <label for="parentId" class="form-label">التصنيف الرئيسي <span class="text-danger">*</span></label>
+              <select class="form-select" id="parentId" formControlName="parentId">
+                <option [ngValue]="null">-- اختر التصنيف الرئيسي --</option>
+                <option *ngFor="let parent of parentCategories" [ngValue]="parent.id">{{ parent.name }}</option>
+              </select>
+              <div *ngIf="!categoryForm.get('isParent')?.value && !categoryForm.get('parentId')?.value && categoryForm.get('parentId')?.touched" class="text-danger">
+                يجب اختيار تصنيف رئيسي للتصنيف الفرعي
+              </div>
             </div>
           </div>
 
@@ -253,6 +298,10 @@
             <h4>
               <i *ngIf="selectedCategory.icon" [class]="selectedCategory.icon + ' me-2'"></i>
               {{ selectedCategory.name }}
+              <span *ngIf="selectedCategory.isParent" class="badge bg-primary ms-2">تصنيف رئيسي</span>
+              <span *ngIf="!selectedCategory.isParent" class="badge bg-secondary ms-2">تصنيف فرعي</span>
+              <span *ngIf="selectedCategory.active" class="badge bg-success ms-2">نشط</span>
+              <span *ngIf="!selectedCategory.active" class="badge bg-danger ms-2">غير نشط</span>
             </h4>
 
             <div class="mb-3">
@@ -260,9 +309,39 @@
               <p>{{ selectedCategory.description }}</p>
             </div>
 
-            <div class="mb-3">
-              <h5>عدد المنتجات:</h5>
-              <span class="badge bg-info fs-6">{{ selectedCategory.productCount }} منتج</span>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <h5>الرابط المختصر:</h5>
+                <code>{{ selectedCategory.slug }}</code>
+              </div>
+              <div class="col-md-6">
+                <h5>ترتيب العرض:</h5>
+                <span>{{ selectedCategory.displayOrder }}</span>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <h5>عدد المنتجات:</h5>
+                <span class="badge bg-info fs-6">{{ selectedCategory.productCount }} منتج</span>
+              </div>
+              <div class="col-md-6" *ngIf="!selectedCategory.isParent">
+                <h5>التصنيف الرئيسي:</h5>
+                <span>{{ getParentCategoryName(selectedCategory.parentId) }}</span>
+              </div>
+            </div>
+
+            <div class="mb-3" *ngIf="selectedCategory.isParent && selectedCategory.subCategories && selectedCategory.subCategories.length > 0">
+              <h5>التصنيفات الفرعية:</h5>
+              <div class="list-group">
+                <a *ngFor="let subCategory of selectedCategory.subCategories" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                  <div>
+                    <i *ngIf="subCategory.icon" [class]="subCategory.icon + ' me-2'"></i>
+                    {{ subCategory.name }}
+                  </div>
+                  <span class="badge bg-info rounded-pill">{{ subCategory.productCount }} منتج</span>
+                </a>
+              </div>
             </div>
 
             <div class="mb-3">

@@ -18,17 +18,24 @@
                    placeholder="ابحث عن منتج...">
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <select class="form-select"
                   [(ngModel)]="selectedCategory"
                   (ngModelChange)="onCategoryChange($event)">
             <option value="">جميع الفئات</option>
-            <option value="1">إلكترونيات</option>
-            <option value="2">ملابس</option>
-            <option value="3">أثاث منزلي</option>
-            <option value="4">مستلزمات رياضية</option>
-            <option value="5">كتب</option>
-            <option value="6">مستلزمات منزلية</option>
+            <option *ngFor="let category of categories" [value]="category.id">
+              {{category.name}}
+            </option>
+          </select>
+        </div>
+        <div class="col-md-3" *ngIf="subCategories && subCategories.length > 0">
+          <select class="form-select"
+                  [(ngModel)]="selectedSubCategory"
+                  (ngModelChange)="onSubCategoryChange($event)">
+            <option value="">جميع التصنيفات الفرعية</option>
+            <option *ngFor="let subCategory of subCategories" [value]="subCategory.id">
+              {{subCategory.name}}
+            </option>
           </select>
         </div>
         <div class="col-md-3">

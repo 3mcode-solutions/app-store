@@ -5,13 +5,31 @@
       <p>تصفح منتجاتنا حسب الفئة</p>
     </header>
 
-    <div class="row gy-4">
+    <!-- حالة التحميل -->
+    <div class="text-center py-5" *ngIf="isLoading">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">جاري التحميل...</span>
+      </div>
+      <p class="mt-2">جاري تحميل التصنيفات...</p>
+    </div>
+
+    <!-- رسالة في حالة عدم وجود تصنيفات -->
+    <div class="alert alert-info" *ngIf="!isLoading && (!categories || categories.length === 0)">
+      <i class="bi bi-info-circle me-2"></i>
+      لا توجد تصنيفات متاحة حالياً.
+    </div>
+
+    <!-- عرض التصنيفات -->
+    <div class="row gy-4" *ngIf="!isLoading && categories && categories.length > 0">
       <div class="col-lg-4 col-md-6" *ngFor="let category of categories">
         <div class="category-card" (click)="navigateToProducts(category.id)">
           <div class="category-img">
             <img [src]="category.imageUrl" [alt]="category.name" class="img-fluid">
             <div class="category-overlay">
-              <i [class]="category.icon"></i>
+              <i [class]="category.icon + ' category-icon'"></i>
+            </div>
+            <div class="category-badge" *ngIf="category.subCategories && category.subCategories.length > 0">
+              <span>{{category.subCategories.length}} تصنيف فرعي</span>
             </div>
           </div>
           <div class="category-content">
@@ -21,6 +39,24 @@
               <i class="bi bi-box-seam"></i>
               <span>{{category.productCount}} منتج</span>
             </div>
+
+            <!-- التصنيفات الفرعية -->
+            <div class="subcategories-list" *ngIf="category.subCategories && category.subCategories.length > 0">
+              <h5 class="subcategories-title">التصنيفات الفرعية</h5>
+              <div class="subcategory-item" *ngFor="let subCategory of category.subCategories">
+                <a href="javascript:void(0)" (click)="$event.stopPropagation(); navigateToProductsBySlug(subCategory.slug)">
+                  <div class="subcategory-icon">
+                    <i [class]="subCategory.icon"></i>
+                  </div>
+                  <div class="subcategory-details">
+                    <span class="subcategory-name">{{subCategory.name}}</span>
+                    <span class="badge bg-primary rounded-pill">{{subCategory.productCount}} منتج</span>
+                  </div>
+                  <i class="bi bi-chevron-left subcategory-arrow"></i>
+                </a>
+              </div>
+            </div>
+
             <div class="browse-link">
               <span>تصفح المنتجات</span>
               <i class="bi bi-arrow-left"></i>

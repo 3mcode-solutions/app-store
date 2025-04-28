@@ -13,6 +13,8 @@ import { CategoryService } from '../../shared/services/category.service';
 })
 export class CategoriesComponent implements OnInit {
   categories: Category[] = [];
+  parentCategories: Category[] = [];
+  isLoading = true;
 
   constructor(
     private categoryService: CategoryService,
@@ -20,8 +22,17 @@ export class CategoriesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.categoryService.getCategories().subscribe(categories => {
-      this.categories = categories;
+    // تحميل التصنيفات الرئيسية فقط
+    this.categoryService.getParentCategories().subscribe({
+      next: (categories) => {
+        this.parentCategories = categories;
+        this.categories = categories;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading categories:', error);
+        this.isLoading = false;
+      }
     });
   }
 
@@ -29,6 +40,15 @@ export class CategoriesComponent implements OnInit {
     this.categoryService.setSelectedCategory(categoryId.toString());
     this.router.navigate(['/products'], {
       queryParams: { category: categoryId }
+    });
+  }
+
+  /**
+   * التنقل إلى صفحة المنتجات باستخدام الرابط المختصر
+   */
+  navigateToProductsBySlug(slug: string): void {
+    this.router.navigate(['/products'], {
+      queryParams: { categorySlug: slug }
     });
   }
 }

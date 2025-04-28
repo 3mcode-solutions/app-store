@@ -459,4 +459,14 @@ export class CategoriesComponent implements OnInit {
       }
     );
   }
+
+  /**
+   * الحصول على اسم التصنيف الرئيسي من معرفه
+   */
+  getParentCategoryName(parentId: number | null | undefined): string {
+    if (!parentId) return 'غير محدد';
+
+    const parentCategory = this.parentCategories.find(c => c.id === parentId);
+    return parentCategory ? parentCategory.name : 'غير محدد';
+  }
 }

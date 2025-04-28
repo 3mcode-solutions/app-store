@@ -25,8 +25,9 @@ export class ProductsComponent implements OnInit {
       name: 'هاتف سامسونج جالكسي S23',
       description: 'هاتف ذكي حديث مع كاميرا متطورة وأداء فائق',
       price: 3499.99,
-      imageUrl: 'assets/img/products/phone-1.jpg',
+      imageUrl: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?q=80&w=600&h=400&auto=format&fit=crop',
       category: '1',
+      subCategory: '2',
       inStock: true,
       rating: 4.8,
       discount: 10
@@ -36,8 +37,9 @@ export class ProductsComponent implements OnInit {
       name: 'لابتوب ماك بوك برو',
       description: 'معالج M2 مع شاشة 14 بوصة عالية الدقة',
       price: 4999.99,
-      imageUrl: 'assets/img/products/laptop-1.jpg',
+      imageUrl: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=600&h=400&auto=format&fit=crop',
       category: '1',
+      subCategory: '3',
       inStock: true,
       rating: 4.9
     },
@@ -46,8 +48,9 @@ export class ProductsComponent implements OnInit {
       name: 'سماعات آبل إيربودز برو',
       description: 'سماعات لاسلكية مع خاصية إلغاء الضوضاء',
       price: 899.99,
-      imageUrl: 'assets/img/products/airpods.jpg',
+      imageUrl: 'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?q=80&w=600&h=400&auto=format&fit=crop',
       category: '1',
+      subCategory: '3',
       inStock: true,
       rating: 4.7,
       discount: 15
@@ -58,8 +61,9 @@ export class ProductsComponent implements OnInit {
       name: 'قميص رجالي كلاسيك',
       description: 'قميص قطني بتصميم أنيق مناسب للعمل',
       price: 199.99,
-      imageUrl: 'assets/img/products/shirt-1.jpg',
+      imageUrl: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?q=80&w=600&h=400&auto=format&fit=crop',
       category: '2',
+      subCategory: '5',
       inStock: true,
       rating: 4.5
     },
@@ -68,8 +72,9 @@ export class ProductsComponent implements OnInit {
       name: 'فستان نسائي صيفي',
       description: 'فستان خفيف بألوان زاهية مناسب للصيف',
       price: 299.99,
-      imageUrl: 'assets/img/products/dress-1.jpg',
+      imageUrl: 'https://images.unsplash.com/photo-1612336307429-8a898d10e223?q=80&w=600&h=400&auto=format&fit=crop',
       category: '2',
+      subCategory: '6',
       inStock: true,
       rating: 4.6,
       discount: 20
@@ -167,8 +172,13 @@ export class ProductsComponent implements OnInit {
   products: Product[] = [];
   searchQuery: string = '';
   selectedCategory: string = '';
+  selectedSubCategory: string = '';
   sortBy: SortOption = 'default';
   viewMode: ViewMode = 'grid';
+
+  // قائمة التصنيفات والتصنيفات الفرعية
+  categories: any[] = [];
+  subCategories: any[] = [];
 
   // نطاق السعر والتقييم
   priceRange = {
@@ -201,22 +211,100 @@ export class ProductsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // تحميل التصنيفات
+    this.loadCategories();
+
     // استمع للتغييرات في المسار
     this.route.data.subscribe(data => {
       if (data['category']) {
         // إذا كان هناك فئة محددة في بيانات المسار
         this.filterByCategory(data['category']);
       } else {
-        // استمع لمعلمات الاستعلام (للتوافق مع الكود القديم)
+        // استمع لمعلمات الاستعلام
         this.route.queryParams.subscribe(params => {
           const categoryId = params['category'];
-          if (categoryId) {
+          const categorySlug = params['categorySlug'];
+          const subCategoryId = params['subCategory'];
+
+          if (categorySlug) {
+            // البحث عن التصنيف بواسطة الرابط المختصر
+            this.findCategoryBySlug(categorySlug);
+          } else if (categoryId) {
             this.selectedCategory = categoryId;
+            this.loadSubCategories(categoryId);
+
+            if (subCategoryId) {
+              this.selectedSubCategory = subCategoryId;
+            }
+
             this.filterProducts();
           } else {
             this.products = [...this.allProducts];
           }
         });
+      }
+    });
+  }
+
+  /**
+   * تحميل التصنيفات من الخدمة
+   */
+  loadCategories(): void {
+    this.categoryService.getParentCategories().subscribe({
+      next: (categories) => {
+        this.categories = categories;
+      },
+      error: (error) => {
+        console.error('Error loading categories:', error);
+      }
+    });
+  }
+
+  /**
+   * تحميل التصنيفات الفرعية لتصنيف معين
+   */
+  loadSubCategories(categoryId: string): void {
+    if (!categoryId) {
+      this.subCategories = [];
+      return;
+    }
+
+    this.categoryService.getSubCategories(parseInt(categoryId)).subscribe({
+      next: (subCategories) => {
+        this.subCategories = subCategories;
+      },
+      error: (error) => {
+        console.error(`Error loading subcategories for category ${categoryId}:`, error);
+        this.subCategories = [];
+      }
+    });
+  }
+
+  /**
+   * البحث عن تصنيف بواسطة الرابط المختصر
+   */
+  findCategoryBySlug(slug: string): void {
+    this.categoryService.getCategoryBySlug(slug).subscribe({
+      next: (category) => {
+        if (category) {
+          this.selectedCategory = category.id.toString();
+
+          if (category.isParent) {
+            this.loadSubCategories(this.selectedCategory);
+          } else if (category.parentId) {
+            this.selectedCategory = category.parentId.toString();
+            this.selectedSubCategory = category.id.toString();
+            this.loadSubCategories(this.selectedCategory);
+          }
+
+          this.filterProducts();
+        } else {
+          this.products = [...this.allProducts];
+        }
+      },
+      error: (error) => {
+        console.error(`Error finding category by slug ${slug}:`, error);
+        this.products = [...this.allProducts];
       }
     });
   }
@@ -249,17 +337,32 @@ export class ProductsComponent implements OnInit {
 
   filterProducts(): void {
     this.products = this.allProducts.filter(product => {
+      // تصفية حسب التصنيف الرئيسي
       const matchesCategory = !this.selectedCategory || product.category === this.selectedCategory;
+
+      // تصفية حسب التصنيف الفرعي
+      const matchesSubCategory = !this.selectedSubCategory || product.subCategory === this.selectedSubCategory;
+
+      // تصفية حسب البحث
       const matchesSearch = !this.searchQuery ||
         product.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
         product.description.toLowerCase().includes(this.searchQuery.toLowerCase());
+
+      // تصفية حسب المخزون
       const matchesInStock = !this.showOnlyInStock || product.inStock;
+
+      // تصفية حسب الخصم
       const matchesDiscount = !this.showOnlyDiscounted || (product.discount && product.discount > 0);
+
+      // تصفية حسب السعر
       const matchesPrice = this.getFinalPrice(product) >= this.priceRange.min &&
                           this.getFinalPrice(product) <= this.priceRange.max;
+
+      // تصفية حسب التقييم
       const matchesRating = !this.ratingFilter || (product.rating && product.rating >= this.ratingFilter);
 
-      return matchesCategory && matchesSearch && matchesInStock &&
+      // تطبيق جميع الفلاتر
+      return matchesCategory && matchesSubCategory && matchesSearch && matchesInStock &&
              matchesDiscount && matchesPrice && matchesRating;
     });
 
@@ -302,6 +405,23 @@ export class ProductsComponent implements OnInit {
 
   onCategoryChange(categoryId: string): void {
     this.selectedCategory = categoryId;
+    this.selectedSubCategory = '';
+
+    // تحميل التصنيفات الفرعية للتصنيف المحدد
+    if (categoryId) {
+      this.loadSubCategories(categoryId);
+    } else {
+      this.subCategories = [];
+    }
+
+    this.filterProducts();
+  }
+
+  /**
+   * معالجة تغيير التصنيف الفرعي
+   */
+  onSubCategoryChange(subCategoryId: string): void {
+    this.selectedSubCategory = subCategoryId;
     this.filterProducts();
   }
 
