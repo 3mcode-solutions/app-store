@@ -7,13 +7,14 @@ import { Product } from '../../shared/interfaces/product.interface';
 import { CategoryService } from '../../shared/services/category.service';
 import { ProductService } from '../../shared/services/product.service';
 import { ToastrService } from '../../shared/services/toastr.service';
+import { IconPickerComponent } from '../../shared/components/icon-picker/icon-picker.component';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-admin-categories',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, IconPickerComponent],
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.css']
 })
@@ -271,7 +272,7 @@ export class CategoriesComponent implements OnInit {
       name: category.name,
       description: category.description,
       imageUrl: category.imageUrl,
-      icon: category.icon ? category.icon.replace('bi bi-', '') : '',
+      icon: category.icon || '',
       slug: category.slug || '',
       displayOrder: category.displayOrder || 0,
       isParent: category.isParent,
@@ -298,9 +299,9 @@ export class CategoriesComponent implements OnInit {
 
     const categoryData = this.categoryForm.value;
 
-    // إضافة "bi bi-" للأيقونة إذا تم إدخالها
-    if (categoryData.icon) {
-      categoryData.icon = `bi bi-${categoryData.icon}`;
+    // التحقق من الأيقونة
+    if (!categoryData.icon) {
+      categoryData.icon = 'bi bi-tag';
     }
 
     // إنشاء slug من الاسم إذا لم يتم إدخاله

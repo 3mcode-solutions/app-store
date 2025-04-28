@@ -169,11 +169,10 @@
             </div>
             <div class="col-md-6">
               <label for="icon" class="form-label">الأيقونة <span class="text-danger">*</span></label>
-              <div class="input-group">
-                <span class="input-group-text">bi bi-</span>
-                <input type="text" class="form-control" id="icon" formControlName="icon" placeholder="مثال: cart, bag, phone">
-              </div>
-              <small class="form-text text-muted">اختر أيقونة من <a href="https://icons.getbootstrap.com/" target="_blank">Bootstrap Icons</a></small>
+              <app-icon-picker
+                [selectedIcon]="categoryForm.get('icon')?.value"
+                (iconSelected)="categoryForm.get('icon')?.setValue($event)">
+              </app-icon-picker>
               <div *ngIf="categoryForm.get('icon')?.invalid && categoryForm.get('icon')?.touched" class="text-danger">
                 الأيقونة مطلوبة
               </div>
